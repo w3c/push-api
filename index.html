@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Push API</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <script src='https://www.w3.org/Tools/respec/respec-w3c-common' class='remove'></script>
+    <script class="remove">
+      var respecConfig = {
+          // specification status (e.g. WD, LCWD, NOTE, etc.). If in doubt use ED.
+          specStatus:           "ED",
+
+          // the specification's short name, as in http://www.w3.org/TR/short-name/
+          shortName:            "push-api",
+
+          // if your specification has a subtitle that goes below the main
+          // formal title, define it here
+          // subtitle   :  "an excellent document",
+
+          // if you wish the publication date to be other than today, set this
+          // publishDate:  "2012-10-18",
+
+          // if the specification's copyright date is a range of years, specify
+          // the start date here:
+          // copyrightStart: "2005"
+
+          // if there is a previously published draft, uncomment this and set its YYYY-MM-DD date
+          // and its maturity status
+          previousPublishDate:  "2013-08-15",
+          previousMaturity:  "WD",
+
+          // if there a publicly available Editor's Draft, this is the link
+          edDraftURI:"http://dvcs.w3.org/hg/push/raw-file/tip/index.html",
+
+          // if this is a LCWD, uncomment and set the end of its review period
+          // lcEnd: "2009-08-05",
+
+          inlineCSS:    true,
+          noIDLIn:      true,
+          
+          // editors, add as many as you like
+          // only "name" is required
+          editors:  [
+              { name: "Bryan Sullivan", company: "AT&T", companyURL:
+              "http://att.com/" },
+              { name: "Eduardo Fullea", company: "Telefonica", companyURL:
+              "http://www.telefonica.com/" } 
+          ],
+
+          // authors, add as many as you like.
+          // This is optional, uncomment if you have authors as well as editors.
+          // only "name" is required. Same format as editors.
+
+          //authors:  [
+          //    { name: "Your Name", url: "http://example.org/",
+          //      company: "Your Company", companyURL: "http://example.com/" },
+          //],
+
+          // name of the WG
+          wg:           "Web Applications Working Group",
+
+          // URI of the public WG page
+          wgURI:        "http://www.w3.org/2008/webapps/",
+
+          // name (with the @w3c.org) of the public mailing to which comments are due
+          wgPublicList: "public-webapps",
+
+          // URI of the patent status for this WG, for Rec-track documents
+          // !!!! IMPORTANT !!!!
+          // This is important for Rec-track documents, do not copy a patent URI from a random
+          // document unless you know what you're doing. If in doubt ask your friendly neighbourhood
+          // Team Contact.
+          wgPatentURI:  "http://www.w3.org/2004/01/pp-impl/42538/status"
+      };
+    </script>
+  </head>
+  
+<body>
+
+<!********************** Abstract  *******************************************>
+
+<section id='abstract'>
+  
+  <p>This specification defines a “Push API” that provides <a
+  class="internalDFN" href="#dfn-webapp">webapps</a> with scripted access to
+  server-sent messages, for simplicity referred to here as <a
+  class="internalDFN" href="#dfn-push-message">push messages</a>, as
+  delivered by <a class="internalDFN" href="#dfn-push-service">push
+  services</a>. <a class="internalDFN" href="#dfn-push-service">Push
+  services</a> are a way for <a class="internalDFN"
+  href="#dfn-webappserver">webapp servers</a> to send messages to <a
+  class="internalDFN" href="#dfn-webapp">webapps</a>, whether or not the <a
+  class="internalDFN" href="#dfn-webapp">webapp</a> is active in a browser
+  window.</p>
+  
+  <p><a class="internalDFN" href="#dfn-push-message">Push messages</a>
+  may be delivered via various methods, either via standardized protocols (e.g.
+  Server-Sent Events [[SSE]], the GSM Short Message Service [[GSM-SMS]], SIP
+  MESSAGE [[RFC3428]], or OMA Push [[OMA-PUSH]]), or via browser-specific
+  methods. The specific method to be used by a <a class="internalDFN"
+  href="#dfn-webapp">webapp</a> is either selected by the user through a 
+	<a class="internalDFN" href="#dfn-push-extension">push service extension</a>, 
+	or by the browser. The Push API is defined to promote compatibility with any 
+		delivery method.</p>
+  
+</section>
+
+
+<!********************** Status of this Document *****************************>
+
+<section id='sotd'>
+</section>
+
+
+<!********************** Introduction ****************************************>
+
+<section class='informative' id="introduction"><h2>Introduction</h2>
+  <p>As defined here, <a class="internalDFN" href="#dfn-push-service">push
+  services</a> support delivery of <a class="internalDFN"
+  href="#dfn-webappserver">webapp server</a> messages in the following
+  contexts and related use cases:</p>
+  
+  <ul>
+   <li>the user is actively involved in the use of a <a class="internalDFN"
+   href="#dfn-webapp">webapp</a>: this relates to any normal use case in which a
+   <a class="internalDFN" href="#dfn-webapp">webapp</a> user may benefit from <a
+   class="internalDFN" href="#dfn-push-message">push messages</a>
+   while the user is actively using the <a class="internalDFN"
+   href="#dfn-webapp">webapp</a>
+   
+   <li>the user is not actively involved in the use of a <a class="internalDFN"
+   href="#dfn-webapp">webapp</a>, but the <a class="internalDFN"
+   href="#dfn-webapp">webapp</a> is active in a window of the browser or
+   executing as a web worker: this relates to use cases such as social
+   networking, messaging, web feed readers, etc in which the user may not be
+   actively using a <a class="internalDFN" href="#dfn-webapp">webapp</a> but
+   still benefits from <a class="internalDFN" href="#dfn-push-message">push
+   messages</a> being sent to (or via) the <a class="internalDFN"
+   href="#dfn-webapp">webapp</a>, to keep the user up-to-date
+   
+   <li>the <a class="internalDFN" href="#dfn-webapp">webapp</a> is not currently
+   active in a browser window: this relates to use cases in which the user may
+   close the <a class="internalDFN" href="#dfn-webapp">webapp</a>, but still
+   benefits from the <a class="internalDFN" href="#dfn-webapp">webapp</a> being
+   able to be restarted when a <a class="internalDFN"
+   href="#dfn-push-message">push message</a> is received, e.g. the
+   WebRTC use case in which an incoming call can invoke the WebRTC <a
+   class="internalDFN" href="#dfn-webapp">webapp</a>
+   
+   <li>multiple <a class="internalDFN" href="#dfn-webapp">webapps</a> are
+   running, but <a class="internalDFN" href="#dfn-push-message">push
+   messages</a> are delivered only to the <a class="internalDFN"
+   href="#dfn-webapp">webapp</a> that requested them, e.g. any normal use case
+   in which multiple <a class="internalDFN" href="#dfn-webapp">webapps</a> are
+   active in the browser and utilizing <a class="internalDFN"
+  href="#dfn-push-service">push services</a>
+   
+   <li>multiple instances of the same <a class="internalDFN"
+   href="#dfn-webapp">webapp</a> are active in the browser, and <a
+   class="internalDFN" href="#dfn-push-message">push messages</a>
+   specific to each instance of the <a class="internalDFN"
+   href="#dfn-webapp">webapp</a> are delivered only to the specific instance,
+   e.g. when a mail <a class="internalDFN" href="#dfn-webapp">webapp</a> is
+   active in two windows using different mail accounts
+   
+   <li>multiple instances of the same <a class="internalDFN"
+   href="#dfn-webapp">webapp</a> are active in different browsers, and push
+   messages are delivered to a set of instances of the <a
+   class="internalDFN" href="#dfn-webapp">webapp</a>, e.g. when a mail <a
+   class="internalDFN" href="#dfn-webapp">webapp</a> is active in two browsers
+   using the same email account</li>
+   
+   <li>multiple instances of the same <a class="internalDFN"
+   href="#dfn-webapp">webapp</a> are active in different browsers, and push
+   messages are delivered to all instances of the <a class="internalDFN"
+   href="#dfn-webapp">webapp</a>, e.g. when a message is to be broadcasted to
+   all users of the <a class="internalDFN" href="#dfn-webapp">webapp</a>
+  </ul>
+</section>
+
+
+<!********************** Conformance *****************************************> 
+
+<section id="conformance">
+  <p>This specification defines conformance criteria that apply to a single
+  product: the <dfn>user agent</dfn> that implements the interfaces that it
+  contains.</p>
+  
+  <p>Implementations that use ECMAScript to implement the APIs defined in this
+  specification <em title="must" class="rfc2119">must</em> implement them in a
+  manner consistent with the ECMAScript Bindings defined in the Web IDL
+  specification [[!WEBIDL]], as this specification uses that specification and
+  terminology.</p>
+  
+</section>
+ 
+ 
+<!********************** Terminology *****************************************>
+
+<section><h2>Terminology</h2>
+  <p>The <dfn><code>Function</code></dfn> interface represents a function in the
+  scripting language being used as defined in [[!HTML5]].</p>
+  
+  <p>The concepts <dfn><a
+  href="http://dev.w3.org/html5/spec/webappapis.html#queue-a-task"> queue a
+  task</a></dfn> and <dfn><a
+  href="http://dev.w3.org/html5/spec/webappapis.html#fire-a-simple-event"> fires
+  a simple event</a></dfn> are defined in [[!HTML5]].</p>
+
+  <p>The terms <dfn><a
+  href="http://dev.w3.org/html5/spec/webappapis.html#event-handlers"> event
+  handlers</a></dfn> and <dfn><a
+  href="http://dev.w3.org/html5/spec/webappapis.html#event-handler-event-type">
+  event handler event types</a></dfn> are defined in [[!HTML5]].</p>
+
+  <p>The <dfn><a href="http://dom.spec.whatwg.org/#promise">Promise</a></dfn>
+  interface, the concepts of a <a href=
+  "http://dom.spec.whatwg.org/#concept-resolver"><dfn>resolver</dfn></a>, a
+  <dfn id="dfn-fulfill-algorithm"><a
+  href="http://dom.spec.whatwg.org/#concept-resolver-fulfill"> resolver's
+  fulfill algorithm</a></dfn> and a <dfn id="dfn-reject-algorithm"><a
+  href="http://dom.spec.whatwg.org/#concept-resolver-reject"> resolver's reject
+  algorithm</a></dfn> are defined in [[!DOM4]].</p>
+  
+  <p>The term <dfn id="dfn-push-extension">push service extension</dfn> refers 
+	to a browser extension enabling push service configuration for the user, and 
+	thereby enabling Push API binding to event delivery via the service.</p>
+  
+  <p>The term <dfn id="dfn-webapp">webapp</dfn> refers to a Web application,
+  i.e. an application implemented using Web technologies, and executing within
+  the context of a Web <a class="internalDFN" href="#dfn-user-agent">user
+  agent</a>, e.g. a Web browser or other Web runtime environment.</p>
+
+  <p>The term <dfn id="dfn-webappserver">webapp server</dfn> refers to server-side 
+	components of a <a class="internalDFN" href="#dfn-webapp">webapp</a>.</p>
+
+  <p>The term <dfn id="dfn-push-message">push message</dfn> refers to
+  an indication to a <a class="internalDFN" href="#dfn-webapp">webapp</a> that
+  there is new information for it from the 
+	<a class="internalDFN" href="#dfn-webappserver">webapp server</a>, 
+	all or part of which MAY be contained in the 
+	<a class="internalDFN" href="#dfn-push-message">push message</a> itself.
+  
+  <p>The term <dfn id="dfn-push-registration">push registration</dfn> refers to
+  each logical channel aimed at delivering <a class="internalDFN"
+  href="#dfn-push-message">push messages</a> from an <a
+  class="internalDFN" href="#dfn-webappserver">webapp server</a> to a <a
+  class="internalDFN" href="#dfn-webapp">webapp</a>, which is created by a
+  distinct registration of such 
+	<a class="internalDFN" href="#dfn-webapp">webapp</a> via this Push API.
+  
+  <p>The term <dfn id="dfn-push-service">push service</dfn> refers to an overall
+	end-to-end system	that allows 
+	<a class="internalDFN" href="#dfn-webappserver">webapp servers</a> 
+	to send <a class="internalDFN" href="#dfn-push-message">push messages</a> 
+	to a <a class="internalDFN" href="#dfn-webapp">webapp</a>.</p>
+  
+  <p>The term <dfn id="dfn-push-server">push server</dfn> refers to the 
+	<a class="internalDFN" href="#dfn-push-service">push service</a> access point 
+	via which <a class="internalDFN" href="#dfn-webapp-server">webapp-servers</a> can initiate 
+  <a class="internalDFN" href="#dfn-push-message">push message</a> delivery.
+	Push servers typically expose APIs specific to the 
+	<a class="internalDFN" href="#dfn-push-service">push service</a>, e.g. for 
+	<a class="internalDFN" href="#dfn-push-message">push message</a> delivery
+	initiation.
+	</p>
+    
+  <p>The term <dfn id="dfn-service-worker"><a href=
+  "http://www.w3.org/TR/service-workers/#dnf-service-worker">Service Worker</a></dfn>
+	is used as defined in [[!SERVICEWORKERS]].</p>
+	
+	<p>The term <dfn id="dfn-express-permission">express permission</dfn> refers to an act 
+	by the user, e.g. via user interface or host device platform features, via which the
+	user approves the permission of a 
+	<a class="internalDFN" href="#dfn-webapp">webapp</a> to access the Push API.</p>
+	 
+	</p>
+  
+ </section>
+
+ 
+<!********************** Security and privacy considerations *****************>
+
+ <section>
+  
+  <h2>Security and privacy considerations</h2>
+  <p><a class="internalDFN" href="#dfn-user-agent">User agents</a> <em
+  title="must" class="rfc2119">must not</em> provide Push API access to <a
+  class="internalDFN" href="#dfn-webapp">webapps</a> without the 
+  <a class="internalDFN" href="#dfn-express-permission">express permission</a>
+  of the user. <a class="internalDFN" href="#dfn-user-agent">User
+  agents</a> <em title="must" class="rfc2119">must</em> acquire consent for
+  permission through a user interface for each call to the
+  <code>register()</code> method, unless a prearranged trust relationship
+  applies.</p>
+ 
+  <p><a class="internalDFN" href="#dfn-user-agent">User agents</a> <em
+  title="may" class="rfc2119">may</em> support prearranged trust relationships
+  that do not require such per-request user interfaces.</p>
+
+  <p><a class="internalDFN" href="#dfn-user-agent">User agents</a> <em
+  title="must" class="rfc2119">must</em> implement the Push API to be
+  HTTPS-only. SSL-only support provides better protection for the user against
+  man-in-the-middle attacks intended to obtain push registration data. Browsers
+  may ignore this rule for development purposes only.</p>
+
+  <p>Permissions that are preserved beyond the current browsing session <em
+  title="must" class="rfc2119">must</em> be revocable.</p>
+  
+ </section> 
+
+ 
+<!********************** Push Framework **************************************>
+ 
+ <section class='informative' id="pushframework">
+  <h2>Push Framework</h2>
+  <p>Although <a class="internalDFN" href="#dfn-push-service">push services</a> 
+	are expected to differ in deployment, a typical deployment is expected to have 
+	the following general entities and example operation for delivery of  
+	<a class="internalDFN" href="#dfn-push-message">push messages</a>:</p>
+	<ul>
+	<li><a class="internalDFN" href="#dfn-webappserver">Webapp servers</a> request 
+	delivery of a 
+	<a class="internalDFN" href="#dfn-push-message">push message</a> to a 
+	<a class="internalDFN" href="#dfn-webapp">webapp</a> via a RESTful API exposed 
+	by a
+	<a class="internalDFN" href="#dfn-push-server">push server</a>
+	<li>The <a class="internalDFN" href="#dfn-push-server">push server</a>  
+	delivers the message to a specific 
+	<a class="internalDFN" href="#dfn-user-agent">user agent</a> 
+	<li>The <a class="internalDFN" href="#dfn-user-agent">user agent</a> delivers the 
+	<a class="internalDFN" href="#dfn-push-message">push message</a> to the specific	
+	<a class="internalDFN" href="#dfn-webapp">webapp</a> intended to receive it.</p>
+	</ul>
+  
+  <p>This overall framework allows 
+	<a class="internalDFN" href="#dfn-webappserver">webapp servers</a> to 
+	inform <a class="internalDFN" href="#dfn-webapp">webapps</a> that new data 
+	is available at the 
+	<a class="internalDFN" href="#dfn-webappserver">webapp server</a>, or 
+	pass the new data directly to the 
+	<a class="internalDFN" href="#dfn-webapp">webapp</a> in the 
+	<a class="internalDFN" href="#dfn-push-message">push message</a>.</p>
+
+	<p>As <a class="internalDFN" href="#dfn-push-service">push services</a> 
+	and	the over-the-air/wire protocols they use may have varying message 
+	delivery or sequencing reliability, 
+	<a class="internalDFN" href="#dfn-push-message">push messages</a> 
+	delivered via the push API include a <code>version</code> value 
+	that can help 
+	<a class="internalDFN" href="#dfn-webapp">webapps</a> recognize new data, or 
+	detect when a resynchronization with the 
+	<a class="internalDFN" href="#dfn-webappserver">webapp server</a> or 
+	re-registration with the 
+	<a class="internalDFN" href="#dfn-push-service">push service</a>
+	is needed.</p>
+	
+	<p>The push API enables delivery of arbitrary application data to 
+	<a class="internalDFN" href="#dfn-webapp">webapps</a>, and makes no 
+	assumptions about the over-the-air/wire protocol used by  
+	<a class="internalDFN" href="#dfn-push-service">push services</a>.
+	As such, the details of what types of data flow through a 
+	<a class="internalDFN" href="#dfn-push-service">push services</a> for 
+	a particular <a class="internalDFN" href="#dfn-webapp">webapp</a> are
+	specific to the 
+	<a class="internalDFN" href="#dfn-push-service">push service</a> and 
+	<a class="internalDFN" href="#dfn-webapp">webapp</a>. As needed, 
+	clarification about what data flows over-the-air/wire should be sought 
+	from <a class="internalDFN" href="#dfn-push-service">push service</a> 
+	operators or 
+	<a class="internalDFN" href="#dfn-webapp">webapp</a> developers.</p>
+		
+	<p>The following code and diagram illustrate a hypothetical use of the push API:</p>
+	  
+<div class="example">
+<pre class="example highlight prettyprint">
+
+ // https://example.com/serviceworker.js
+ 
+ this.oninstall = function(e) {
+  // Note that push messages won't be delivered to this service worker (SW)
+  // until the install and activate steps are completed. This
+  // may mean waiting until caches are populated, etc.
+  e.waitUntil(...);
+ };
+ 
+ this.onactivate = function(e) { ... }
+
+ // Note that we no longer need navigator.hasPendingMessages() because the UA
+ // can queue push messages for the SW and deliver them as events whenever it
+ // deems necessary.
+ this.onpush = function(e) {
+  // Log the pushRegistrationId
+  console.log(e.message.pushRegistrationId);
+  // Log the version
+  console.log(e.message.version);
+  // Log the deserialized JSON data object
+  console.log(e.message.data);
+  // ...
+  // From here the SW can write the data to IndexedDB, display a notification,
+  // send it to any open windows, etcetera.
+ }
+ 
+ // https://example.com/webapp.js
+ 
+ var logError = console.error.bind(console);
+ 
+ function toQueryString(obj) {
+  var encode = encodeURIComponent;
+  for (var x in obj) {
+   components.push(encode(x) + "=" + encode(obj[x]));
+  }
+  return "?" + components.join("&");
+ }
+
+ function registerWithAppServer(registration) {
+  // We've been handed the info that the app server may need
+  // to complete preparation for activating the push service
+  // including the pushEndpoint and pushRegistrationId
+  asyncXHR(
+   "https://example.com/push/activate" + toQueryString(registration);
+  );
+ }
+ 
+ // This is an ugly detail of the current SW design. See:
+ //   https://github.com/slightlyoff/ServiceWorker/issues/174
+ function swReady() {
+  var sw = navigator.serviceWorker;
+  return new Promise(function(resolve, reject) {
+   if (!sw.active) {
+    // Note that the promise returned from register() resolves as soon
+    // as the script for the SW is downloaded and evaluates without issue.
+    // At this point it is NOT considered installed and will not receive
+    // push events. We will, however, allow the registration for pushes
+    // to proceed at this point. Push registrations that succeed and generate
+    // messages will see those messages queued until the SW is installed
+    // and activated, perhaps at some time in the near future (e.g., once
+    // resources for the application itself are downloaded).
+    sw.register("/service_worker.js", { scope: "*" }).then(resolve, reject);
+   } else {
+    sw.ready().then(resolve, reject);
+   }
+  });
+ }
+
+ // Only try to register for a push channel when we have valid SW
+ swReady().then(function(sw) {
+  var gcmSenderId = "......";
+  var apnSenderId = "......";
+  var regId = "......";
+  var push = navigator.push;
+
+  // The push object is an async map that can be used to enumerate and
+  // test for active channels.
+  push.has(regId).catch(function() {
+   // this will be executed if the regId is not found 
+   // register() is async and can prompt the user. On success, the
+   // expected regId value should be added to the map.
+   push.register({
+    // the "sender" field is push-server-specific and is optional.
+    // Some servers (e.g., GCM) will require that this field be
+    // populated with a pre-arranged ID for the app. The system
+    // selects between the supplied keys to decide which one to
+    // offer the "local" push server for this registration.
+    sender: {
+     apn: apnSenderId,
+     gcm: gcmSenderId,
+     // ...
+    }
+   }).then(registerWithAppServer, logError);
+  });
+ });
+
+ 
+/* Hypothetical end-to-end flow of a push service lifecycle
+   +--------+               +--------+             +--------+           +--------+
+   | webapp |               |  user  |             |  push  |           |  app   |
+   |  +SW   |               | agent  |             | server |           | server |
+   +--------+               +--------+             +--------+           +--------+
+       |                        |                      |                     |
+       |                        |                      |         Developer registers with push
+       |                        |                      |         service(s) and receives data 
+       |                        |                      |          needed for app registration
+       |                        |                      |              with push service
+  User invokes app,             |                      |                     |
+  which is configured           |                      |                     |
+  with push service             |                      |                     |
+  registration options          |                      |                     |
+       |&lt;---- app setup with push service registration options if needed --->|
+       |                        |                      |                     |
+       |--register w/options--->|                      |                     |
+       |                  (user accepts)               |                     |
+       |                        |                      |                     |
+       |                        |&lt;-setup push service->|                     |
+       |                        |                      |                     |
+       |&lt;--- call promise ------|                      |                     |
+       | fullfilled function w/ |                      |                     |
+       | registration attributes|                      |                     |
+       |                        |                      |                     |
+       |&lt;----deliver registration attributes to app server for later use---->|
+       |                        |                      |                     |
+       |                        |                      |         Server associates registration
+       |                        |                      |           attributes with webapp
+       |                        |                      |                     |
+       |                        |                      |              (sometime later)
+       |                        |                      |         Server has data to push, 
+       |                        |                      |        invokes push server API as
+       |                        |                      |        per registration attributes
+       |                        |                      |                     |
+       |                        |                      |&lt;--push message-|
+       |                        |                      |   per service API   |
+       |                        |                      |                     |
+       |                        |             (match to user agent)          |
+       |                        |                      |                     |
+       |                        |&lt;--push message--|                     |
+       |                        | per service protocol |                     |
+       |                        |                      |                     |
+       |                (match to webapp)              |                     |
+       |                        |                      |                     |
+       |&lt;-----push message------|                      |                     |
+       |                        |                      |                     |
+*/
+   </pre>
+  </div>
+    
+	<section>
+	<h3>Push Server Discovery and API Use</h3>
+		<p>This specification does not define either specific normative methods via
+		which webapps can determine the applicable push system, or initiate push 
+		requests through that system via a push server API. While these limitations 
+		add complexity for webapp developers, they reflect the current reality of a 
+		diversity of push systems, for which convergence at least in push server APIs,
+		is not expected to be a short-term possibility. While a converged push server 
+		API is a worthwhile goal and may be addressed in a different specification, 
+		the Push API defined here has been designed to enable the current variety 
+		of push systems to be used as appropriate for the webapp host device or 
+		software platform. This section provides examples of how a webapp can be 
+		designed to work with a variety of hypothetical push systems as needed.</p>
+		
+		<p>The Push API provides several interface parameters and attributes that can 
+		enable a webapp to deliver and obtain the necessary push system specific data 
+		enabling use of that particular push system. These parameters and attributes 
+		include:</p>
+		<ul>
+		<li>The <code>pushRegistrationId</code> of a <code>PushRegistration</code>, as 
+		an opaque string to the Push API, may be used by push systems to provide 
+		meaningful data to the 
+		<a class="internalDFN" href="#dfn-webappserver">webapp server</a> 
+		through the webapp. For example, 
+		the <code>pushRegistrationId</code> may be used as a push server API request 
+		parameter or request body element for specific push systems.
+		<li>As a URI, the <code>pushEndpoint</code> of a <code>PushRegistration</code>
+		provides a flexible means for push systems to deliver webapp-specific registration 
+		and/or push server API parameters to the 
+		<a class="internalDFN" href="#dfn-webappserver">webapp server</a>, 
+		through the webapp.
+		</ul>
+		
+		<p>Push systems that are compatible with the Push API will be expected to 
+		clarify how these data are used in the push server APIs of the specific system, 
+		e.g. through their developer programs. Examples of considerations include:</p>
+		<ul>
+		<li>The URI used by the 
+		<a class="internalDFN" href="#dfn-webappserver">webapp server</a> 
+		to issue push server API requests, 
+		which may be based upon the <code>pushEndpoint</code>, and for a particular 
+		push server API request require additional parameters e.g. the 
+		<code>pushRegistrationId</code></a>.
+		<li>The push server API request body, which may require that the 
+		<code>pushEndpoint</code></a> or <code>pushRegistrationId</code> be present in some 
+		body element.
+		<li>The <code>pushRegistration</code> attributes may only be used by the 
+		<a class="internalDFN" href="#dfn-webappserver">webapp server</a> 
+		to associate the webapp to a specific push service 
+		registration, with the details of the push server API relying upon other 
+		pre-configured data.	
+		</ul>
+		
+		<p>The Push API does not provide any <code>pushRegistration</code> attributes 
+		that normatively identify the particular push system that applies to the 
+		registration. Webapps that are designed to work with a single push system are 
+		assumed to know inherently how to use the push server API of that system. For
+		such webapps, a key consideration is ensuring that if the webapp is used 
+		on a device or browser that does not support the necessary push system, that 
+		either the user is informed that the push-dependent webapp functions will not 
+		work, or the webapp must use alternate methods e.g. [[websockets]] or 
+		[[SSE]] to deliver the server-initiated data.</p>
+		
+		<p>Prior to use of a push server API, 
+		<a class="internalDFN" href="#dfn-webappserver">webapp servers</a> that are 
+		designed to work with multiple push systems may need to determine the 
+		applicable system by parsing the <code>pushEndpoint</code> to detect the push
+		system from the URI domain.
+		</ul>
+		
+	</section>
+</section>
+
+
+<!********************** Extended interface Navigator ************************>
+
+<section>
+  <h2><a>Navigator</a> Interface</h2>
+    <dl title="partial interface Navigator" class="idl">
+      <dt>readonly attribute PushManager push</dt>
+      <dd>
+      The object that exposes the push service management interface.
+      </dd>
+  </dl>
+</section>
+
+  <p class="note">TAG issue: 
+	navigator.push as an object of PushManager type seems misleading per se and is 
+	inconsistent with Array.prototype.push method. 
+	Suggestion: navigator.pushRegistrationManager.</p>
+
+<!********************** Interface PushManager *******************************>
+
+<section>
+  <h2><a>PushManager</a> Interface</h2>
+  
+	<p class="note">TAG issue: 
+	PushManager is limited to dealing with registrations. Suggestion: PushRegistrationManager.</p>
+
+	<p class="note">TAG issue: 
+	PushManager.registrations method seems inconsistent. Suggestion: PushManager.getRegistrations.</p>
+
+  <p class="note">TAG issue: 
+  PushManager.register provides two heterogeneous functions:
+    asking use permission,
+    registering push notifications.
+	This mixing leads to odd user agent behavior, i.e. push service failure forces webapp 
+	to ask permission again.
+	Suggestion: split the functionality and provide separate methods to ask user permission 
+	(check if permission has already being granted) and to register push notifications. 
+	Provide different sets of errors for those purposes.
+	</p>
+	  
+  <p>The <a>PushManager</a> interface defines the operations that enable <a
+  class="internalDFN" href="#dfn-webapp">webapps</a> to establish access to <a
+  class="internalDFN" href="#dfn-push-service">push services</a>.</p>
+
+  <dl title="interface PushManager" class="idl">
+
+    <dt> Promise register ()</dt>
+    <dd>This method allows a <a class="internalDFN"
+    href="#dfn-webapp">webapp</a> to create a new <a class="internalDFN"
+    href="#dfn-push-registration">push registration</a> to receive <a
+    class="internalDFN" href="#dfn-push-message">push messages</a>. It
+    returns a <a><code>Promise</code></a> that will allow the caller to be 
+    notified about the result of the operation. 
+     </dl>
+    </dd>
+
+    <dt> Promise unregister ()</dt>
+    <dd>This method allows a <a class="internalDFN"
+    href="#dfn-webapp">webapp</a> to unregister a specific <a
+    class="internalDFN" href="#dfn-push-registration">push registration</a>. It
+    returns a <a><code>Promise</code></a> that will allow the caller to be 
+		notified about the result of the operation.
+      <dl class='parameters'>
+         <dt>DOMString pushRegistrationId</dt> <dd>
+           Identifies the push registration that the <a class="internalDFN"
+           href="#dfn-webapp">webapp</a> requests to unregister
+     </dl>
+    </dd>
+
+    <dt> Promise registrations ()</dt>
+    <dd>This method allows a <a class="internalDFN"
+    href="#dfn-webapp">webapp</a> to retrieve the list of its active <a
+    class="internalDFN" href="#dfn-push-registration">push registrations</a>. It
+    returns a <a><code>Promise</code></a> that will allow the caller to be 
+		notified about the result of the operation. 
+    </dd>
+    
+  </dl>  
+
+  <section>
+  <h3>Steps</h3>
+  
+	<p class="note">TAG issue: 
+	AbortError is raised when user doesn't grant permissions, not when registration is aborted. 
+	Suggestion: PermissionDeniedError.</p>
+
+  <p> The <dfn><code>register</code></dfn> method when invoked MUST run the following steps:
+    <ol>
+      <li>Let <var>promise</var> be a new <a><code>Promise</code></a> object and
+      <var>resolver</var> its associated resolver.
+      </li>
+      <li>Return <var>promise</var> and continue the following steps
+      asynchronously.
+      </li>
+      <li>If the scheme of the document url is not <code>https</code>, then:
+        <ol>
+          <li>Let <em>error</em> be a new <a href="
+          "http://dom.spec.whagwg.org/#domerror">DOMError</a> object whose
+          name is "<a href=
+          "http://dom.spec.whatwg.org/#securityerror">SecurityError</a>".
+          </li>
+          <li>Invoke <em>resolver</em>'s <a class="internalDFN"
+          href="#dfn-reject-algorithm">reject algorithm</a> with <em>error</em>
+          as the <code>value</code> argument.
+          </li>
+        </ol>
+      </li>
+      <li>Ask the user whether it allows the requesting <a class="internalDFN"
+      href="#dfn-webapp">webapp</a> to activate the reception of <a
+      class="internalDFN" href="#dfn-push-message">push messages</a>,
+      unless a prearranged trust relationship applies or the user has already
+      granted or denied permission explicitly to this <a class="internalDFN"
+      href="#dfn-webapp">webapp</a>.
+      <li>If not granted, run the following sub-steps and terminate these steps:
+        <ol>
+          <li>Let <em>error</em> be a new <a href=
+          "http://dom.spec.whatwg.org/#domerror">DOMError</a> object whose
+          name is "<a href=
+          "http://dom.spec.whatwg.org/#aborterror">AbortError</a>".
+          </li>
+          <li>Invoke <em>resolver</em>'s <a class="internalDFN"
+          href="#dfn-reject-algorithm">reject algorithm</a> with <em>error</em>
+          as the <code>value</code> argument.
+        </ol>
+      </li>
+      <li>Make a request to the system to create a new <a class="internalDFN"
+      href="#dfn-push-registration">push registration</a> for the
+      requesting <a class="internalDFN" href="#dfn-webapp">webapp</a>.
+      </li>
+      <li>If there is an error invoke <em>resolver</em>'s <a class="internalDFN"
+      href="#dfn-reject-algorithm">reject algorithm</a> with no arguments and
+      terminate these steps.
+      </li>
+      <li>When the request has been completed run the following sub-steps:
+        <ol>
+          <li>Let <em>pushRegistration</em> be a new
+          <code>PushRegistration</code> object providing the details of
+          the <a class="internalDFN" href="#dfn-push-registration">push
+          registration</a>.
+          </li>
+          <li>Invoke <em>resolver</em>'s <a class="internalDFN"
+          href="#dfn-fulfill-algorithm">fulfill algorithm</a> with
+          <em>pushRegistration</em> as the <code>value</code> argument.
+        </ol>
+      </li>
+   </ol>
+
+  <p> The <dfn><code>unregister</code></dfn> method when invoked MUST run the
+  following steps:
+    <ol>
+      <li>Let <var>promise</var> be a new <a><code>Promise</code></a> object and
+      <var>resolver</var> its associated resolver.
+      </li>
+      <li>Return <var>promise</var> and continue the following steps
+      asynchronously.
+      </li>
+      <li>Check that the <code>pushRegistrationId</code> attribute relates to an
+      active <a class="internalDFN" href="#dfn-push-registration">push
+      registration</a> of the requesting <a class="internalDFN"
+      href="#dfn-webapp">webapp</a>.
+      </li>
+      <li>If the previous step was not successful, run the following sub-steps and
+      terminate these steps:
+        <ol>
+          <li>Let <em>error</em> be a new <a href=
+          "http://dom.spec.whatwg.org/#domerror">DOMError</a> object whose
+          name is "<a href=
+          "http://dom.spec.whatwg.org/#nomodificationallowederror"
+          >NoModificationAllowedError</a>".
+          </li>
+          <li>Invoke <em>resolver</em>'s <a class="internalDFN"
+          href="#dfn-reject-algorithm">reject algorithm</a> algorithm with
+          <em>error</em> as the <code>value</code> argument.
+          </li>
+        </ol>
+      </li>
+      <li>Make a request to the system to deactivate the <a class="internalDFN"
+      href="#dfn-push-registration">push registration</a>
+      identified by the <code>pushRegistrationId</code> attribute.
+      </li>
+      <li>If there is an error invoke <em>resolver</em>'s <a class="internalDFN"
+      href="#dfn-reject-algorithm">reject algorithm</a> with no arguments and
+      terminate these steps.
+      </li>
+      <li>When the request has been completed invoke <em>resolver</em>'s <a
+      class="internalDFN" href="#dfn-fulfill-algorithm">fulfill algorithm</a>
+      with a <code>DOMString</code> set to the value of the
+      <code>pushRegistrationId</code> attribute as the <code>value</code> argument.
+      </li>
+   </ol>
+    
+  <p> The <dfn><code>registrations</code></dfn> method when invoked MUST run the
+  following steps:
+    <ol>
+      <li>Let <var>promise</var> be a new <a><code>Promise</code></a> object and
+      <var>resolver</var> its associated resolver.
+      </li>
+      <li>Return <var>promise</var> and continue the following steps
+      asynchronously.
+      </li>
+      <li>Retrieve the list of <a class="internalDFN"
+      href="#dfn-push-registration">push registration</a> associated to the
+      requesting <a class="internalDFN" href="#dfn-webapp">webapp</a>
+      <li>If there is an error invoke <em>resolver</em>'s <a
+      class="internalDFN" href="#dfn-reject-algorithm">reject algorithm</a>
+      algorithm with no arguments and terminate these steps.
+      </li>
+      <li>When the request has been completed run the following sub-steps:
+        <ol>
+          <li>Let <em>pushRegistrations</em> be a new array containing a
+          <code>pushRegistration</code> object per active <a
+          class="internalDFN" href="#dfn-push-registration">push
+          registration</a> associated to the requesting <a class="internalDFN"
+          href="#dfn-webapp">webapp</a>. A length of <code>zero</code> for
+          <em>pushRegistrations</em> indicates that there are no registrations.
+          </li>
+          <li>Invoke <em>resolver</em>'s <a class="internalDFN"
+          href="#dfn-fulfill-algorithm">fulfill algorithm</a> algorithm with
+          <em>pushRegistrations</em> as the <code>value</code> argument.
+        </ol>
+      </li>
+   </ol>
+     
+  </section>
+	
+  <section>
+		<h3>Push Registration Persistence</h3>
+		<p>To facilitate persistence of push registrations when a 
+		<a class="internalDFN" href="#dfn-webapp">webapp</a> is closed, it can use a 
+		<a class="internalDFN" href="#dfn-service-worker">Service Worker</a> to 
+		register for and receive push events. In that case, even if the 
+		<a class="internalDFN" href="#dfn-webapp">webapp</a> parent window is closed, 
+		the <code>pushRegistration</code> object will still enable delivery of
+		<a class="internalDFN" href="#dfn-push-message">push messages</a>, through 
+		the <a class="internalDFN" href="#dfn-service-worker">Service Worker</a>. 
+		The <a class="internalDFN" href="#dfn-push-message">push messages</a>,
+		can then be processed by the 
+		<a class="internalDFN" href="#dfn-service-worker">Service Worker</a>, e.g. including 
+		one or more of the following actions:</p>
+		<ul>
+		<li>store the <a class="internalDFN" href="#dfn-push-message">push messages</a> for 
+		later access by the <a class="internalDFN" href="#dfn-webapp">webapp</a> when 
+		reinvoked by the user
+		<li>invoke/reconstruct the <a class="internalDFN" href="#dfn-webapp">webapp</a>,
+		a process that is not described here (expected to be clarified in [[!SERVICEWORKERS]])
+		<li>delivery of the 
+		<a class="internalDFN" href="#dfn-push-message">push messages</a> data to the
+		 to the <a class="internalDFN" href="#dfn-webapp">webapp</a> as necessary through 
+		 other means, e.g. [[webmessaging]].
+		</ul>
+		
+		<p>If a <a class="internalDFN" href="#dfn-webapp">webapp</a> creates a 
+		<a class="internalDFN" href="#dfn-push-registration">push registration</a> 
+		without using a <a class="internalDFN" href="#dfn-service-worker">Service Worker</a>,
+		the <code>pushRegistration</code> object will persist only as long as the 
+		<a class="internalDFN" href="#dfn-webapp">webapp</a> window is open.</p>
+	</section>
+	
+  <section>
+		<h3>Push Registration Uniqueness</h3>
+		<p>Each <a class="internalDFN" href="#dfn-push-registration">push registration</a> 
+		is unique, i.e. a single instance specific to each 
+		<a class="internalDFN" href="#dfn-webapp">webapp</a> and call to the 
+		<code>register</code></a> interface.</p>
+		
+		<p><a class="internalDFN" href="#dfn-webapp">Webapps</a> that create multiple 
+		<a class="internalDFN" href="#dfn-push-registration">push registrations</a> are 
+		responsible for mapping the individual registrations to specific app functions as 
+		necessary. For example, the 
+		<a class="internalDFN" href="#dfn-webapp">webapp</a> or 
+		<a class="internalDFN" href="#dfn-webapp-server">webapp server</a> can associate 
+		a specific <code>pushRegistration</code> to a particular function of the app
+		through JavaScript.</p>
+		
+	</section>
+	
+</section>
+
+<!********************** Interface PushRegistration **************************>
+
+<section>
+  <h2><a>PushRegistration</a> Interface</h2>
+  <p>The <a>PushRegistration</a> interface contains information about a specific
+  channel used by a <a class="internalDFN" href="#dfn-webapp">webapp</a> to
+  receive <a class="internalDFN" href="#dfn-push-message">push
+  messages</a>.</p>
+
+  <dl title="interface PushRegistration: EventTarget" class="idl">
+
+    <dt>readonly attribute DOMString pushEndpoint</dt>
+    <dd>It MUST return the absolute URL exposed by the <a class="internalDFN"
+    href="#dfn-push-server">push server</a> where the <a class="internalDFN"
+    href="#dfn-webappserver">webapp server</a> can send
+    <a class="internalDFN" href="#dfn-push-message">push messages</a>
+    to this <a class="internalDFN" href="#dfn-webapp">webapp</a></dd>
+  
+    <dt>readonly attribute DOMString pushRegistrationId</dt>
+    <dd>It MUST return a univocal identifier of this <a
+    class="internalDFN" href="#dfn-push-registration">push registration</a> in
+    the <a class="internalDFN" href="#dfn-push-server">push server</a>. It is
+    used by the <a class="internalDFN" href="#dfn-webappserver">application
+    server</a> to indicate the target of the <a class="internalDFN"
+    href="#dfn-push-message">push messages</a> that it submits to the
+    <a class="internalDFN" href="#dfn-push-server">push server</a>.</dd>
+    
+  </dl>
+
+</section>
+
+<!************************ Interface PushMessage ****************************>
+<section>
+  <h2><a>PushMessage</a> Interface</h2>
+  <p>The <a>PushMessage</a> interface represents a received <a class="internalDFN"
+    href="#dfn-push-message">push message</a>.
+  <dl title="interface PushMessage"
+      class="idl">
+    <dt>readonly attribute DOMString pushRegistrationId</dt>
+    <dd>MUST return the identifier of the <a class="internalDFN"
+    href="#dfn-push-registration">push registration</a> to which this event is 
+		related.</dd>
+
+    <dt>readonly attribute unsigned long long? version</dt>
+    <dd>MUST return an identifier of the latest version of the content available
+    through this <a class="internalDFN" href="#dfn-push-registration">push
+    registration</a>. If it is different from the last version the <a
+    class="internalDFN" href="#dfn-webapp">webapp</a> is aware of it signals
+    that it has new content to be retrieved from the <a class="internalDFN"
+    href="#dfn-webappserver">webapp server</a>. The <code>version</code> is an
+    integer value that is incremented when new content is available through a
+    <a class="internalDFN" href="#dfn-push-registration">push registration</a>.
+    So higher values of <code>version</code> indicate newer content. Note that
+    the <a class="internalDFN" href="#dfn-push-server">push server</a> may just
+    notify of the latest version if multiple message requests have been recieved 
+		from the <a class="internalDFN" href="#dfn-webappserver">webapp server</a> 
+		before the <a class="internalDFN" href="#dfn-push-server">push server</a> is 
+		ready to send a message. Thus a message for each version may not be 
+		received by the <a class="internalDFN" href="#dfn-user-agent">user agent</a> 
+		and in turn by the <a class="internalDFN" href="#dfn-webapp">webapp</a>. 
+		This attribute MUST return null when the <a class="internalDFN" 
+		href="#dfn-push-server">push server</a> has lost track of the state, in order 
+		to indicate the <a class="internalDFN" href="#dfn-webapp">webapp</a> that it 
+		should ask the webapp server and restore local state.
+    </dd>
+
+    <dt>readonly attribute Object data</dt>
+    <dd>MUST return the deserialized JSON data object, if any, received by the 
+    <a class="internalDFN" href="#dfn-user-agent">user agent</a> in the 
+    <a class="internalDFN" href="#dfn-push-message">push message</a>.</dd>
+    
+  </dl>
+
+</section>
+
+
+<!************************ Interface PushRegisterMessage *********************>
+<section>
+  <h2><a>PushRegisterMessage</a> Interface</h2>
+
+	<p class="note">TAG issue: 
+	PushRegisterMessage name is confusing as it really occurs when push service failed, 
+	not when new registration granted. Suggestion: PushServiceFailure.</p>	
+  
+  <p>The <a>PushRegisterMessage</a> interface represents an event related to a 
+		<a class="internalDFN" href="#dfn-push-registration">push registration</a> 
+		that is no longer valid and thus needs to be created again by the 
+		<a class="internalDFN" href="#dfn-webapp">webapp</a> by means of a new invocation 
+		of the <a><code>register</code></a> method.</p>
+		
+  <dl title="interface PushRegisterMessage"
+      class="idl">
+    <dt>readonly attribute DOMString pushRegistrationId</dt>
+    <dd>MUST return the identifier of the <a class="internalDFN"
+    href="#dfn-push-registration">push registration</a> to which this event is 
+		related.</dd>
+
+  </dl>
+</section>
+
+
+<!************************ Push Events ***********************************>
+  <section>
+  <h2>Push Events</h2>
+
+  <p>A <a class="internalDFN" href="#dfn-webapp">webapp</a> that wants to be
+  able to make use of the capabilities provided by this API needs to be
+  registered to receive the following events:
+
+    <table class="simple">
+      <thead>
+        <tr>
+          <th>name</th>
+          <th>type</th>
+          <th>description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong><dfn><code>push</code></dfn></strong></td>
+          <td><a><code>PushMessage</code></a></td>
+          <td>Incoming push message</td>
+        </tr>
+        <tr>
+          <td><strong><dfn><code>push-register</code></dfn></strong></td>
+          <td><a><code>PushRegisterMessage</code></a></td>
+          <td>Request to register a specific push registration</td>
+        </tr>
+      </tbody>
+    </table>
+  
+	<p class="note">TAG issue: 
+	How to invoke a webapp that is using History API to manipulate page URLs?</p>
+
+  <p>Upon receiving a <a class="internalDFN" href="#dfn-push-message">push
+  message</a> from the <a class="internalDFN" href="#dfn-push-server">push
+  server</a> the <a class="internalDFN" href="#dfn-user-agent">User agent</a>
+  MUST run the following steps:
+   <ul>
+    <li>Create a new <a><code>PushMessage</code></a> object
+    <li>Set the <code>pushRegistrationId</code> of the
+    <a><code>PushMessage</code></a> object to the identifier of the <a
+    class="internalDFN" href="#dfn-push-registration">push registration</a> to
+    which the <a class="internalDFN" href="#dfn-push-message">push
+    message</a> was sent <li>Set the <code>version</code> of the
+    <a><code>PushMessage</code></a> object to the version attribute indicated in
+    the <a class="internalDFN" href="#dfn-push-message">push
+    message</a>, if provided
+    <li>Send an event of type <a><code>push</code></a> including the
+    previous <a><code>PushMessage</code></a> object to the <a
+    class="internalDFN"
+  href="#dfn-webapp">webapp</a> to which the <a class="internalDFN"
+  href="#dfn-push-message">push message</a> relates
+   </ul>
+   
+  <p>Upon any event that makes a <a class="internalDFN"
+    href="#dfn-push-registration">push registration</a> no longer valid, e.g. <a
+  class="internalDFN" href="#dfn-push-server">push server</a> database failure,
+  the <a class="internalDFN" href="#dfn-user-agent">User agent</a> MUST run the
+  following steps:	
+   <ul>
+    <li>Create a new <a><code>PushRegisterMessage</code></a> object
+    <li>Set the <code>pushRegistrationId</code> of the
+    <a><code>PushRegisterMessage</code></a> object to the identifier of the <a
+    class="internalDFN" href="#dfn-push-registration">push registration</a> that
+    is no longer valid
+    <li>Send an event of type <a><code>push-register</code></a>
+    including the previous <a><code>PushRegisterMessage</code></a> object to the
+    <a class="internalDFN" href="#dfn-webapp">webapp</a> to which the <a
+    class="internalDFN" href="#dfn-push-registration">push registration</a>
+    relates
+   </ul>
+      
+  <p>If a <a class="internalDFN" href="#dfn-push-message">push message
+  </a> or an indication about a <a class="internalDFN"
+  href="#dfn-push-registration">push registration</a> being no longer valid is
+  received and the <a class="internalDFN" href="#dfn-webapp">webapp</a> is not
+  active in a browser window, the <a class="internalDFN"
+  href="#dfn-user-agent">User agent</a> <em title="must"
+  class="rfc2119">must</em> invoke the <a class="internalDFN"
+  href="#dfn-webapp">webapp</a> if possible, and deliver the <a
+  class="internalDFN" href="#dfn-push-message">push message</a> to it.
+  Examples of cases in which <a class="internalDFN"
+  href="#dfn-webapp">webapps</a> should be invokable include:</p>
+   <ul>
+    <li>The <a class="internalDFN" href="#dfn-webapp">webapp</a> has been
+    installed from a widget package or other installation method.
+    <li>The <a class="internalDFN" href="#dfn-webapp">webapp</a> is persistently
+    cached via the [[!HTML5]] Application Cache.
+    <li>The <a class="internalDFN" href="#dfn-webapp">webapp</a> exists in the
+    browser cache.
+    <li>The browser is able to retrieve the <a class="internalDFN"
+    href="#dfn-webapp">webapp</a> at the absolute URL from where it was accessed
+    when the <code>pushRegistration</code> object was created.
+   </ul>
+    
+  </section>
+
+
+<!********************** Acknowledgements  ***********************************>
+
+ <section class="appendix"><h2>Acknowledgements</h2>
+  <p>The editors would like to express their gratitude to the Mozilla and
+  Telefónica Digital teams implementing the Firefox OS Push message
+  solution and specially to Doug Turner, Nikhil Marathe, Fernando R. Sela,
+  Guillermo López, Antonio Amaya, José Manuel Cantera and Albert Crespell, for
+  their technical guidance, implementation work and support.</p>
+ </section> 
+         
+</body>
+</html>
