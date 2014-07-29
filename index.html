@@ -341,19 +341,6 @@
 	<a class="internalDFN" href="#dfn-webapp">webapp</a> in the 
 	<a class="internalDFN" href="#dfn-push-message">push message</a>.</p>
 
-	<p>As <a class="internalDFN" href="#dfn-push-service">push services</a> 
-	and	the over-the-air/wire protocols they use may have varying message 
-	delivery or sequencing reliability, 
-	<a class="internalDFN" href="#dfn-push-message">push messages</a> 
-	delivered via the push API include a <code>version</code> value 
-	that can help 
-	<a class="internalDFN" href="#dfn-webapp">webapps</a> recognize new data, or 
-	detect when a resynchronization with the 
-	<a class="internalDFN" href="#dfn-webappserver">webapp server</a> or 
-	re-registration with the 
-	<a class="internalDFN" href="#dfn-push-service">push service</a>
-	is needed.</p>
-	
 	<p>The push API enables delivery of arbitrary application data to 
 	<a class="internalDFN" href="#dfn-webapp">webapps</a>, and makes no 
 	assumptions about the over-the-air/wire protocol used by  
@@ -391,8 +378,6 @@
  this.onpush = function(e) {
   // Log the pushRegistrationId
   console.log(e.message.pushRegistrationId);
-  // Log the version
-  console.log(e.message.version);
   // Log the message data
   console.log(e.message.data);
   // ...
@@ -915,29 +900,6 @@
     href="#dfn-push-registration">push registration</a> to which this event is 
 		related.</dd>
 
-    <dt>readonly attribute unsigned long long? version</dt>
-    <dd>MUST return an identifier of the latest version of the content available
-    through this <a class="internalDFN" href="#dfn-push-registration">push
-    registration</a>. If it is different from the last version the <a
-    class="internalDFN" href="#dfn-webapp">webapp</a> is aware of it signals
-    that it has new content to be retrieved from the <a class="internalDFN"
-    href="#dfn-webappserver">webapp server</a>. The <code>version</code> is an
-    integer value that is incremented when new content is available through a
-    <a class="internalDFN" href="#dfn-push-registration">push registration</a>.
-    So higher values of <code>version</code> indicate newer content. Note that
-    the <a class="internalDFN" href="#dfn-push-server">push server</a> may just
-    notify of the latest version if multiple message requests have been recieved 
-		from the <a class="internalDFN" href="#dfn-webappserver">webapp server</a> 
-		before the <a class="internalDFN" href="#dfn-push-server">push server</a> is 
-		ready to send a message. Thus a message for each version may not be 
-		received by the <a class="internalDFN" href="#dfn-user-agent">user agent</a> 
-		and in turn by the <a class="internalDFN" href="#dfn-webapp">webapp</a>. 
-		This attribute MUST return null when the <a class="internalDFN" 
-		href="#dfn-push-server">push server</a> has lost track of the state, in order 
-		to indicate the <a class="internalDFN" href="#dfn-webapp">webapp</a> that it 
-		should ask the webapp server and restore local state.
-    </dd>
-
     <dt>readonly attribute DOMString? data</dt>
     <dd>MUST return the message data received by the 
     <a class="internalDFN" href="#dfn-user-agent">user agent</a> in the 
@@ -1017,10 +979,7 @@
     <a><code>PushMessage</code></a> object to the identifier of the <a
     class="internalDFN" href="#dfn-push-registration">push registration</a> to
     which the <a class="internalDFN" href="#dfn-push-message">push
-    message</a> was sent <li>Set the <code>version</code> of the
-    <a><code>PushMessage</code></a> object to the version attribute indicated in
-    the <a class="internalDFN" href="#dfn-push-message">push
-    message</a>, if provided
+    message</a> was sent
     <li>Send an event of type <a><code>push</code></a> including the
     previous <a><code>PushMessage</code></a> object to the <a
     class="internalDFN"
