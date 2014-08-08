@@ -393,7 +393,7 @@
   console.log(e.message.pushRegistrationId);
   // Log the version
   console.log(e.message.version);
-  // Log the deserialized JSON data object
+  // Log the message data
   console.log(e.message.data);
   // ...
   // From here the SW can write the data to IndexedDB, display a notification,
@@ -938,10 +938,11 @@
 		should ask the webapp server and restore local state.
     </dd>
 
-    <dt>readonly attribute Object data</dt>
-    <dd>MUST return the deserialized JSON data object, if any, received by the 
+    <dt>readonly attribute DOMString? data</dt>
+    <dd>MUST return the message data received by the 
     <a class="internalDFN" href="#dfn-user-agent">user agent</a> in the 
-    <a class="internalDFN" href="#dfn-push-message">push message</a>.</dd>
+    <a class="internalDFN" href="#dfn-push-message">push message</a>, or null if
+    no data was received.</dd>
     
   </dl>
 
