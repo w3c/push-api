@@ -641,17 +641,16 @@
 
   <dl title="interface PushManager" class="idl">
 
-    <dt> Promise register ()</dt>
+    <dt> Promise&lt;PushRegistration&gt; register ()</dt>
     <dd>This method allows a <a class="internalDFN"
     href="#dfn-webapp">webapp</a> to create a new <a class="internalDFN"
     href="#dfn-push-registration">push registration</a> to receive <a
     class="internalDFN" href="#dfn-push-message">push messages</a>. It
     returns a <a><code>Promise</code></a> that will allow the caller to be 
     notified about the result of the operation. 
-     </dl>
     </dd>
 
-    <dt> Promise unregister ()</dt>
+    <dt> Promise&lt;DOMString&gt; unregister ()</dt>
     <dd>This method allows a <a class="internalDFN"
     href="#dfn-webapp">webapp</a> to unregister a specific <a
     class="internalDFN" href="#dfn-push-registration">push registration</a>. It
@@ -664,7 +663,7 @@
      </dl>
     </dd>
 
-    <dt> Promise registrations ()</dt>
+    <dt> Promise&lt;PushRegistration[]&gt; registrations ()</dt>
     <dd>This method allows a <a class="internalDFN"
     href="#dfn-webapp">webapp</a> to retrieve the list of its active <a
     class="internalDFN" href="#dfn-push-registration">push registrations</a>. It
