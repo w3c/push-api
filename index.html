@@ -872,8 +872,11 @@
     <dd>It MUST return the absolute URL exposed by the <a class="internalDFN"
     href="#dfn-push-server">push server</a> where the <a class="internalDFN"
     href="#dfn-webappserver">webapp server</a> can send
-    <a class="internalDFN" href="#dfn-push-message">push messages</a>
-    to this <a class="internalDFN" href="#dfn-webapp">webapp</a></dd>
+    <a class="internalDFN" href="#dfn-push-message">push messages</a> to this <a
+    class="internalDFN" href="#dfn-webapp">webapp</a>. The value of
+    <code>pushEndpoint</code> may be the same for multiple <a class="internalDFN"
+    href="#dfn-webapp">webapps</a> / <a class="internalDFN"
+    href="#dfn-webapp">webapp</a> instances running at multiple devices.</dd>
   
     <dt>readonly attribute DOMString pushRegistrationId</dt>
     <dd>It MUST return a univocal identifier of this <a
@@ -882,7 +885,10 @@
     used by the <a class="internalDFN" href="#dfn-webappserver">application
     server</a> to indicate the target of the <a class="internalDFN"
     href="#dfn-push-message">push messages</a> that it submits to the
-    <a class="internalDFN" href="#dfn-push-server">push server</a>.</dd>
+    <a class="internalDFN" href="#dfn-push-server">push server</a>. The value of
+    <code>pushRegistrationId</code> is expected to be unique and specific to a
+    particular <a class="internalDFN" href="#dfn-webapp">webapp</a> instance
+    running at a specific device.</dd>
     
   </dl>
 
