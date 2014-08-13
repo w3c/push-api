@@ -622,8 +622,12 @@
 	  
   <p>The <a>PushManager</a> interface defines the operations that enable <a
   class="internalDFN" href="#dfn-webapp">webapps</a> to establish access to <a
-  class="internalDFN" href="#dfn-push-service">push services</a>.</p>
-
+  class="internalDFN" href="#dfn-push-service">push services</a>. Note that just
+  a single <a class="internalDFN" href="#dfn-push-registration">push
+  registration</a> is allowed per <a class="internalDFN"
+  href="#dfn-webapp">webapp</a>.</p>
+  
+  
   <dl title="interface PushManager" class="idl">
 
     <dt> Promise&lt;PushRegistration&gt; register ()</dt>
