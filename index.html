@@ -637,15 +637,9 @@
 
     <dt> Promise&lt;DOMString&gt; unregister ()</dt>
     <dd>This method allows a <a class="internalDFN"
-    href="#dfn-webapp">webapp</a> to unregister a specific <a
-    class="internalDFN" href="#dfn-push-registration">push registration</a>. It
+    href="#dfn-webapp">webapp</a> to unregister. It
     returns a <a><code>Promise</code></a> that will allow the caller to be 
 		notified about the result of the operation.
-      <dl class='parameters'>
-         <dt>DOMString pushRegistrationId</dt> <dd>
-           Identifies the push registration that the <a class="internalDFN"
-           href="#dfn-webapp">webapp</a> requests to unregister
-     </dl>
     </dd>
 
     <dt> Promise&lt;PushRegistration[]&gt; registrations ()</dt>
@@ -735,29 +729,9 @@
       <li>Return <var>promise</var> and continue the following steps
       asynchronously.
       </li>
-      <li>Check that the <code>pushRegistrationId</code> attribute relates to an
-      active <a class="internalDFN" href="#dfn-push-registration">push
-      registration</a> of the requesting <a class="internalDFN"
-      href="#dfn-webapp">webapp</a>.
-      </li>
-      <li>If the previous step was not successful, run the following sub-steps and
-      terminate these steps:
-        <ol>
-          <li>Let <em>error</em> be a new <a href=
-          "http://dom.spec.whatwg.org/#domerror">DOMError</a> object whose
-          name is "<a href=
-          "http://dom.spec.whatwg.org/#nomodificationallowederror"
-          >NoModificationAllowedError</a>".
-          </li>
-          <li>Invoke <em>resolver</em>'s <a class="internalDFN"
-          href="#dfn-reject-algorithm">reject algorithm</a> algorithm with
-          <em>error</em> as the <code>value</code> argument.
-          </li>
-        </ol>
-      </li>
       <li>Make a request to the system to deactivate the <a class="internalDFN"
-      href="#dfn-push-registration">push registration</a>
-      identified by the <code>pushRegistrationId</code> attribute.
+      href="#dfn-push-registration">push registration</a> of the requesting <a
+      class="internalDFN" href="#dfn-webapp">webapp</a>.
       </li>
       <li>If there is an error invoke <em>resolver</em>'s <a class="internalDFN"
       href="#dfn-reject-algorithm">reject algorithm</a> with no arguments and
@@ -766,7 +740,9 @@
       <li>When the request has been completed invoke <em>resolver</em>'s <a
       class="internalDFN" href="#dfn-fulfill-algorithm">fulfill algorithm</a>
       with a <code>DOMString</code> set to the value of the
-      <code>pushRegistrationId</code> attribute as the <code>value</code> argument.
+      <code>pushRegistrationId</code> attribute of the unregistered <a
+      class="internalDFN" href="#dfn-push-registration">push registration</a> as
+      the <code>value</code> argument.
       </li>
    </ol>
     
