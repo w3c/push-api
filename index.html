@@ -642,10 +642,10 @@
 		notified about the result of the operation.
     </dd>
 
-    <dt> Promise&lt;PushRegistration[]&gt; registrations ()</dt>
+    <dt> Promise&lt;PushRegistration&gt; getRegistration ()</dt>
     <dd>This method allows a <a class="internalDFN"
-    href="#dfn-webapp">webapp</a> to retrieve the list of its active <a
-    class="internalDFN" href="#dfn-push-registration">push registrations</a>. It
+    href="#dfn-webapp">webapp</a> to retrieve the active <a
+    class="internalDFN" href="#dfn-push-registration">push registration</a>. It
     returns a <a><code>Promise</code></a> that will allow the caller to be 
 		notified about the result of the operation. 
     </dd>
@@ -746,7 +746,7 @@
       </li>
    </ol>
     
-  <p> The <dfn><code>registrations</code></dfn> method when invoked MUST run the
+  <p> The <dfn><code>getRegistration</code></dfn> method when invoked MUST run the
   following steps:
     <ol>
       <li>Let <var>promise</var> be a new <a><code>Promise</code></a> object and
@@ -755,25 +755,22 @@
       <li>Return <var>promise</var> and continue the following steps
       asynchronously.
       </li>
-      <li>Retrieve the list of <a class="internalDFN"
+      <li>Retrieve the <a class="internalDFN"
       href="#dfn-push-registration">push registration</a> associated to the
       requesting <a class="internalDFN" href="#dfn-webapp">webapp</a>
-      <li>If there is an error invoke <em>resolver</em>'s <a
-      class="internalDFN" href="#dfn-reject-algorithm">reject algorithm</a>
-      algorithm with no arguments and terminate these steps.
-      </li>
+      <li>If there is an error or the <a class="internalDFN"
+      href="#dfn-webapp">webapp</a> is not registered invoke <em>resolver</em>'s
+      <a class="internalDFN" href="#dfn-reject-algorithm">reject algorithm</a>
+      algorithm with no arguments and terminate these steps. </li>
       <li>When the request has been completed run the following sub-steps:
         <ol>
-          <li>Let <em>pushRegistrations</em> be a new array containing a
-          <code>pushRegistration</code> object per active <a
-          class="internalDFN" href="#dfn-push-registration">push
-          registration</a> associated to the requesting <a class="internalDFN"
-          href="#dfn-webapp">webapp</a>. A length of <code>zero</code> for
-          <em>pushRegistrations</em> indicates that there are no registrations.
+          <li>Let <em>pushRegistration</em> be the
+          <code>pushRegistration</code> object associated to the requesting <a
+          class="internalDFN" href="#dfn-webapp">webapp</a>.
           </li>
           <li>Invoke <em>resolver</em>'s <a class="internalDFN"
           href="#dfn-fulfill-algorithm">fulfill algorithm</a> algorithm with
-          <em>pushRegistrations</em> as the <code>value</code> argument.
+          <em>pushRegistration</em> as the <code>value</code> argument.
         </ol>
       </li>
    </ol>
