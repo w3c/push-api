@@ -622,8 +622,12 @@
 	  
   <p>The <a>PushManager</a> interface defines the operations that enable <a
   class="internalDFN" href="#dfn-webapp">webapps</a> to establish access to <a
-  class="internalDFN" href="#dfn-push-service">push services</a>.</p>
-
+  class="internalDFN" href="#dfn-push-service">push services</a>. Note that just
+  a single <a class="internalDFN" href="#dfn-push-registration">push
+  registration</a> is allowed per <a class="internalDFN"
+  href="#dfn-webapp">webapp</a>.</p>
+  
+  
   <dl title="interface PushManager" class="idl">
 
     <dt> Promise&lt;PushRegistration&gt; register ()</dt>
@@ -637,21 +641,15 @@
 
     <dt> Promise&lt;DOMString&gt; unregister ()</dt>
     <dd>This method allows a <a class="internalDFN"
-    href="#dfn-webapp">webapp</a> to unregister a specific <a
-    class="internalDFN" href="#dfn-push-registration">push registration</a>. It
+    href="#dfn-webapp">webapp</a> to unregister. It
     returns a <a><code>Promise</code></a> that will allow the caller to be 
 		notified about the result of the operation.
-      <dl class='parameters'>
-         <dt>DOMString pushRegistrationId</dt> <dd>
-           Identifies the push registration that the <a class="internalDFN"
-           href="#dfn-webapp">webapp</a> requests to unregister
-     </dl>
     </dd>
 
-    <dt> Promise&lt;PushRegistration[]&gt; registrations ()</dt>
+    <dt> Promise&lt;PushRegistration&gt; getRegistration ()</dt>
     <dd>This method allows a <a class="internalDFN"
-    href="#dfn-webapp">webapp</a> to retrieve the list of its active <a
-    class="internalDFN" href="#dfn-push-registration">push registrations</a>. It
+    href="#dfn-webapp">webapp</a> to retrieve the active <a
+    class="internalDFN" href="#dfn-push-registration">push registration</a>. It
     returns a <a><code>Promise</code></a> that will allow the caller to be 
 		notified about the result of the operation. 
     </dd>
@@ -735,29 +733,9 @@
       <li>Return <var>promise</var> and continue the following steps
       asynchronously.
       </li>
-      <li>Check that the <code>pushRegistrationId</code> attribute relates to an
-      active <a class="internalDFN" href="#dfn-push-registration">push
-      registration</a> of the requesting <a class="internalDFN"
-      href="#dfn-webapp">webapp</a>.
-      </li>
-      <li>If the previous step was not successful, run the following sub-steps and
-      terminate these steps:
-        <ol>
-          <li>Let <em>error</em> be a new <a href=
-          "http://dom.spec.whatwg.org/#domerror">DOMError</a> object whose
-          name is "<a href=
-          "http://dom.spec.whatwg.org/#nomodificationallowederror"
-          >NoModificationAllowedError</a>".
-          </li>
-          <li>Invoke <em>resolver</em>'s <a class="internalDFN"
-          href="#dfn-reject-algorithm">reject algorithm</a> algorithm with
-          <em>error</em> as the <code>value</code> argument.
-          </li>
-        </ol>
-      </li>
       <li>Make a request to the system to deactivate the <a class="internalDFN"
-      href="#dfn-push-registration">push registration</a>
-      identified by the <code>pushRegistrationId</code> attribute.
+      href="#dfn-push-registration">push registration</a> of the requesting <a
+      class="internalDFN" href="#dfn-webapp">webapp</a>.
       </li>
       <li>If there is an error invoke <em>resolver</em>'s <a class="internalDFN"
       href="#dfn-reject-algorithm">reject algorithm</a> with no arguments and
@@ -766,11 +744,13 @@
       <li>When the request has been completed invoke <em>resolver</em>'s <a
       class="internalDFN" href="#dfn-fulfill-algorithm">fulfill algorithm</a>
       with a <code>DOMString</code> set to the value of the
-      <code>pushRegistrationId</code> attribute as the <code>value</code> argument.
+      <code>pushRegistrationId</code> attribute of the unregistered <a
+      class="internalDFN" href="#dfn-push-registration">push registration</a> as
+      the <code>value</code> argument.
       </li>
    </ol>
     
-  <p> The <dfn><code>registrations</code></dfn> method when invoked MUST run the
+  <p> The <dfn><code>getRegistration</code></dfn> method when invoked MUST run the
   following steps:
     <ol>
       <li>Let <var>promise</var> be a new <a><code>Promise</code></a> object and
@@ -779,25 +759,22 @@
       <li>Return <var>promise</var> and continue the following steps
       asynchronously.
       </li>
-      <li>Retrieve the list of <a class="internalDFN"
+      <li>Retrieve the <a class="internalDFN"
       href="#dfn-push-registration">push registration</a> associated to the
       requesting <a class="internalDFN" href="#dfn-webapp">webapp</a>
-      <li>If there is an error invoke <em>resolver</em>'s <a
-      class="internalDFN" href="#dfn-reject-algorithm">reject algorithm</a>
-      algorithm with no arguments and terminate these steps.
-      </li>
+      <li>If there is an error or the <a class="internalDFN"
+      href="#dfn-webapp">webapp</a> is not registered invoke <em>resolver</em>'s
+      <a class="internalDFN" href="#dfn-reject-algorithm">reject algorithm</a>
+      algorithm with no arguments and terminate these steps. </li>
       <li>When the request has been completed run the following sub-steps:
         <ol>
-          <li>Let <em>pushRegistrations</em> be a new array containing a
-          <code>pushRegistration</code> object per active <a
-          class="internalDFN" href="#dfn-push-registration">push
-          registration</a> associated to the requesting <a class="internalDFN"
-          href="#dfn-webapp">webapp</a>. A length of <code>zero</code> for
-          <em>pushRegistrations</em> indicates that there are no registrations.
+          <li>Let <em>pushRegistration</em> be the
+          <code>pushRegistration</code> object associated to the requesting <a
+          class="internalDFN" href="#dfn-webapp">webapp</a>.
           </li>
           <li>Invoke <em>resolver</em>'s <a class="internalDFN"
           href="#dfn-fulfill-algorithm">fulfill algorithm</a> algorithm with
-          <em>pushRegistrations</em> as the <code>value</code> argument.
+          <em>pushRegistration</em> as the <code>value</code> argument.
         </ol>
       </li>
    </ol>
