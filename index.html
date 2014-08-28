@@ -197,29 +197,31 @@
 <!********************** Terminology *****************************************>
 
 <section><h2>Terminology</h2>
-  <p>The <dfn><code>Function</code></dfn> interface represents a function in the
-  scripting language being used as defined in [[!HTML5]].</p>
-  
-  <p>The concepts <dfn><a
-  href="http://dev.w3.org/html5/spec/webappapis.html#queue-a-task"> queue a
-  task</a></dfn> and <dfn><a
-  href="http://dev.w3.org/html5/spec/webappapis.html#fire-a-simple-event"> fires
-  a simple event</a></dfn> are defined in [[!HTML5]].</p>
+  <p>The following concepts and interfaces are defined in [[!HTML5]]:</p>
+  <ul>
+    <li><dfn><a href=
+      "http://www.w3.org/TR/html5/webappapis.html#queue-a-task">queue a
+      task</a></dfn></li>
+    <li><dfn><a href=
+      "http://www.w3.org/TR/html5/webappapis.html#fire-a-simple-event">fire
+      a simple event</a></dfn></li>
+    <li><dfn><a href=
+      "http://www.w3.org/TR/html5/browsers.html#event-handlers">event
+      handler</a></dfn></li>
+    <li><dfn><a href=
+      "http://www.w3.org/TR/html5/browsers.html#event-handler-event-type">event
+      handler event type</a></dfn></li>
+  </ul>
 
-  <p>The terms <dfn><a
-  href="http://dev.w3.org/html5/spec/webappapis.html#event-handlers"> event
-  handlers</a></dfn> and <dfn><a
-  href="http://dev.w3.org/html5/spec/webappapis.html#event-handler-event-type">
-  event handler event types</a></dfn> are defined in [[!HTML5]].</p>
+  <p>
+    <a href=
+    'http://people.mozilla.org/~jorendorff/es6-draft.html#sec-promise-objects'>
+    <dfn>Promise</dfn></a> is defined in [[!ECMASCRIPT]].
+  </p>
 
-  <p>The <dfn><a href="http://dom.spec.whatwg.org/#promise">Promise</a></dfn>
-  interface, the concepts of a <a href=
-  "http://dom.spec.whatwg.org/#concept-resolver"><dfn>resolver</dfn></a>, a
-  <dfn id="dfn-fulfill-algorithm"><a
-  href="http://dom.spec.whatwg.org/#concept-resolver-fulfill"> resolver's
-  fulfill algorithm</a></dfn> and a <dfn id="dfn-reject-algorithm"><a
-  href="http://dom.spec.whatwg.org/#concept-resolver-reject"> resolver's reject
-  algorithm</a></dfn> are defined in [[!DOM4]].</p>
+  <p><dfn id="dfn-service-worker"><a href=
+  "http://www.w3.org/TR/service-workers/#dnf-service-worker">Service Worker</a></dfn>
+  is defined in [[!SERVICEWORKERS]].</p>
   
   <p>The term <dfn id="dfn-push-extension">push service extension</dfn> refers 
 	to a browser extension enabling push service configuration for the user, and 
@@ -264,10 +266,6 @@
 	initiation.
 	</p>
     
-  <p>The term <dfn id="dfn-service-worker"><a href=
-  "http://www.w3.org/TR/service-workers/#dnf-service-worker">Service Worker</a></dfn>
-	is used as defined in [[!SERVICEWORKERS]].</p>
-	
 	<p>The term <dfn id="dfn-express-permission">express permission</dfn> refers to an act 
 	by the user, e.g. via user interface or host device platform features, via which the
 	user approves the permission of a 
