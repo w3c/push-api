@@ -586,173 +586,116 @@
         "#dfn-push-registration">push registration</a> is allowed per <a class=
         "internalDFN" href="#dfn-webapp">webapp</a>.
       </p>
-      <dl title="interface PushManager" class="idl">
-        <dt>
-          Promise&lt;PushRegistration&gt; register ()
-        </dt>
-        <dd>
-          This method allows a <a class="internalDFN" href=
-          "#dfn-webapp">webapp</a> to create a new <a class="internalDFN" href=
-          "#dfn-push-registration">push registration</a> to receive <a class=
-          "internalDFN" href="#dfn-push-message">push messages</a>. It returns
-          a <a><code>Promise</code></a> that will allow the caller to be
-          notified about the result of the operation.
-        </dd>
-        <dt>
-          Promise&lt;DOMString&gt; unregister ()
-        </dt>
-        <dd>
-          This method allows a <a class="internalDFN" href=
-          "#dfn-webapp">webapp</a> to unregister. It returns a
-          <a><code>Promise</code></a> that will allow the caller to be notified
-          about the result of the operation.
-        </dd>
-        <dt>
-          Promise&lt;PushRegistration&gt; getRegistration ()
-        </dt>
-        <dd>
-          This method allows a <a class="internalDFN" href=
-          "#dfn-webapp">webapp</a> to retrieve the active <a class=
-          "internalDFN" href="#dfn-push-registration">push registration</a>. It
-          returns a <a><code>Promise</code></a> that will allow the caller to
-          be notified about the result of the operation.
-        </dd>
-      </dl>
-      <section>
-        <h3>
-          Steps
-        </h3>
-        <p class="note">
-          TAG issue: AbortError is raised when user doesn't grant permissions,
-          not when registration is aborted. Suggestion: PermissionDeniedError.
-        </p>
-        <p>
-          The <dfn><code>register</code></dfn> method when invoked MUST run the
-          following steps:
-        </p>
-        <ol>
-          <li>Let <var>promise</var> be a new <a><code>Promise</code></a>
-          object and <var>resolver</var> its associated resolver.
-          </li>
-          <li>Return <var>promise</var> and continue the following steps
-          asynchronously.
-          </li>
-          <li>If the scheme of the document url is not <code>https</code>,
-          then:
-            <ol>
-              <li>Let <em>error</em> be a new <a>DOMError</a> object whose name
-              is "<a href=
-              "http://dom.spec.whatwg.org/#securityerror">SecurityError</a>".
-              </li>
-              <li>Invoke <em>resolver</em>'s <a class="internalDFN" href=
-              "#dfn-reject-algorithm">reject algorithm</a> with <em>error</em>
-              as the <code>value</code> argument.
-              </li>
-            </ol>
-          </li>
-          <li>Ask the user whether it allows the requesting <a class=
-          "internalDFN" href="#dfn-webapp">webapp</a> to activate the reception
-          of <a class="internalDFN" href="#dfn-push-message">push messages</a>,
-          unless a prearranged trust relationship applies or the user has
-          already granted or denied permission explicitly to this <a class=
-          "internalDFN" href="#dfn-webapp">webapp</a>.
-          </li>
-          <li>If not granted, run the following sub-steps and terminate these
-          steps:
-            <ol>
-              <li>Let <em>error</em> be a new <a href=
-              "http://dom.spec.whatwg.org/#domerror">DOMError</a> object whose
-              name is "<a href=
-              "http://dom.spec.whatwg.org/#aborterror">AbortError</a>".
-              </li>
-              <li>Invoke <em>resolver</em>'s <a class="internalDFN" href=
-              "#dfn-reject-algorithm">reject algorithm</a> with <em>error</em>
-              as the <code>value</code> argument.
-              </li>
-            </ol>
-          </li>
-          <li>Make a request to the system to create a new <a class=
-          "internalDFN" href="#dfn-push-registration">push registration</a> for
-          the requesting <a class="internalDFN" href="#dfn-webapp">webapp</a>.
-          </li>
-          <li>If there is an error invoke <em>resolver</em>'s <a class=
-          "internalDFN" href="#dfn-reject-algorithm">reject algorithm</a> with
-          no arguments and terminate these steps.
-          </li>
-          <li>When the request has been completed run the following sub-steps:
-            <ol>
-              <li>Let <em>pushRegistration</em> be a new
-              <code>PushRegistration</code> object providing the details of the
-              <a class="internalDFN" href="#dfn-push-registration">push
-              registration</a>.
-              </li>
-              <li>Invoke <em>resolver</em>'s <a class="internalDFN" href=
-              "#dfn-fulfill-algorithm">fulfill algorithm</a> with
-              <em>pushRegistration</em> as the <code>value</code> argument.
-              </li>
-            </ol>
-          </li>
-        </ol>
-        <p>
-          The <dfn><code>unregister</code></dfn> method when invoked MUST run
-          the following steps:
-        </p>
-        <ol>
-          <li>Let <var>promise</var> be a new <a><code>Promise</code></a>
-          object and <var>resolver</var> its associated resolver.
-          </li>
-          <li>Return <var>promise</var> and continue the following steps
-          asynchronously.
-          </li>
-          <li>Make a request to the system to deactivate the <a class=
-          "internalDFN" href="#dfn-push-registration">push registration</a> of
-          the requesting <a class="internalDFN" href="#dfn-webapp">webapp</a>.
-          </li>
-          <li>If there is an error invoke <em>resolver</em>'s <a class=
-          "internalDFN" href="#dfn-reject-algorithm">reject algorithm</a> with
-          no arguments and terminate these steps.
-          </li>
-          <li>When the request has been completed invoke <em>resolver</em>'s
-          <a class="internalDFN" href="#dfn-fulfill-algorithm">fulfill
-          algorithm</a> with a <code>DOMString</code> set to the value of the
-          <code>pushRegistrationId</code> attribute of the unregistered
-          <a class="internalDFN" href="#dfn-push-registration">push
-          registration</a> as the <code>value</code> argument.
-          </li>
-        </ol>
-        <p>
-          The <dfn><code>getRegistration</code></dfn> method when invoked MUST
-          run the following steps:
-        </p>
-        <ol>
-          <li>Let <var>promise</var> be a new <a><code>Promise</code></a>
-          object and <var>resolver</var> its associated resolver.
-          </li>
-          <li>Return <var>promise</var> and continue the following steps
-          asynchronously.
-          </li>
-          <li>Retrieve the <a class="internalDFN" href=
-          "#dfn-push-registration">push registration</a> associated to the
-          requesting <a class="internalDFN" href="#dfn-webapp">webapp</a>
-          </li>
-          <li>If there is an error or the <a class="internalDFN" href=
-          "#dfn-webapp">webapp</a> is not registered invoke <em>resolver</em>'s
-          <a class="internalDFN" href="#dfn-reject-algorithm">reject
-          algorithm</a> algorithm with no arguments and terminate these steps.
-          </li>
-          <li>When the request has been completed run the following sub-steps:
-            <ol>
-              <li>Let <em>pushRegistration</em> be the
-              <code>pushRegistration</code> object associated to the requesting
-              <a class="internalDFN" href="#dfn-webapp">webapp</a>.
-              </li>
-              <li>Invoke <em>resolver</em>'s <a class="internalDFN" href=
-              "#dfn-fulfill-algorithm">fulfill algorithm</a> algorithm with
-              <em>pushRegistration</em> as the <code>value</code> argument.
-              </li>
-            </ol>
-          </li>
-        </ol>
+
+  <dl title="interface PushManager" class="idl">
+
+    <dt> Promise&lt;PushRegistration&gt; register ()</dt>
+    <dd>This method allows a <a class="internalDFN"
+    href="#dfn-webapp">webapp</a> to create a new <a class="internalDFN"
+    href="#dfn-push-registration">push registration</a> to receive <a
+    class="internalDFN" href="#dfn-push-message">push messages</a>. It
+    returns a <a><code>Promise</code></a> that will allow the caller to be 
+    notified about the result of the operation. 
+    </dd>
+
+    <dt> Promise&lt;DOMString&gt; unregister ()</dt>
+    <dd>This method allows a <a class="internalDFN"
+    href="#dfn-webapp">webapp</a> to unregister. It
+    returns a <a><code>Promise</code></a> that will allow the caller to be 
+		notified about the result of the operation.
+    </dd>
+
+    <dt> Promise&lt;PushRegistration&gt; getRegistration ()</dt>
+    <dd>This method allows a <a class="internalDFN"
+    href="#dfn-webapp">webapp</a> to retrieve the active <a
+    class="internalDFN" href="#dfn-push-registration">push registration</a>. It
+    returns a <a><code>Promise</code></a> that will allow the caller to be 
+		notified about the result of the operation. 
+    </dd>
+    
+  </dl>  
+
+  <section>
+  <h3>Steps</h3>
+  
+	<p class="note">TAG issue: 
+	AbortError is raised when user doesn't grant permissions, not when registration is aborted. 
+	Suggestion: PermissionDeniedError.</p>
+
+  <p>The <dfn><code>register</code></dfn> method when invoked MUST run the
+    following steps:</p>
+  <ol>
+    <li>Let <var>promise</var> be a new <a><code>Promise</code></a>.</li>
+    <li>Return <var>promise</var> and continue the following steps
+    asynchronously.</li>
+    <li>If the scheme of the document url is not <code>https</code> then reject
+      <var>promise</var> with a <a href=
+      "http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a>
+      whose name is "<a href=
+      "http://dom.spec.whatwg.org/#securityerror"><code>SecurityError</code></a>"
+      and terminate these steps.</li>
+    <li>Ask the user whether they allow the requesting <a class="internalDFN"
+      href="#dfn-webapp">webapp</a> to receive <a
+      class="internalDFN" href="#dfn-push-message">push messages</a>,
+      unless a prearranged trust relationship applies or the user has already
+      granted or denied permission explicitly to this <a class="internalDFN"
+      href="#dfn-webapp">webapp</a>.</li>
+    <li>If not granted then reject <var>promise</var> with a <a href=
+      "http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a>
+      whose name is "<a href=
+      "http://dom.spec.whatwg.org/#aborterror"><code>AbortError</code></a>" and
+      terminate these steps.</li>
+    <li>Make a request to the system to create a new <a class="internalDFN"
+      href="#dfn-push-registration">push registration</a> for the
+      requesting <a class="internalDFN" href="#dfn-webapp">webapp</a>.</li>
+    <li>If there is an error then reject <var>promise</var>
+      with a <a href=
+      "http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a>
+      of the most appropriate type and terminate these steps.</li>
+    <li>When the request has been completed resolve <var>promise</var> with a
+      <a><code>PushRegistration</code></a> providing the details of
+        the new <a class="internalDFN" href="#dfn-push-registration">push
+        registration</a>.</li>
+  </ol>
+
+  <p>The <dfn><code>unregister</code></dfn> method when invoked MUST run the
+    following steps:</p>
+  <ol>
+    <li>Let <var>promise</var> be a new <a><code>Promise</code></a>.</li>
+    <li>Return <var>promise</var> and continue the following steps
+      asynchronously.</li>
+    <li>Make a request to the system to deactivate the <a class="internalDFN"
+      href="#dfn-push-registration">push registration</a> of the requesting <a
+      class="internalDFN" href="#dfn-webapp">webapp</a>.</li>
+    <li>If there is an error then reject <var>promise</var> with a <a href=
+      "http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a>
+      of the most appropriate type and terminate these steps.</li>
+    <li>When the request has been completed resolve <var>promise</var> with a
+      <code>DOMString</code> set to the value of the
+      <code>pushRegistrationId</code> attribute of the unregistered <a
+    class="internalDFN" href="#dfn-push-registration">push registration</a>.
+    </li>
+  </ol>
+
+  <p>The <dfn><code>getRegistration</code></dfn> method when invoked MUST run
+    the following steps:</p>
+  <ol>
+    <li>Let <var>promise</var> be a new <a><code>Promise</code></a>.</li>
+    <li>Return <var>promise</var> and continue the following steps
+      asynchronously.</li>
+    <li>Retrieve the <a class="internalDFN"
+      href="#dfn-push-registration">push registration</a> associated with the
+      requesting <a class="internalDFN" href="#dfn-webapp">webapp</a>.</li>
+    <li>If there is an error or the <a class="internalDFN"
+      href="#dfn-webapp">webapp</a> is not registered then reject
+      <var>promise</var> with a <a href=
+      "http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a>
+      of the most appropriate type and terminate these steps.</li>
+    <li>When the request has been completed resolve <var>promise</var> with a
+      <a><code>PushRegistration</code></a> providing the details of the
+      retrieved <a class="internalDFN" href="#dfn-push-registration">push
+      registration</a>.</li>
+  </ol>
       </section>
       <section>
         <h3>
