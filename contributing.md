@@ -8,7 +8,7 @@ For more substantial contributions that, please first start a thread in the
 [webapps mailing list](http://lists.w3.org/Archives/Public/public-webapps/)  at
 the W3C.
 
-Note: The [Web Applications Working Group](http://www.w3.org/2012/webapps/)
+Note: The [Web Applications Working Group](http://www.w3.org/2008/webapps/)
 operates under the [W3C Patent Policy which](http://www.w3.org/Consortium
 /Patent-Policy-20040205/)  aims to enable implementations of W3C Recommendations
 without the need to pay royalty fees. If you want to make contributions that can
