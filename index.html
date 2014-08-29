@@ -598,7 +598,7 @@
     notified about the result of the operation. 
     </dd>
 
-    <dt> Promise&lt;DOMString&gt; unregister ()</dt>
+    <dt> Promise&lt;PushRegistration&gt; unregister ()</dt>
     <dd>This method allows a <a class="internalDFN"
     href="#dfn-webapp">webapp</a> to unregister. It
     returns a <a><code>Promise</code></a> that will allow the caller to be 
@@ -618,40 +618,56 @@
   <section>
   <h3>Steps</h3>
   
-	<p class="note">TAG issue: 
-	AbortError is raised when user doesn't grant permissions, not when registration is aborted. 
-	Suggestion: PermissionDeniedError.</p>
-
   <p>The <dfn><code>register</code></dfn> method when invoked MUST run the
     following steps:</p>
   <ol>
     <li>Let <var>promise</var> be a new <a><code>Promise</code></a>.</li>
     <li>Return <var>promise</var> and continue the following steps
     asynchronously.</li>
-    <li>If the scheme of the document url is not <code>https</code> then reject
+    <li>If the scheme of the document url is not <code>https</code>, reject
       <var>promise</var> with a <a href=
       "http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a>
       whose name is "<a href=
       "http://dom.spec.whatwg.org/#securityerror"><code>SecurityError</code></a>"
       and terminate these steps.</li>
-    <li>Ask the user whether they allow the requesting <a class="internalDFN"
+    <li>Ask the user whether they allow the <a class="internalDFN"
       href="#dfn-webapp">webapp</a> to receive <a
       class="internalDFN" href="#dfn-push-message">push messages</a>,
       unless a prearranged trust relationship applies or the user has already
       granted or denied permission explicitly to this <a class="internalDFN"
       href="#dfn-webapp">webapp</a>.</li>
-    <li>If not granted then reject <var>promise</var> with a <a href=
+    <li>If not granted, reject <var>promise</var> with a <a href=
       "http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a>
       whose name is "<a href=
-      "http://dom.spec.whatwg.org/#aborterror"><code>AbortError</code></a>" and
-      terminate these steps.</li>
+      "https://www.w3.org/Bugs/Public/show_bug.cgi?id=23033"><code>PermissionDeniedError</code></a>"
+      and terminate these steps.</li>
+    <li>If the <a class="internalDFN" href="#dfn-webapp">webapp</a> is already
+      registered, run the following substeps:
+      <ol>
+        <li>Retrieve the <a class="internalDFN"
+          href="#dfn-push-registration">push registration</a> associated with the
+          <a class="internalDFN" href="#dfn-webapp">webapp</a>.</li>
+        <li>If there is an error, reject
+          <var>promise</var> with a <a href=
+          "http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a>
+          whose name is "<a href=
+          "http://dom.spec.whatwg.org/#aborterror"><code>AbortError</code></a>"
+          and terminate these steps.</li>
+        <li>When the request has been completed resolve <var>promise</var> with a
+          <a><code>PushRegistration</code></a> providing the details of the
+          retrieved <a class="internalDFN" href="#dfn-push-registration">push
+          registration</a>.</li>
+      </ol>
+    </li>
     <li>Make a request to the system to create a new <a class="internalDFN"
       href="#dfn-push-registration">push registration</a> for the
-      requesting <a class="internalDFN" href="#dfn-webapp">webapp</a>.</li>
-    <li>If there is an error then reject <var>promise</var>
+      <a class="internalDFN" href="#dfn-webapp">webapp</a>.</li>
+    <li>If there is an error, reject <var>promise</var>
       with a <a href=
       "http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a>
-      of the most appropriate type and terminate these steps.</li>
+      whose name is "<a href=
+      "http://dom.spec.whatwg.org/#aborterror"><code>AbortError</code></a>"
+      and terminate these steps.</li>
     <li>When the request has been completed resolve <var>promise</var> with a
       <a><code>PushRegistration</code></a> providing the details of
         the new <a class="internalDFN" href="#dfn-push-registration">push
@@ -664,17 +680,26 @@
     <li>Let <var>promise</var> be a new <a><code>Promise</code></a>.</li>
     <li>Return <var>promise</var> and continue the following steps
       asynchronously.</li>
-    <li>Make a request to the system to deactivate the <a class="internalDFN"
-      href="#dfn-push-registration">push registration</a> of the requesting <a
-      class="internalDFN" href="#dfn-webapp">webapp</a>.</li>
-    <li>If there is an error then reject <var>promise</var> with a <a href=
+    <li>If the <a class="internalDFN" href="#dfn-webapp">webapp</a> is not
+      registered, reject
+      <var>promise</var> with a <a href=
       "http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a>
-      of the most appropriate type and terminate these steps.</li>
+      whose name is "<a href=
+      "http://dom.spec.whatwg.org/#notfounderror"><code>NotFoundError</code></a>"
+      and terminate these steps.</li>
+    <li>Make a request to the system to deactivate the <a class="internalDFN"
+      href="#dfn-push-registration">push registration</a> associated with the <a
+      class="internalDFN" href="#dfn-webapp">webapp</a>.</li>
+    <li>If there is an error, reject <var>promise</var> with a <a href=
+      "http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a>
+      whose name is "<a href=
+      "http://dom.spec.whatwg.org/#aborterror"><code>AbortError</code></a>"
+      and terminate these steps.</li>
     <li>When the request has been completed resolve <var>promise</var> with a
-      <code>DOMString</code> set to the value of the
-      <code>pushRegistrationId</code> attribute of the unregistered <a
-    class="internalDFN" href="#dfn-push-registration">push registration</a>.
-    </li>
+      <a><code>PushRegistration</code></a> providing the details of
+        the unregistered
+        <a class="internalDFN" href="#dfn-push-registration">push
+        registration</a>.</li>
   </ol>
 
   <p>The <dfn><code>getRegistration</code></dfn> method when invoked MUST run
@@ -683,14 +708,21 @@
     <li>Let <var>promise</var> be a new <a><code>Promise</code></a>.</li>
     <li>Return <var>promise</var> and continue the following steps
       asynchronously.</li>
-    <li>Retrieve the <a class="internalDFN"
-      href="#dfn-push-registration">push registration</a> associated with the
-      requesting <a class="internalDFN" href="#dfn-webapp">webapp</a>.</li>
-    <li>If there is an error or the <a class="internalDFN"
-      href="#dfn-webapp">webapp</a> is not registered then reject
+    <li>If the <a class="internalDFN" href="#dfn-webapp">webapp</a> is not
+      registered, reject
       <var>promise</var> with a <a href=
       "http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a>
-      of the most appropriate type and terminate these steps.</li>
+      whose name is "<a href=
+      "http://dom.spec.whatwg.org/#notfounderror"><code>NotFoundError</code></a>"
+      and terminate these steps.</li>
+    <li>Retrieve the <a class="internalDFN"
+      href="#dfn-push-registration">push registration</a> associated with the
+      <a class="internalDFN" href="#dfn-webapp">webapp</a>.</li>
+    <li>If there is an error, reject <var>promise</var> with a <a href=
+      "http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a>
+      whose name is "<a href=
+      "http://dom.spec.whatwg.org/#aborterror"><code>AbortError</code></a>"
+      and terminate these steps.</li>
     <li>When the request has been completed resolve <var>promise</var> with a
       <a><code>PushRegistration</code></a> providing the details of the
       retrieved <a class="internalDFN" href="#dfn-push-registration">push
