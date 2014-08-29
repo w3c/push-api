@@ -13,7 +13,7 @@ operates under the [W3C Patent Policy which](http://www.w3.org/Consortium
 /Patent-Policy-20040205/)  aims to enable implementations of W3C Recommendations
 without the need to pay royalty fees. If you want to make contributions that can
 be used in normative parts of our specifications, we require you to [make the
-appropriate licensing commitments](http://www.w3.org/2004/01/pp-impl/58119/status).
+appropriate licensing commitments](http://www.w3.org/2004/01/pp-impl/42538/status).
 
 
 # Style guide to contributors 
