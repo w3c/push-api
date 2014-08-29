@@ -396,7 +396,7 @@
   var gcmSenderId = "......";
   var apnSenderId = "......";
   var regId = "......";
-  var push = navigator.push;
+  var push = navigator.pushRegistrationManager;
 
   // The push object is an async map that can be used to enumerate and
   // test for active channels.
@@ -549,31 +549,20 @@
 <section>
   <h2><a>Navigator</a> Interface</h2>
     <dl title="partial interface Navigator" class="idl">
-      <dt>readonly attribute PushManager push</dt>
+      <dt>readonly attribute PushRegistrationManager pushRegistrationManager</dt>
       <dd>
       The object that exposes the push service management interface.
       </dd>
   </dl>
 </section>
 
-  <p class="note">TAG issue: 
-	navigator.push as an object of PushManager type seems misleading per se and is 
-	inconsistent with Array.prototype.push method. 
-	Suggestion: navigator.pushRegistrationManager.</p>
-
-<!********************** Interface PushManager *******************************>
+<!********************** Interface PushRegistrationManager ********************>
 
 <section>
-  <h2><a>PushManager</a> Interface</h2>
+  <h2><a>PushRegistrationManager</a> Interface</h2>
   
-	<p class="note">TAG issue: 
-	PushManager is limited to dealing with registrations. Suggestion: PushRegistrationManager.</p>
-
-	<p class="note">TAG issue: 
-	PushManager.registrations method seems inconsistent. Suggestion: PushManager.getRegistrations.</p>
-
   <p class="note">TAG issue: 
-  PushManager.register provides two heterogeneous functions:
+  PushRegistrationManager.register provides two heterogeneous functions:
     asking use permission,
     registering push notifications.
 	This mixing leads to odd user agent behavior, i.e. push service failure forces webapp 
@@ -583,7 +572,7 @@
 	Provide different sets of errors for those purposes.
 	</p>
 	  
-  <p>The <a>PushManager</a> interface defines the operations that enable <a
+  <p>The <a>PushRegistrationManager</a> interface defines the operations that enable <a
   class="internalDFN" href="#dfn-webapp">webapps</a> to establish access to <a
   class="internalDFN" href="#dfn-push-service">push services</a>. Note that just
   a single <a class="internalDFN" href="#dfn-push-registration">push
@@ -591,7 +580,7 @@
   href="#dfn-webapp">webapp</a>.</p>
   
   
-  <dl title="interface PushManager" class="idl">
+  <dl title="interface PushRegistrationManager" class="idl">
 
     <dt> Promise&lt;PushRegistration&gt; register ()</dt>
     <dd>This method allows a <a class="internalDFN"
