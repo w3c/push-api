@@ -362,8 +362,6 @@
  // can queue push messages for the SW and deliver them as events whenever it
  // deems necessary.
  this.onpush = function(e) {
-  // Log the pushRegistrationId
-  console.log(e.message.pushRegistrationId);
   // Log the message data
   console.log(e.message.data);
   // ...
@@ -909,14 +907,6 @@
       </p>
       <dl title="interface PushMessage" class="idl">
         <dt>
-          readonly attribute DOMString pushRegistrationId
-        </dt>
-        <dd>
-          MUST return the identifier of the <a class="internalDFN" href=
-          "#dfn-push-registration">push registration</a> to which this event is
-          related.
-        </dd>
-        <dt>
           readonly attribute DOMString? data
         </dt>
         <dd>
@@ -1011,11 +1001,12 @@
       <ul>
         <li>Create a new <a><code>PushMessage</code></a> object
         </li>
-        <li>Set the <code>pushRegistrationId</code> of the
-        <a><code>PushMessage</code></a> object to the identifier of the
-        <a class="internalDFN" href="#dfn-push-registration">push
-        registration</a> to which the <a class="internalDFN" href=
-        "#dfn-push-message">push message</a> was sent
+        <li>Set the <code>data</code> attribute of the
+        <a><code>PushMessage</code></a> object to the message data received by
+         the <a class="internalDFN"
+          href="#dfn-user-agent">user agent</a> in the <a class="internalDFN"
+          href="#dfn-push-message">push message</a>, or null if no data was
+          received.
         </li>
         <li>Send an event of type <a><code>push</code></a> including the
         previous <a><code>PushMessage</code></a> object to the <a class=
