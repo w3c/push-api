@@ -352,7 +352,6 @@
         <pre class="example highlight">
 // https://example.com/serviceworker.js
 this.onpush = function(event) {
-  // During development we can log the data for easier inspection.
   console.log(event.message.data);
   // From here we can write the data to IndexedDB, send it to any open windows,
   // display a notification, etc.
@@ -362,8 +361,6 @@ this.onpush = function(event) {
 navigator.serviceWorker.ready.then(function() {
   navigator.pushRegistrationManager.register().then(
     function(registration) {
-      // During development we can log the registration details for easier
-      // inspection.
       console.log(registration.pushRegistrationId);
       console.log(registration.pushEndpoint);
       // The push registration details needed by the application server to push
