@@ -343,9 +343,13 @@
       </p>
       <p>
         The following code and diagram illustrate a hypothetical use of the
-        push API:
+        push API.
       </p>
-      <pre class="example highlight">
+      <section class="informative">
+        <h2>
+          Example
+        </h2>
+        <pre class="example highlight">
 // https://example.com/serviceworker.js
 this.onpush = function(event) {
   // During development we can log the data for easier inspection.
@@ -358,17 +362,23 @@ this.onpush = function(event) {
 navigator.serviceWorker.ready.then(function() {
   navigator.pushRegistrationManager.register().then(
     function(registration) {
+      // During development we can log the registration details for easier
+      // inspection.
       console.log(registration.pushRegistrationId);
       console.log(registration.pushEndpoint);
-      // We now have the registration details that the application server needs
-      // to start pushing messages. From here we can send them to the  server
-      // using an asynchronous XMLHttpRequest.
+      // The push registration details needed by the application server to push
+      // messages to the push service are now available, and can be sent to the
+      // application server using, for example, an XMLHttpRequest.
     }, function(error) {
+      // During development it often helps to log errors to the console. In a
+      // production environment it might make sense to also report information
+      // about errors back to the application server.
       console.log(error);
     }
   });
- });
+});
 </pre>
+      </section>
       <section class="informative">
         <h2>
           Sequence diagram
@@ -896,10 +906,9 @@ navigator.serviceWorker.ready.then(function() {
         </li>
         <li>Set the <code>data</code> attribute of the
         <a><code>PushMessage</code></a> object to the message data received by
-         the <a class="internalDFN"
-          href="#dfn-user-agent">user agent</a> in the <a class="internalDFN"
-          href="#dfn-push-message">push message</a>, or null if no data was
-          received.
+        the <a class="internalDFN" href="#dfn-user-agent">user agent</a> in the
+        <a class="internalDFN" href="#dfn-push-message">push message</a>, or
+        null if no data was received.
         </li>
         <li>Send an event of type <a><code>push</code></a> including the
         previous <a><code>PushMessage</code></a> object to the <a class=
