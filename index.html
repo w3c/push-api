@@ -438,58 +438,21 @@
    }).then(registerWithAppServer, logError);
   });
  });
-
- 
-/* Hypothetical end-to-end flow of a push service lifecycle
-   +--------+               +--------+             +--------+           +--------+
-   | webapp |               |  user  |             |  push  |           |  app   |
-   |  +SW   |               | agent  |             | server |           | server |
-   +--------+               +--------+             +--------+           +--------+
-       |                        |                      |                     |
-       |                        |                      |         Developer registers with push
-       |                        |                      |         service(s) and receives data 
-       |                        |                      |          needed for app registration
-       |                        |                      |              with push service
-  User invokes app,             |                      |                     |
-  which is configured           |                      |                     |
-  with push service             |                      |                     |
-  registration options          |                      |                     |
-       |&lt;---- app setup with push service registration options if needed ---&gt;|
-       |                        |                      |                     |
-       |--register w/options---&gt;|                      |                     |
-       |                  (user accepts)               |                     |
-       |                        |                      |                     |
-       |                        |&lt;-setup push service-&gt;|                     |
-       |                        |                      |                     |
-       |&lt;--- call promise ------|                      |                     |
-       | fullfilled function w/ |                      |                     |
-       | registration attributes|                      |                     |
-       |                        |                      |                     |
-       |&lt;----deliver registration attributes to app server for later use----&gt;|
-       |                        |                      |                     |
-       |                        |                      |         Server associates registration
-       |                        |                      |           attributes with webapp
-       |                        |                      |                     |
-       |                        |                      |              (sometime later)
-       |                        |                      |         Server has data to push, 
-       |                        |                      |        invokes push server API as
-       |                        |                      |        per registration attributes
-       |                        |                      |                     |
-       |                        |                      |&lt;--push message-|
-       |                        |                      |   per service API   |
-       |                        |                      |                     |
-       |                        |             (match to user agent)          |
-       |                        |                      |                     |
-       |                        |&lt;--push message--|                     |
-       |                        | per service protocol |                     |
-       |                        |                      |                     |
-       |                (match to webapp)              |                     |
-       |                        |                      |                     |
-       |&lt;-----push message------|                      |                     |
-       |                        |                      |                     |
-*/
-   
 </pre>
+      <section class="informative">
+        <h2>
+          Sequence diagram
+        </h2>
+        <figure>
+          <a href="sequence_diagram.png"><img src="sequence_diagram.png" width=
+          "800" alt=
+          "Example flow of events for registration, message delivery, and unregistration"></a>
+          <figcaption>
+            Example flow of events for registration, message delivery, and
+            unregistration
+          </figcaption>
+        </figure>
+      </section>
       <section>
         <h3>
           Push Server Discovery and API Use
