@@ -643,7 +643,7 @@
             href="#dfn-webapp">webapp</a> to receive <a class="internalDFN"
             href="#dfn-push-message">push messages</a>, unless a prearranged
             trust relationship applies or the user has already granted or
-            denied permission explicitly to this <a class="internalDFN" href=
+            denied permission explicitly for this <a class="internalDFN" href=
             "#dfn-webapp">webapp</a>.
           </li>
           <li>If not granted, reject <var>promise</var> with a <a href=
@@ -666,7 +666,7 @@
               "http://dom.spec.whatwg.org/#aborterror"><code>AbortError</code></a>"
               and terminate these steps.
               </li>
-              <li>When the request has been completed resolve
+              <li>When the request has been completed, resolve
               <var>promise</var> with a <a><code>PushRegistration</code></a>
               providing the details of the retrieved <a class="internalDFN"
               href="#dfn-push-registration">push registration</a>.
@@ -683,12 +683,16 @@
           "http://dom.spec.whatwg.org/#aborterror"><code>AbortError</code></a>"
           and terminate these steps.
           </li>
-          <li>When the request has been completed resolve <var>promise</var>
+          <li>When the request has been completed, resolve <var>promise</var>
           with a <a><code>PushRegistration</code></a> providing the details of
           the new <a class="internalDFN" href="#dfn-push-registration">push
           registration</a>.
           </li>
         </ol>
+        <p class="note">
+          <a href=
+          "https://www.w3.org/Bugs/Public/show_bug.cgi?id=23033"><code>PermissionDeniedError</code></a> has not yet been defined in a specification, this document currently links to the bug for defining it.
+        </p>
         <p>
           The <dfn><code>unregister</code></dfn> method when invoked MUST run
           the following steps:
@@ -717,10 +721,10 @@
           "http://dom.spec.whatwg.org/#aborterror"><code>AbortError</code></a>"
           and terminate these steps.
           </li>
-          <li>When the request has been completed resolve <var>promise</var>
+          <li>When the request has been completed, resolve <var>promise</var>
           with a <a><code>PushRegistration</code></a> providing the details of
-          the unregistered <a class="internalDFN" href=
-          "#dfn-push-registration">push registration</a>.
+          the <a class="internalDFN" href="#dfn-push-registration">push
+          registration</a> which has been unregistered.
           </li>
         </ol>
         <p>
@@ -750,7 +754,7 @@
           "http://dom.spec.whatwg.org/#aborterror"><code>AbortError</code></a>"
           and terminate these steps.
           </li>
-          <li>When the request has been completed resolve <var>promise</var>
+          <li>When the request has been completed, resolve <var>promise</var>
           with a <a><code>PushRegistration</code></a> providing the details of
           the retrieved <a class="internalDFN" href=
           "#dfn-push-registration">push registration</a>.
