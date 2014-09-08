@@ -417,12 +417,12 @@ navigator.serviceWorker.ready.then(function() {
           These parameters and attributes include:
         </p>
         <ul>
-          <li>The <code>pushRegistrationId</code> of a
+          <li>The <code>registrationId</code> of a
           <code>PushRegistration</code>, as an opaque string to the Push API,
           may be used by push systems to provide meaningful data to the
           <a class="internalDFN" href="#dfn-webappserver">webapp server</a>
-          through the webapp. For example, the <code>pushRegistrationId</code>
-          may be used as a push server API request parameter or request body
+          through the webapp. For example, the <code>registrationId</code> may
+          be used as a push server API request parameter or request body
           element for specific push systems.
           </li>
           <li>As a URI, the <code>endpoint</code> of a
@@ -441,13 +441,13 @@ navigator.serviceWorker.ready.then(function() {
         <ul>
           <li>The URI used by the <a class="internalDFN" href=
           "#dfn-webappserver">webapp server</a> to issue push server API
-          requests, which may be based upon the <code>endpoint</code>, and
-          for a particular push server API request require additional
-          parameters e.g. the <code>pushRegistrationId</code>.
+          requests, which may be based upon the <code>endpoint</code>, and for
+          a particular push server API request require additional parameters
+          e.g. the <code>registrationId</code>.
           </li>
           <li>The push server API request body, which may require that the
-          <code>endpoint</code> or <code>pushRegistrationId</code> be
-          present in some body element.
+          <code>endpoint</code> or <code>registrationId</code> be present in
+          some body element.
           </li>
           <li>The <code>pushRegistration</code> attributes may only be used by
           the <a class="internalDFN" href="#dfn-webappserver">webapp server</a>
@@ -472,8 +472,8 @@ navigator.serviceWorker.ready.then(function() {
           Prior to use of a push server API, <a class="internalDFN" href=
           "#dfn-webappserver">webapp servers</a> that are designed to work with
           multiple push systems may need to determine the applicable system by
-          parsing the <code>endpoint</code> to detect the push system from
-          the URI domain.
+          parsing the <code>endpoint</code> to detect the push system from the
+          URI domain.
         </p>
       </section>
     </section>
@@ -790,7 +790,7 @@ navigator.serviceWorker.ready.then(function() {
           href="#dfn-webapp">webapp</a> instances running on multiple devices.
         </dd>
         <dt>
-          readonly attribute DOMString pushRegistrationId
+          readonly attribute DOMString registrationId
         </dt>
         <dd>
           It MUST return a univocal identifier of this <a class="internalDFN"
@@ -800,8 +800,8 @@ navigator.serviceWorker.ready.then(function() {
           server</a> to indicate the target of the <a class="internalDFN" href=
           "#dfn-push-message">push messages</a> that it submits to the
           <a class="internalDFN" href="#dfn-push-server">push server</a>. Each
-          pair of <code>pushRegistrationId</code> and <code>endpoint</code>
-          is expected to be unique and specific to a particular <a class=
+          pair of <code>registrationId</code> and <code>endpoint</code> is
+          expected to be unique and specific to a particular <a class=
           "internalDFN" href="#dfn-webapp">webapp</a> instance running on a
           specific device.
         </dd>
@@ -845,7 +845,7 @@ navigator.serviceWorker.ready.then(function() {
       </p>
       <dl title="interface PushRegisterMessage" class="idl">
         <dt>
-          readonly attribute DOMString pushRegistrationId
+          readonly attribute DOMString registrationId
         </dt>
         <dd>
           MUST return the identifier of the <a class="internalDFN" href=
@@ -933,7 +933,7 @@ navigator.serviceWorker.ready.then(function() {
       <ul>
         <li>Create a new <a><code>PushRegisterMessage</code></a> object
         </li>
-        <li>Set the <code>pushRegistrationId</code> of the
+        <li>Set the <code>registrationId</code> of the
         <a><code>PushRegisterMessage</code></a> object to the identifier of the
         <a class="internalDFN" href="#dfn-push-registration">push
         registration</a> that is no longer valid
