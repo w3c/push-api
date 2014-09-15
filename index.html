@@ -343,102 +343,39 @@
       </p>
       <p>
         The following code and diagram illustrate a hypothetical use of the
-        push API:
+        push API.
       </p>
-      <pre class="example highlight">
+      <section class="informative">
+        <h2>
+          Example
+        </h2>
+        <pre class="example highlight">
+// https://example.com/serviceworker.js
+this.onpush = function(event) {
+  console.log(event.message.data);
+  // From here we can write the data to IndexedDB, send it to any open windows,
+  // display a notification, etc.
+}
 
- // https://example.com/serviceworker.js
- 
- this.oninstall = function(e) {
-  // Note that push messages won't be delivered to this service worker (SW)
-  // until the install and activate steps are completed. This
-  // may mean waiting until caches are populated, etc.
-  e.waitUntil(...);
- };
- 
- this.onactivate = function(e) { ... }
-
- // Note that we no longer need navigator.hasPendingMessages() because the UA
- // can queue push messages for the SW and deliver them as events whenever it
- // deems necessary.
- this.onpush = function(e) {
-  // Log the message data
-  console.log(e.message.data);
-  // ...
-  // From here the SW can write the data to IndexedDB, display a notification,
-  // send it to any open windows, etcetera.
- }
- 
- // https://example.com/webapp.js
- 
- var logError = console.error.bind(console);
- 
- function toQueryString(obj) {
-  var encode = encodeURIComponent;
-  for (var x in obj) {
-   components.push(encode(x) + "=" + encode(obj[x]));
-  }
-  return "?" + components.join("&amp;");
- }
-
- function registerWithAppServer(registration) {
-  // We've been handed the info that the app server may need
-  // to complete preparation for activating the push service
-  // including the pushEndpoint and pushRegistrationId
-  asyncXHR(
-   "https://example.com/push/activate" + toQueryString(registration);
-  );
- }
- 
- // This is an ugly detail of the current SW design. See:
- //   https://github.com/slightlyoff/ServiceWorker/issues/174
- function swReady() {
-  var sw = navigator.serviceWorker;
-  return new Promise(function(resolve, reject) {
-   if (!sw.active) {
-    // Note that the promise returned from register() resolves as soon
-    // as the script for the SW is downloaded and evaluates without issue.
-    // At this point it is NOT considered installed and will not receive
-    // push events. We will, however, allow the registration for pushes
-    // to proceed at this point. Push registrations that succeed and generate
-    // messages will see those messages queued until the SW is installed
-    // and activated, perhaps at some time in the near future (e.g., once
-    // resources for the application itself are downloaded).
-    sw.register("/service_worker.js", { scope: "*" }).then(resolve, reject);
-   } else {
-    sw.ready().then(resolve, reject);
-   }
-  });
- }
-
- // Only try to register for a push channel when we have valid SW
- swReady().then(function(sw) {
-  var gcmSenderId = "......";
-  var apnSenderId = "......";
-  var regId = "......";
-  var push = navigator.push;
-
-  // The push object is an async map that can be used to enumerate and
-  // test for active channels.
-  push.has(regId).catch(function() {
-   // this will be executed if the regId is not found 
-   // register() is async and can prompt the user. On success, the
-   // expected regId value should be added to the map.
-   push.register({
-    // the "sender" field is push-server-specific and is optional.
-    // Some servers (e.g., GCM) will require that this field be
-    // populated with a pre-arranged ID for the app. The system
-    // selects between the supplied keys to decide which one to
-    // offer the "local" push server for this registration.
-    sender: {
-     apn: apnSenderId,
-     gcm: gcmSenderId,
-     // ...
+// https://example.com/webapp.js
+navigator.serviceWorker.ready.then(function() {
+  navigator.pushRegistrationManager.register().then(
+    function(registration) {
+      console.log(registration.pushRegistrationId);
+      console.log(registration.pushEndpoint);
+      // The push registration details needed by the application server to push
+      // messages to the push service are now available, and can be sent to the
+      // application server using, for example, an XMLHttpRequest.
+    }, function(error) {
+      // During development it often helps to log errors to the console. In a
+      // production environment it might make sense to also report information
+      // about errors back to the application server.
+      console.log(error);
     }
-   }).then(registerWithAppServer, logError);
   });
- });
+});
 </pre>
+      </section>
       <section class="informative">
         <h2>
           Sequence diagram
