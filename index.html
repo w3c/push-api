@@ -479,45 +479,24 @@ navigator.serviceWorker.ready.then(function() {
     </section>
     <section>
       <h2>
-        <a>Navigator</a> Interface
+        <a>ServiceWorkerRegistration</a> Interface
       </h2>
-      <dl title="partial interface Navigator" class="idl">
+      <dl title="partial interface ServiceWorkerRegistration" class="idl">
         <dt>
-          readonly attribute PushManager push
+          readonly attribute PushRegistrationManager pushRegistrationManager
         </dt>
         <dd>
           The object that exposes the push service management interface.
         </dd>
       </dl>
     </section>
-    <p class="note">
-      TAG issue: navigator.push as an object of PushManager type seems
-      misleading per se and is inconsistent with Array.prototype.push method.
-      Suggestion: navigator.pushRegistrationManager.
-    </p>
+
     <section>
       <h2>
-        <a>PushManager</a> Interface
+        <a>PushRegistrationManager</a> Interface
       </h2>
-      <p class="note">
-        TAG issue: PushManager is limited to dealing with registrations.
-        Suggestion: PushRegistrationManager.
-      </p>
-      <p class="note">
-        TAG issue: PushManager.registrations method seems inconsistent.
-        Suggestion: PushManager.getRegistrations.
-      </p>
-      <p class="note">
-        TAG issue: PushManager.register provides two heterogeneous functions:
-        asking use permission, registering push notifications. This mixing
-        leads to odd user agent behavior, i.e. push service failure forces
-        webapp to ask permission again. Suggestion: split the functionality and
-        provide separate methods to ask user permission (check if permission
-        has already being granted) and to register push notifications. Provide
-        different sets of errors for those purposes.
-      </p>
       <p>
-        The <a>PushManager</a> interface defines the operations that enable
+        The <a>PushRegistrationManager</a> interface defines the operations that enable
         <a class="internalDFN" href="#dfn-webapp">webapps</a> to establish
         access to <a class="internalDFN" href="#dfn-push-service">push
         services</a>. Note that just a single <a class="internalDFN" href=
@@ -555,6 +534,13 @@ navigator.serviceWorker.ready.then(function() {
           returns a <a><code>Promise</code></a> that will allow the caller to
           be notified about the result of the operation.
         </dd>
+        <dt> Promise&lt;PushPermissionStatus&gt; hasPermission ()</dt>
+        <dd>
+          This method allows a <a class="internalDFN"
+          href="#dfn-webapp">webapp</a> to check whether user has granted permission
+          to use push service. It returns a <a><code>Promise</code></a> that will
+          allow the caller to be notified about the result of the operation. 
+
       </dl>
       <section>
         <h3>
@@ -700,6 +686,37 @@ navigator.serviceWorker.ready.then(function() {
           "#dfn-push-registration">push registration</a>.
           </li>
         </ol>
+
+        <p>
+          The <dfn><code>hasPermission</code></dfn> method when invoked MUST run the
+          following steps:
+        </p>          
+        <ol>
+          <li>Let <var>promise</var> be a new <a><code>Promise</code></a>.
+          </li>
+          <li>Return <var>promise</var> and continue the following steps
+          asynchronously.
+          </li>
+          <li>Retrieve the push permission status
+          (<a><code>PushPermissionStatus</code></a>) of the requesting <a
+          class="internalDFN" href="#dfn-webapp">webapp</a>
+          <li>If there is an error, reject <var>promise</var> with no arguments
+          and terminate these steps.
+          </li>
+          <li>When the request has been completed, resolve <var>promise</var>
+          with <a><code>PushPermissionStatus</code></a> providing the push
+          permission status.
+        </ol>
+      </li>
+   </ol>
+
+  <p> Permission to use the push service can be persistent, that is, it does not
+  need to be reconfirmed for subsequent registrations if a valid permission
+  exists.
+
+  <p> If there is a need to ask for permission, it needs to be done by invoking
+  the <a><code>register</code></a> method.
+
       </section>
       <section>
         <h3>
@@ -974,6 +991,25 @@ navigator.serviceWorker.ready.then(function() {
         </li>
       </ul>
     </section>
+  <section>
+    <h2>Enumerations</h2>
+    <dl class="idl" title="enum PushPermissionStatus">
+          <dt>granted</dt>
+          <dd>
+              The <a class="internalDFN" href="#dfn-webapp">webapp</a> has
+              permission to use Push API.
+          </dd>
+          <dt>denied</dt>
+          <dd>
+              The <a class="internalDFN" href="#dfn-webapp">webapp</a> has been
+              denied permission to use Push API.
+          </dd>
+          <dt>default</dt>
+          <dd>
+              The <a class="internalDFN" href="#dfn-webapp">webapp</a> needs to
+              ask for permission in order to use Push API.
+          </dd>
+    </dl>
     <section class="appendix">
       <h2>
         Acknowledgements
