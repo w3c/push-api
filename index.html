@@ -362,8 +362,8 @@ this.onpush = function(event) {
 navigator.serviceWorker.ready.then(function() {
   navigator.pushRegistrationManager.register().then(
     function(registration) {
-      console.log(registration.pushRegistrationId);
-      console.log(registration.pushEndpoint);
+      console.log(registration.registrationId);
+      console.log(registration.endpoint);
       // The push registration details needed by the application server to push
       // messages to the push service are now available, and can be sent to the
       // application server using, for example, an XMLHttpRequest.
