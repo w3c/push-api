@@ -53,32 +53,13 @@
   <body>
     <section id='abstract'>
       <p>
-        The <cite>Push API</cite> provides <a class="internalDFN" href=
-        "#dfn-webapp">webapps</a> with scripted access to server-sent messages,
-        for simplicity referred to here as <a class="internalDFN" href=
-        "#dfn-push-message">push messages</a>, as delivered by <a class=
-        "internalDFN" href="#dfn-push-service">push services</a>. A <a class=
-        "internalDFN" href="#dfn-push-service">push service</a> allows a
-        <a class="internalDFN" href="#dfn-webappserver">webapp server</a> to
-        send messages to a <a class="internalDFN" href=
-        "#dfn-webapp">webapp</a>, regardless of whether the <a class=
-        "internalDFN" href="#dfn-webapp">webapp</a> is actively running at the
-        time or not. The <a>push message</a> is delivered to a <a class=
-        "internalDFN" href="#dfn-service-worker">Service Worker</a> as a push
-        event. The push event optionally has a data payload. From the event
-        handler any available API may be called, for example to store the
-        message data or to display a notification to the user.
+        The <cite>Push API</cite> provides <a title="webapp">webapps</a> with scripted access to
+        server-sent messages, for simplicity referred to here as <a title="push message">push
+        messages</a>, as delivered by <a title="push service">push services</a>. A <a>push
+        service</a> allows a <a>webapp server</a> to send messages to a <a>webapp</a>, regardless of whether the <a>webapp</a> is currently active on the <a>user agent</a>. The <a>push message</a> will be delivered to a <a>Service Worker</a>, which could then store the message's data or display a notification to the user.
       </p>
       <p>
-        <a class="internalDFN" href="#dfn-push-message">Push messages</a> may
-        be delivered by the <a class="internalDFN" href=
-        "#dfn-push-service">push service</a> to the <a class="internalDFN"
-        href="#dfn-user-agent">user agent</a> via any method, this part of the
-        system is not exposed as part of the <cite>Push API</cite>. The method
-        to be used is selected by the <a class="internalDFN" href=
-        "#dfn-user-agent">user agent</a>, or it may allow the user to select
-        one. The <cite>Push API</cite> is defined to promote compatibility with
-        any delivery method.
+        This specification is designed to promote compatibility with any delivery method for <a title="push message">push messages</a> from <a title="push service">push services</a> to <a title="user agent">user agents</a>.
       </p>
     </section>
     <section id='sotd'></section>
