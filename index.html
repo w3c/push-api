@@ -54,26 +54,21 @@
   <body>
     <section id='abstract'>
       <p>
-        This specification defines a “Push API” that provides <a class=
-        "internalDFN" href="#dfn-webapp">webapps</a> with scripted access to
-        server-sent messages, for simplicity referred to here as <a class=
-        "internalDFN" href="#dfn-push-message">push messages</a>, as delivered
-        by <a class="internalDFN" href="#dfn-push-service">push services</a>.
-        <a class="internalDFN" href="#dfn-push-service">Push services</a> are a
-        way for <a class="internalDFN" href="#dfn-webappserver">webapp
-        servers</a> to send messages to <a class="internalDFN" href=
-        "#dfn-webapp">webapps</a>, whether or not the <a class="internalDFN"
-        href="#dfn-webapp">webapp</a> is active in a browser window.
+        This specification defines a “Push API” that provides <a title="webapp">webapps</a> with scripted access to
+        server-sent messages, for simplicity referred to here as <a title="push message">push messages</a>, as delivered
+        by <a title="push service">push services</a>.
+        <a title="push service">Push services</a> are a
+        way for <a title="webapp server">webapp
+        servers</a> to send messages to <a title=
+        "webapp">webapps</a>, whether or not the <a>webapp</a> is active in a browser window.
       </p>
       <p>
-        <a class="internalDFN" href="#dfn-push-message">Push messages</a> may
-        be delivered to the <a class="internalDFN" href="#dfn-user-agent">user
+        <a title="push message">Push messages</a> may
+        be delivered to the <a>user
         agent</a> via various methods, either via standardized protocols (e.g.
         Server-Sent Events [[SSE]], the GSM Short Message Service [[GSM-SMS]],
-        SIP MESSAGE [[RFC3428]], or OMA Push [[OMA-PUSH]]), or via <a class=
-        "internalDFN" href="#dfn-user-agent">user agent</a> specific methods.
-        The method to be used is selected by the <a class="internalDFN" href=
-        "#dfn-user-agent">user agent</a>, or it may allow the user to select
+        SIP MESSAGE [[RFC3428]], or OMA Push [[OMA-PUSH]]), or via <a>user agent</a> specific methods.
+        The method to be used is selected by the <a>user agent</a>, or it may allow the user to select
         one. The Push API is defined to promote compatibility with any delivery
         method.
       </p>
@@ -84,68 +79,50 @@
         Introduction
       </h2>
       <p>
-        As defined here, <a class="internalDFN" href="#dfn-push-service">push
-        services</a> support delivery of <a class="internalDFN" href=
-        "#dfn-webappserver">webapp server</a> messages in the following
+        As defined here, <a title="push service">push
+        services</a> support delivery of <a>webapp server</a> messages in the following
         contexts and related use cases:
       </p>
       <ul>
-        <li>the user is actively involved in the use of a <a class=
-        "internalDFN" href="#dfn-webapp">webapp</a>: this relates to any normal
-        use case in which a <a class="internalDFN" href=
-        "#dfn-webapp">webapp</a> user may benefit from <a class="internalDFN"
-        href="#dfn-push-message">push messages</a> while the user is actively
-        using the <a class="internalDFN" href="#dfn-webapp">webapp</a>
+        <li>the user is actively involved in the use of a <a>webapp</a>: this relates to any normal
+        use case in which a <a>webapp</a> user may benefit from <a
+        title="push message">push messages</a> while the user is actively
+        using the <a>webapp</a>
         </li>
-        <li>the user is not actively involved in the use of a <a class=
-        "internalDFN" href="#dfn-webapp">webapp</a>, but the <a class=
-        "internalDFN" href="#dfn-webapp">webapp</a> is active in a window of
+        <li>the user is not actively involved in the use of a <a>webapp</a>, but the <a>webapp</a> is active in a window of
         the browser or executing as a web worker: this relates to use cases
         such as social networking, messaging, web feed readers, etc in which
-        the user may not be actively using a <a class="internalDFN" href=
-        "#dfn-webapp">webapp</a> but still benefits from <a class="internalDFN"
-          href="#dfn-push-message">push messages</a> being sent to (or via) the
-          <a class="internalDFN" href="#dfn-webapp">webapp</a>, to keep the
+        the user may not be actively using a <a>webapp</a> but still benefits from <a
+          title="push message">push messages</a> being sent to (or via) the
+          <a>webapp</a>, to keep the
           user up-to-date
         </li>
-        <li>the <a class="internalDFN" href="#dfn-webapp">webapp</a> is not
+        <li>the <a>webapp</a> is not
         currently active in a browser window: this relates to use cases in
-        which the user may close the <a class="internalDFN" href="#dfn-webapp">
-          webapp</a>, but still benefits from the <a class="internalDFN" href=
-          "#dfn-webapp">webapp</a> being able to be restarted when a <a class=
-          "internalDFN" href="#dfn-push-message">push message</a> is received,
+        which the user may close the <a>webapp</a>, but still benefits from the <a>webapp</a> being able to be restarted when a <a>push message</a> is received,
           e.g. the WebRTC use case in which an incoming call can invoke the
-          WebRTC <a class="internalDFN" href="#dfn-webapp">webapp</a>
+          WebRTC <a>webapp</a>
         </li>
-        <li>multiple <a class="internalDFN" href="#dfn-webapp">webapps</a> are
-        running, but <a class="internalDFN" href="#dfn-push-message">push
-        messages</a> are delivered only to the <a class="internalDFN" href=
-        "#dfn-webapp">webapp</a> that requested them, e.g. any normal use case
-        in which multiple <a class="internalDFN" href="#dfn-webapp">webapps</a>
-        are active in the browser and utilizing <a class="internalDFN" href=
-        "#dfn-push-service">push services</a>
+        <li>multiple <a title="webapp">webapps</a> are
+        running, but <a title="push message">push
+        messages</a> are delivered only to the <a>webapp</a> that requested them, e.g. any normal use case
+        in which multiple <a>webapps</a>
+        are active in the browser and utilizing <a title=
+        "push service">push services</a>
         </li>
-        <li>multiple instances of the same <a class="internalDFN" href=
-        "#dfn-webapp">webapp</a> are active in the browser, and <a class=
-        "internalDFN" href="#dfn-push-message">push messages</a> specific to
-        each instance of the <a class="internalDFN" href=
-        "#dfn-webapp">webapp</a> are delivered only to the specific instance,
-        e.g. when a mail <a class="internalDFN" href="#dfn-webapp">webapp</a>
+        <li>multiple instances of the same <a>webapp</a> are active in the browser, and <a title="push message">push messages</a> specific to
+        each instance of the <a>webapp</a> are delivered only to the specific instance,
+        e.g. when a mail <a>webapp</a>
         is active in two windows using different mail accounts
         </li>
-        <li>multiple instances of the same <a class="internalDFN" href=
-        "#dfn-webapp">webapp</a> are active in different browsers, and push
-        messages are delivered to a set of instances of the <a class=
-        "internalDFN" href="#dfn-webapp">webapp</a>, e.g. when a mail
-          <a class="internalDFN" href="#dfn-webapp">webapp</a> is active in two
+        <li>multiple instances of the same <a>webapp</a> are active in different browsers, and push
+        messages are delivered to a set of instances of the <a>webapp</a>, e.g. when a mail
+          <a>webapp</a> is active in two
           browsers using the same email account
         </li>
-        <li>multiple instances of the same <a class="internalDFN" href=
-        "#dfn-webapp">webapp</a> are active in different browsers, and push
-        messages are delivered to all instances of the <a class="internalDFN"
-        href="#dfn-webapp">webapp</a>, e.g. when a message is to be broadcasted
-        to all users of the <a class="internalDFN" href=
-        "#dfn-webapp">webapp</a>
+        <li>multiple instances of the same <a>webapp</a> are active in different browsers, and push
+        messages are delivered to all instances of the <a>webapp</a>, e.g. when a message is to be broadcasted
+        to all users of the <a>webapp</a>
         </li>
       </ul>
     </section>
@@ -198,62 +175,50 @@
         <dfn>Promise</dfn></a> is defined in [[!ECMASCRIPT]].
       </p>
       <p>
-        <dfn id="dfn-service-worker"><a href=
+        <dfn><a href=
         "http://www.w3.org/TR/service-workers/#dnf-service-worker">Service
         Worker</a></dfn> is defined in [[!SERVICE-WORKERS]].
       </p>
       <p>
-        The term <dfn id="dfn-webapp">webapp</dfn> refers to a Web application,
+        The term <dfn>webapp</dfn> refers to a Web application,
         i.e. an application implemented using Web technologies, and executing
-        within the context of a Web <a class="internalDFN" href=
-        "#dfn-user-agent">user agent</a>, e.g. a Web browser or other Web
+        within the context of a Web <a>user agent</a>, e.g. a Web browser or other Web
         runtime environment.
       </p>
       <p>
-        The term <dfn id="dfn-webappserver">webapp server</dfn> refers to
-        server-side components of a <a class="internalDFN" href=
-        "#dfn-webapp">webapp</a>.
+        The term <dfn>webapp server</dfn> refers to
+        server-side components of a <a>webapp</a>.
       </p>
       <p>
-        The term <dfn id="dfn-push-message">push message</dfn> refers to an
-        indication to a <a class="internalDFN" href="#dfn-webapp">webapp</a>
-        that there is new information for it from the <a class="internalDFN"
-        href="#dfn-webappserver">webapp server</a>, all or part of which MAY be
-        contained in the <a class="internalDFN" href="#dfn-push-message">push
-        message</a> itself.
+        The term <dfn>push message</dfn> refers to an
+        indication to a <a>webapp</a>
+        that there is new information for it from the <a>webapp server</a>, all or part of which MAY be
+        contained in the <a>push message</a> itself.
       </p>
       <p>
-        The term <dfn id="dfn-push-registration">push registration</dfn> refers
-        to each logical channel aimed at delivering <a class="internalDFN"
-        href="#dfn-push-message">push messages</a> from an <a class=
-        "internalDFN" href="#dfn-webappserver">webapp server</a> to a <a class=
-        "internalDFN" href="#dfn-webapp">webapp</a>, which is created by a
-        distinct registration of such <a class="internalDFN" href=
-        "#dfn-webapp">webapp</a> via this Push API.
+        The term <dfn>push registration</dfn> refers
+        to each logical channel aimed at delivering <a
+        title="push message">push messages</a> from an <a>webapp server</a> to a <a>webapp</a>, which is created by a
+        distinct registration of such <a>webapp</a> via this Push API.
       </p>
       <p>
-        The term <dfn id="dfn-push-service">push service</dfn> refers to an
-        overall end-to-end system that allows <a class="internalDFN" href=
-        "#dfn-webappserver">webapp servers</a> to send <a class="internalDFN"
-        href="#dfn-push-message">push messages</a> to a <a class="internalDFN"
-        href="#dfn-webapp">webapp</a>.
+        The term <dfn>push service</dfn> refers to an
+        overall end-to-end system that allows <a title=
+        "webapp server">webapp servers</a> to send <a
+        title="push message">push messages</a> to a <a>webapp</a>.
       </p>
       <p>
-        The term <dfn id="dfn-push-server">push server</dfn> refers to the
-        <a class="internalDFN" href="#dfn-push-service">push service</a> access
-        point via which <a class="internalDFN" href=
-        "#dfn-webapp-server">webapp-servers</a> can initiate <a class=
-        "internalDFN" href="#dfn-push-message">push message</a> delivery. Push
-        servers typically expose APIs specific to the <a class="internalDFN"
-        href="#dfn-push-service">push service</a>, e.g. for <a class=
-        "internalDFN" href="#dfn-push-message">push message</a> delivery
+        The term <dfn>push server</dfn> refers to the
+        <a>push service</a> access
+        point via which <a title="webapp server">webapp-servers</a> can initiate <a>push message</a> delivery. Push
+        servers typically expose APIs specific to the <a>push service</a>, e.g. for <a>push message</a> delivery
         initiation.
       </p>
       <p>
-        The term <dfn id="dfn-express-permission">express permission</dfn>
+        The term <dfn>express permission</dfn>
         refers to an act by the user, e.g. via user interface or host device
         platform features, via which the user approves the permission of a
-        <a class="internalDFN" href="#dfn-webapp">webapp</a> to access the Push
+        <a>webapp</a> to access the Push
         API.
       </p>
     </section>
@@ -262,23 +227,23 @@
         Security and privacy considerations
       </h2>
       <p>
-        <a class="internalDFN" href="#dfn-user-agent">User agents</a>
+        <a title="user agent">User agents</a>
         <em title="must" class="rfc2119">must not</em> provide Push API access
-        to <a class="internalDFN" href="#dfn-webapp">webapps</a> without the
-        <a class="internalDFN" href="#dfn-express-permission">express
-        permission</a> of the user. <a class="internalDFN" href=
-        "#dfn-user-agent">User agents</a> <em title="must" class=
+        to <a title="webapp">webapps</a> without the
+        <a>express
+        permission</a> of the user. <a title=
+        "user agent">User agents</a> <em title="must" class=
         "rfc2119">must</em> acquire consent for permission through a user
         interface for each call to the <code>register()</code> method, unless a
         prearranged trust relationship applies.
       </p>
       <p>
-        <a class="internalDFN" href="#dfn-user-agent">User agents</a>
+        <a title="user agent">User agents</a>
         <em title="may" class="rfc2119">may</em> support prearranged trust
         relationships that do not require such per-request user interfaces.
       </p>
       <p>
-        <a class="internalDFN" href="#dfn-user-agent">User agents</a>
+        <a title="user agent">User agents</a>
         <em title="must" class="rfc2119">must</em> implement the Push API to be
         HTTPS-only. SSL-only support provides better protection for the user
         against man-in-the-middle attacks intended to obtain push registration
@@ -294,52 +259,45 @@
         Push Framework
       </h2>
       <p>
-        Although <a class="internalDFN" href="#dfn-push-service">push
+        Although <a title="push service">push
         services</a> are expected to differ in deployment, a typical deployment
         is expected to have the following general entities and example
-        operation for delivery of <a class="internalDFN" href=
-        "#dfn-push-message">push messages</a>:
+        operation for delivery of <a title=
+        "push message">push messages</a>:
       </p>
       <ul>
         <li>
-          <a class="internalDFN" href="#dfn-webappserver">Webapp servers</a>
-          request delivery of a <a class="internalDFN" href=
-          "#dfn-push-message">push message</a> to a <a class="internalDFN"
-          href="#dfn-webapp">webapp</a> via a RESTful API exposed by a
-          <a class="internalDFN" href="#dfn-push-server">push server</a>
+          <a title="webapp server">Webapp servers</a>
+          request delivery of a <a>push message</a> to a <a>webapp</a> via a RESTful API exposed by a
+          <a>push server</a>
         </li>
-        <li>The <a class="internalDFN" href="#dfn-push-server">push server</a>
-        delivers the message to a specific <a class="internalDFN" href=
-        "#dfn-user-agent">user agent</a>
+        <li>The <a>push server</a>
+        delivers the message to a specific <a>user agent</a>
         </li>
-        <li>The <a class="internalDFN" href="#dfn-user-agent">user agent</a>
-        delivers the <a class="internalDFN" href="#dfn-push-message">push
-        message</a> to the specific <a class="internalDFN" href="#dfn-webapp">
+        <li>The <a>user agent</a>
+        delivers the <a>push
+        message</a> to the specific <a>
           webapp</a> intended to receive it.
         </li>
       </ul>
       <p>
-        This overall framework allows <a class="internalDFN" href=
-        "#dfn-webappserver">webapp servers</a> to inform <a class="internalDFN"
-        href="#dfn-webapp">webapps</a> that new data is available at the
-        <a class="internalDFN" href="#dfn-webappserver">webapp server</a>, or
-        pass the new data directly to the <a class="internalDFN" href=
-        "#dfn-webapp">webapp</a> in the <a class="internalDFN" href=
-        "#dfn-push-message">push message</a>.
+        This overall framework allows <a title=
+        "webapp server">webapp servers</a> to inform <a
+        title="webapp">webapps</a> that new data is available at the
+        <a title="webapp server">webapp server</a>, or
+        pass the new data directly to the <a>webapp</a> in the <a>push message</a>.
       </p>
       <p>
         The push API enables delivery of arbitrary application data to
-        <a class="internalDFN" href="#dfn-webapp">webapps</a>, and makes no
-        assumptions about the over-the-air/wire protocol used by <a class=
-        "internalDFN" href="#dfn-push-service">push services</a>. As such, the
-        details of what types of data flow through a <a class="internalDFN"
-        href="#dfn-push-service">push services</a> for a particular <a class=
-        "internalDFN" href="#dfn-webapp">webapp</a> are specific to the
-        <a class="internalDFN" href="#dfn-push-service">push service</a> and
-        <a class="internalDFN" href="#dfn-webapp">webapp</a>. As needed,
+        <a title="webapp">webapps</a>, and makes no
+        assumptions about the over-the-air/wire protocol used by <a title="push service">push services</a>. As such, the
+        details of what types of data flow through a <a
+        title="push-service">push services</a> for a particular <a>webapp</a> are specific to the
+        <a>push service</a> and
+        <a>webapp</a>. As needed,
         clarification about what data flows over-the-air/wire should be sought
-        from <a class="internalDFN" href="#dfn-push-service">push service</a>
-        operators or <a class="internalDFN" href="#dfn-webapp">webapp</a>
+        from <a>push service</a>
+        operators or <a>webapp</a>
         developers.
       </p>
       <p>
@@ -420,7 +378,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           <li>The <code>registrationId</code> of a
           <code>PushRegistration</code>, as an opaque string to the Push API,
           may be used by push systems to provide meaningful data to the
-          <a class="internalDFN" href="#dfn-webappserver">webapp server</a>
+          <a>webapp server</a>
           through the webapp. For example, the <code>registrationId</code> may
           be used as a push server API request parameter or request body
           element for specific push systems.
@@ -428,8 +386,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           <li>As a URI, the <code>endpoint</code> of a
           <code>PushRegistration</code> provides a flexible means for push
           systems to deliver webapp-specific registration and/or push server
-          API parameters to the <a class="internalDFN" href=
-          "#dfn-webappserver">webapp server</a>, through the webapp.
+          API parameters to the <a>webapp server</a>, through the webapp.
           </li>
         </ul>
         <p>
@@ -439,8 +396,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           considerations include:
         </p>
         <ul>
-          <li>The URI used by the <a class="internalDFN" href=
-          "#dfn-webappserver">webapp server</a> to issue push server API
+          <li>The URI used by the <a>webapp server</a> to issue push server API
           requests, which may be based upon the <code>endpoint</code>, and for
           a particular push server API request require additional parameters
           e.g. the <code>registrationId</code>.
@@ -450,7 +406,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           some body element.
           </li>
           <li>The <code>pushRegistration</code> attributes may only be used by
-          the <a class="internalDFN" href="#dfn-webappserver">webapp server</a>
+          the <a>webapp server</a>
           to associate the webapp to a specific push service registration, with
           the details of the push server API relying upon other pre-configured
           data.
@@ -469,8 +425,8 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           to deliver the server-initiated data.
         </p>
         <p>
-          Prior to use of a push server API, <a class="internalDFN" href=
-          "#dfn-webappserver">webapp servers</a> that are designed to work with
+          Prior to use of a push server API, <a title=
+          "webapp server">webapp servers</a> that are designed to work with
           multiple push systems may need to determine the applicable system by
           parsing the <code>endpoint</code> to detect the push system from the
           URI domain.
@@ -496,22 +452,18 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       </h2>
       <p>
         The <a>PushRegistrationManager</a> interface defines the operations
-        that enable <a class="internalDFN" href="#dfn-webapp">webapps</a> to
-        establish access to <a class="internalDFN" href=
-        "#dfn-push-service">push services</a>. Note that just a single
-        <a class="internalDFN" href="#dfn-push-registration">push
-        registration</a> is allowed per <a class="internalDFN" href=
-        "#dfn-webapp">webapp</a>.
+        that enable <a title="webapp">webapps</a> to
+        establish access to <a title=
+        "push service">push services</a>. Note that just a single
+        <a>push
+        registration</a> is allowed per <a>webapp</a>.
       </p>
       <dl title="interface PushRegistrationManager" class="idl">
         <dt>
           Promise&lt;PushRegistration&gt; register ()
         </dt>
         <dd>
-          This method allows a <a class="internalDFN" href=
-          "#dfn-webapp">webapp</a> to create a new <a class="internalDFN" href=
-          "#dfn-push-registration">push registration</a> to receive <a class=
-          "internalDFN" href="#dfn-push-message">push messages</a>. It returns
+          This method allows a <a>webapp</a> to create a new <a>push registration</a> to receive <a title="push message">push messages</a>. It returns
           a <a><code>Promise</code></a> that will allow the caller to be
           notified about the result of the operation.
         </dd>
@@ -519,8 +471,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           Promise&lt;PushRegistration&gt; unregister ()
         </dt>
         <dd>
-          This method allows a <a class="internalDFN" href=
-          "#dfn-webapp">webapp</a> to unregister. It returns a
+          This method allows a <a>webapp</a> to unregister. It returns a
           <a><code>Promise</code></a> that will allow the caller to be notified
           about the result of the operation.
         </dd>
@@ -528,9 +479,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           Promise&lt;PushRegistration&gt; getRegistration ()
         </dt>
         <dd>
-          This method allows a <a class="internalDFN" href=
-          "#dfn-webapp">webapp</a> to retrieve the active <a class=
-          "internalDFN" href="#dfn-push-registration">push registration</a>. It
+          This method allows a <a>webapp</a> to retrieve the active <a>push registration</a>. It
           returns a <a><code>Promise</code></a> that will allow the caller to
           be notified about the result of the operation.
         </dd>
@@ -538,8 +487,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           Promise&lt;PushPermissionStatus&gt; hasPermission ()
         </dt>
         <dd>
-          This method allows a <a class="internalDFN" href=
-          "#dfn-webapp">webapp</a> to check whether user has granted permission
+          This method allows a <a>webapp</a> to check whether user has granted permission
           to use push service. It returns a <a><code>Promise</code></a> that
           will allow the caller to be notified about the result of the
           operation.
@@ -566,12 +514,10 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           "http://dom.spec.whatwg.org/#securityerror"><code>SecurityError</code></a>"
           and terminate these steps.
           </li>
-          <li>Ask the user whether they allow the <a class="internalDFN"
-            href="#dfn-webapp">webapp</a> to receive <a class="internalDFN"
-            href="#dfn-push-message">push messages</a>, unless a prearranged
+          <li>Ask the user whether they allow the <a>webapp</a> to receive <a
+            title="push message">push messages</a>, unless a prearranged
             trust relationship applies or the user has already granted or
-            denied permission explicitly for this <a class="internalDFN" href=
-            "#dfn-webapp">webapp</a>.
+            denied permission explicitly for this <a>webapp</a>.
           </li>
           <li>If not granted, reject <var>promise</var> with a <a href=
           "http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a>
@@ -579,12 +525,11 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           "https://www.w3.org/Bugs/Public/show_bug.cgi?id=23033"><code>PermissionDeniedError</code></a>"
           and terminate these steps.
           </li>
-          <li>If the <a class="internalDFN" href="#dfn-webapp">webapp</a> is
+          <li>If the <a>webapp</a> is
           already registered, run the following substeps:
             <ol>
-              <li>Retrieve the <a class="internalDFN" href=
-              "#dfn-push-registration">push registration</a> associated with
-              the <a class="internalDFN" href="#dfn-webapp">webapp</a>.
+              <li>Retrieve the <a>push registration</a> associated with
+              the <a>webapp</a>.
               </li>
               <li>If there is an error, reject <var>promise</var> with a
               <a href=
@@ -595,14 +540,12 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
               </li>
               <li>When the request has been completed, resolve
               <var>promise</var> with a <a><code>PushRegistration</code></a>
-              providing the details of the retrieved <a class="internalDFN"
-              href="#dfn-push-registration">push registration</a>.
+              providing the details of the retrieved <a>push registration</a>.
               </li>
             </ol>
           </li>
-          <li>Make a request to the system to create a new <a class=
-          "internalDFN" href="#dfn-push-registration">push registration</a> for
-          the <a class="internalDFN" href="#dfn-webapp">webapp</a>.
+          <li>Make a request to the system to create a new <a>push registration</a> for
+          the <a>webapp</a>.
           </li>
           <li>If there is an error, reject <var>promise</var> with a <a href=
           "http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a>
@@ -612,7 +555,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           </li>
           <li>When the request has been completed, resolve <var>promise</var>
           with a <a><code>PushRegistration</code></a> providing the details of
-          the new <a class="internalDFN" href="#dfn-push-registration">push
+          the new <a>push
           registration</a>.
           </li>
         </ol>
@@ -632,17 +575,15 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           <li>Return <var>promise</var> and continue the following steps
           asynchronously.
           </li>
-          <li>If the <a class="internalDFN" href="#dfn-webapp">webapp</a> is
+          <li>If the <a>webapp</a> is
           not registered, reject <var>promise</var> with a <a href=
           "http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a>
           whose name is "<a href=
           "http://dom.spec.whatwg.org/#notfounderror"><code>NotFoundError</code></a>"
           and terminate these steps.
           </li>
-          <li>Make a request to the system to deactivate the <a class=
-          "internalDFN" href="#dfn-push-registration">push registration</a>
-          associated with the <a class="internalDFN" href=
-          "#dfn-webapp">webapp</a>.
+          <li>Make a request to the system to deactivate the <a>push registration</a>
+          associated with the <a>webapp</a>.
           </li>
           <li>If there is an error, reject <var>promise</var> with a <a href=
           "http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a>
@@ -652,7 +593,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           </li>
           <li>When the request has been completed, resolve <var>promise</var>
           with a <a><code>PushRegistration</code></a> providing the details of
-          the <a class="internalDFN" href="#dfn-push-registration">push
+          the <a>push
           registration</a> which has been unregistered.
           </li>
         </ol>
@@ -666,16 +607,15 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           <li>Return <var>promise</var> and continue the following steps
           asynchronously.
           </li>
-          <li>If the <a class="internalDFN" href="#dfn-webapp">webapp</a> is
+          <li>If the <a>webapp</a> is
           not registered, reject <var>promise</var> with a <a href=
           "http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a>
           whose name is "<a href=
           "http://dom.spec.whatwg.org/#notfounderror"><code>NotFoundError</code></a>"
           and terminate these steps.
           </li>
-          <li>Retrieve the <a class="internalDFN" href=
-          "#dfn-push-registration">push registration</a> associated with the
-          <a class="internalDFN" href="#dfn-webapp">webapp</a>.
+          <li>Retrieve the <a>push registration</a> associated with the
+          <a>webapp</a>.
           </li>
           <li>If there is an error, reject <var>promise</var> with a <a href=
           "http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a>
@@ -685,8 +625,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           </li>
           <li>When the request has been completed, resolve <var>promise</var>
           with a <a><code>PushRegistration</code></a> providing the details of
-          the retrieved <a class="internalDFN" href=
-          "#dfn-push-registration">push registration</a>.
+          the retrieved <a>push registration</a>.
           </li>
         </ol>
         <p>
@@ -701,7 +640,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           </li>
           <li>Retrieve the push permission status
           (<a><code>PushPermissionStatus</code></a>) of the requesting
-            <a class="internalDFN" href="#dfn-webapp">webapp</a>
+            <a>webapp</a>
           </li>
           <li>If there is an error, reject <var>promise</var> with no arguments
           and terminate these steps.
@@ -726,41 +665,36 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           Push Registration Persistence
         </h3>
         <p>
-          To facilitate persistence of push registrations when a <a class=
-          "internalDFN" href="#dfn-webapp">webapp</a> is closed, it can use a
-          <a class="internalDFN" href="#dfn-service-worker">Service Worker</a>
+          To facilitate persistence of push registrations when a <a>webapp</a> is closed, it can use a
+          <a>Service Worker</a>
           to register for and receive push events. In that case, even if the
-          <a class="internalDFN" href="#dfn-webapp">webapp</a> parent window is
+          <a>webapp</a> parent window is
           closed, the <code>pushRegistration</code> object will still enable
-          delivery of <a class="internalDFN" href="#dfn-push-message">push
-          messages</a>, through the <a class="internalDFN" href=
-          "#dfn-service-worker">Service Worker</a>. The <a class="internalDFN"
-          href="#dfn-push-message">push messages</a>, can then be processed by
-          the <a class="internalDFN" href="#dfn-service-worker">Service
+          delivery of <a title="push message">push
+          messages</a>, through the <a>Service Worker</a>. The <a
+          title="push message">push messages</a>, can then be processed by
+          the <a>Service
           Worker</a>, e.g. including one or more of the following actions:
         </p>
         <ul>
-          <li>store the <a class="internalDFN" href="#dfn-push-message">push
-          messages</a> for later access by the <a class="internalDFN" href=
-          "#dfn-webapp">webapp</a> when reinvoked by the user
+          <li>store the <a title="push message">push
+          messages</a> for later access by the <a>webapp</a> when reinvoked by the user
           </li>
-          <li>invoke/reconstruct the <a class="internalDFN" href="#dfn-webapp">
+          <li>invoke/reconstruct the <a>
             webapp</a>, a process that is not described here (expected to be
             clarified in [[!SERVICE-WORKERS]])
           </li>
-          <li>delivery of the <a class="internalDFN" href="#dfn-push-message">
-            push messages</a> data to the to the <a class="internalDFN" href=
-            "#dfn-webapp">webapp</a> as necessary through other means, e.g.
+          <li>delivery of the <a title="push message">
+            push messages</a> data to the to the <a>webapp</a> as necessary through other means, e.g.
             [[webmessaging]].
           </li>
         </ul>
         <p>
-          If a <a class="internalDFN" href="#dfn-webapp">webapp</a> creates a
-          <a class="internalDFN" href="#dfn-push-registration">push
-          registration</a> without using a <a class="internalDFN" href=
-          "#dfn-service-worker">Service Worker</a>, the
+          If a <a>webapp</a> creates a
+          <a>push
+          registration</a> without using a <a>Service Worker</a>, the
           <code>pushRegistration</code> object will persist only as long as the
-          <a class="internalDFN" href="#dfn-webapp">webapp</a> window is open.
+          <a>webapp</a> window is open.
         </p>
       </section>
       <section>
@@ -768,18 +702,17 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           Push Registration Uniqueness
         </h3>
         <p>
-          Each <a class="internalDFN" href="#dfn-push-registration">push
+          Each <a>push
           registration</a> is unique, i.e. a single instance specific to each
-          <a class="internalDFN" href="#dfn-webapp">webapp</a> and call to the
+          <a>webapp</a> and call to the
           <code>register</code> interface.
         </p>
         <p>
-          <a class="internalDFN" href="#dfn-webapp">Webapps</a> that create
-          multiple <a class="internalDFN" href="#dfn-push-registration">push
+          <a title="webapp">webapps</a> that create
+          multiple <a title="push registration">push
           registrations</a> are responsible for mapping the individual
           registrations to specific app functions as necessary. For example,
-          the <a class="internalDFN" href="#dfn-webapp">webapp</a> or <a class=
-          "internalDFN" href="#dfn-webapp-server">webapp server</a> can
+          the <a>webapp</a> or <a>webapp server</a> can
           associate a specific <code>pushRegistration</code> to a particular
           function of the app through JavaScript.
         </p>
@@ -791,38 +724,30 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       </h2>
       <p>
         The <a>PushRegistration</a> interface contains information about a
-        specific channel used by a <a class="internalDFN" href=
-        "#dfn-webapp">webapp</a> to receive <a class="internalDFN" href=
-        "#dfn-push-message">push messages</a>.
+        specific channel used by a <a>webapp</a> to receive <a title=
+        "push message">push messages</a>.
       </p>
       <dl title="interface PushRegistration: EventTarget" class="idl">
         <dt>
           readonly attribute DOMString endpoint
         </dt>
         <dd>
-          It MUST return the absolute URL exposed by the <a class="internalDFN"
-          href="#dfn-push-server">push server</a> where the <a class=
-          "internalDFN" href="#dfn-webappserver">webapp server</a> can send
-          <a class="internalDFN" href="#dfn-push-message">push messages</a> to
-          this <a class="internalDFN" href="#dfn-webapp">webapp</a>. The value
-          of <code>endpoint</code> may be the same for multiple <a class=
-          "internalDFN" href="#dfn-webapp">webapps</a> / <a class="internalDFN"
-          href="#dfn-webapp">webapp</a> instances running on multiple devices.
+          It MUST return the absolute URL exposed by the <a>push server</a> where the <a>webapp server</a> can send
+          <a title="push message">push messages</a> to
+          this <a>webapp</a>. The value
+          of <code>endpoint</code> may be the same for multiple <a title="webapp">webapps</a> / <a>webapp</a> instances running on multiple devices.
         </dd>
         <dt>
           readonly attribute DOMString registrationId
         </dt>
         <dd>
-          It MUST return a univocal identifier of this <a class="internalDFN"
-          href="#dfn-push-registration">push registration</a> in the <a class=
-          "internalDFN" href="#dfn-push-server">push server</a>. It is used by
-          the <a class="internalDFN" href="#dfn-webappserver">application
-          server</a> to indicate the target of the <a class="internalDFN" href=
-          "#dfn-push-message">push messages</a> that it submits to the
-          <a class="internalDFN" href="#dfn-push-server">push server</a>. Each
+          It MUST return a univocal identifier of this <a>push registration</a> in the <a>push server</a>. It is used by
+          the <a>webapp
+          server</a> to indicate the target of the <a title=
+          "push message">push messages</a> that it submits to the
+          <a>push server</a>. Each
           pair of <code>registrationId</code> and <code>endpoint</code> is
-          expected to be unique and specific to a particular <a class=
-          "internalDFN" href="#dfn-webapp">webapp</a> instance running on a
+          expected to be unique and specific to a particular <a>webapp</a> instance running on a
           specific device.
         </dd>
       </dl>
@@ -832,17 +757,14 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         <a>PushMessage</a> Interface
       </h2>
       <p>
-        The <a>PushMessage</a> interface represents a received <a class=
-        "internalDFN" href="#dfn-push-message">push message</a>.
+        The <a>PushMessage</a> interface represents a received <a>push message</a>.
       </p>
       <dl title="interface PushMessage" class="idl">
         <dt>
           readonly attribute DOMString? data
         </dt>
         <dd>
-          MUST return the message data received by the <a class="internalDFN"
-          href="#dfn-user-agent">user agent</a> in the <a class="internalDFN"
-          href="#dfn-push-message">push message</a>, or null if no data was
+          MUST return the message data received by the <a>user agent</a> in the <a>push message</a>, or null if no data was
           received.
         </dd>
       </dl>
@@ -858,9 +780,9 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       </p>
       <p>
         The <a>PushRegisterMessage</a> interface represents an event related to
-        a <a class="internalDFN" href="#dfn-push-registration">push
+        a <a>push
         registration</a> that is no longer valid and thus needs to be created
-        again by the <a class="internalDFN" href="#dfn-webapp">webapp</a> by
+        again by the <a>webapp</a> by
         means of a new invocation of the <a><code>register</code></a> method.
       </p>
       <dl title="interface PushRegisterMessage" class="idl">
@@ -868,8 +790,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           readonly attribute DOMString registrationId
         </dt>
         <dd>
-          MUST return the identifier of the <a class="internalDFN" href=
-          "#dfn-push-registration">push registration</a> to which this event is
+          MUST return the identifier of the <a>push registration</a> to which this event is
           related.
         </dd>
       </dl>
@@ -879,7 +800,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         Push Events
       </h2>
       <p>
-        A <a class="internalDFN" href="#dfn-webapp">webapp</a> that wants to be
+        A <a>webapp</a> that wants to be
         able to make use of the capabilities provided by this API needs to be
         registered to receive the following events:
       </p>
@@ -923,31 +844,26 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         </tbody>
       </table>
       <p>
-        Upon receiving a <a class="internalDFN" href="#dfn-push-message">push
-        message</a> from the <a class="internalDFN" href=
-        "#dfn-push-server">push server</a> the <a class="internalDFN" href=
-        "#dfn-user-agent">User agent</a> MUST run the following steps:
+        Upon receiving a <a>push
+        message</a> from the <a>push server</a> the <a>user agent</a> MUST run the following steps:
       </p>
       <ul>
         <li>Create a new <a><code>PushMessage</code></a> object
         </li>
         <li>Set the <code>data</code> attribute of the
         <a><code>PushMessage</code></a> object to the message data received by
-        the <a class="internalDFN" href="#dfn-user-agent">user agent</a> in the
-        <a class="internalDFN" href="#dfn-push-message">push message</a>, or
+        the <a>user agent</a> in the
+        <a>push message</a>, or
         null if no data was received.
         </li>
         <li>Send an event of type <a><code>push</code></a> including the
-        previous <a><code>PushMessage</code></a> object to the <a class=
-        "internalDFN" href="#dfn-webapp">webapp</a> to which the <a class=
-        "internalDFN" href="#dfn-push-message">push message</a> relates
+        previous <a><code>PushMessage</code></a> object to the <a>webapp</a> to which the <a>push message</a> relates
         </li>
       </ul>
       <p>
-        Upon any event that makes a <a class="internalDFN" href=
-        "#dfn-push-registration">push registration</a> no longer valid, e.g.
-        <a class="internalDFN" href="#dfn-push-server">push server</a> database
-        failure, the <a class="internalDFN" href="#dfn-user-agent">User
+        Upon any event that makes a <a>push registration</a> no longer valid, e.g.
+        <a>push server</a> database
+        failure, the <a>user
         agent</a> MUST run the following steps:
       </p>
       <ul>
@@ -955,41 +871,36 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         </li>
         <li>Set the <code>registrationId</code> of the
         <a><code>PushRegisterMessage</code></a> object to the identifier of the
-        <a class="internalDFN" href="#dfn-push-registration">push
+        <a>push
         registration</a> that is no longer valid
         </li>
         <li>Send an event of type <a><code>push-register</code></a> including
         the previous <a><code>PushRegisterMessage</code></a> object to the
-        <a class="internalDFN" href="#dfn-webapp">webapp</a> to which the
-        <a class="internalDFN" href="#dfn-push-registration">push
+        <a>webapp</a> to which the
+        <a>push
         registration</a> relates
         </li>
       </ul>
       <p>
-        If a <a class="internalDFN" href="#dfn-push-message">push message</a>
-        or an indication about a <a class="internalDFN" href=
-        "#dfn-push-registration">push registration</a> being no longer valid is
-        received and the <a class="internalDFN" href="#dfn-webapp">webapp</a>
-        is not active in a browser window, the <a class="internalDFN" href=
-        "#dfn-user-agent">User agent</a> <em title="must" class=
-        "rfc2119">must</em> invoke the <a class="internalDFN" href=
-        "#dfn-webapp">webapp</a> if possible, and deliver the <a class=
-        "internalDFN" href="#dfn-push-message">push message</a> to it. Examples
-        of cases in which <a class="internalDFN" href="#dfn-webapp">webapps</a>
+        If a <a>push message</a>
+        or an indication about a <a>push registration</a> being no longer valid is
+        received and the <a>webapp</a>
+        is not active in a browser window, the <a>user agent</a> <em title="must" class=
+        "rfc2119">must</em> invoke the <a>webapp</a> if possible, and deliver the <a>push message</a> to it. Examples
+        of cases in which <a title="webapp">webapps</a>
         should be invokable include:
       </p>
       <ul>
-        <li>The <a class="internalDFN" href="#dfn-webapp">webapp</a> has been
+        <li>The <a>webapp</a> has been
         installed from a widget package or other installation method.
         </li>
-        <li>The <a class="internalDFN" href="#dfn-webapp">webapp</a> is
+        <li>The <a>webapp</a> is
         persistently cached via the [[!HTML5]] Application Cache.
         </li>
-        <li>The <a class="internalDFN" href="#dfn-webapp">webapp</a> exists in
+        <li>The <a>webapp</a> exists in
         the browser cache.
         </li>
-        <li>The browser is able to retrieve the <a class="internalDFN" href=
-        "#dfn-webapp">webapp</a> at the absolute URL from where it was accessed
+        <li>The browser is able to retrieve the <a>webapp</a> at the absolute URL from where it was accessed
         when the <code>pushRegistration</code> object was created.
         </li>
       </ul>
@@ -1003,21 +914,21 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           granted
         </dt>
         <dd>
-          The <a class="internalDFN" href="#dfn-webapp">webapp</a> has
+          The <a>webapp</a> has
           permission to use Push API.
         </dd>
         <dt>
           denied
         </dt>
         <dd>
-          The <a class="internalDFN" href="#dfn-webapp">webapp</a> has been
+          The <a>webapp</a> has been
           denied permission to use Push API.
         </dd>
         <dt>
           default
         </dt>
         <dd>
-          The <a class="internalDFN" href="#dfn-webapp">webapp</a> needs to ask
+          The <a>webapp</a> needs to ask
           for permission in order to use Push API.
         </dd>
       </dl>
