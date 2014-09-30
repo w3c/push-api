@@ -134,10 +134,9 @@
       </p>
       <p>
         Implementations that use ECMAScript to implement the APIs defined in
-        this specification <em title="must" class="rfc2119">must</em> implement
+        this specification MUST implement
         them in a manner consistent with the ECMAScript Bindings defined in the
-        Web IDL specification [[!WEBIDL]], as this specification uses that
-        specification and terminology.
+        Web IDL specification [[!WEBIDL]].
       </p>
     </section>
     <section>
@@ -228,30 +227,29 @@
       </h2>
       <p>
         <a title="user agent">User agents</a>
-        <em title="must" class="rfc2119">must not</em> provide Push API access
+        MUST NOT provide Push API access
         to <a title="webapp">webapps</a> without the
         <a>express
         permission</a> of the user. <a title=
-        "user agent">User agents</a> <em title="must" class=
-        "rfc2119">must</em> acquire consent for permission through a user
+        "user agent">User agents</a> MUST acquire consent for permission through a user
         interface for each call to the <code>register()</code> method, unless a
         prearranged trust relationship applies.
       </p>
       <p>
         <a title="user agent">User agents</a>
-        <em title="may" class="rfc2119">may</em> support prearranged trust
+        MAY support prearranged trust
         relationships that do not require such per-request user interfaces.
       </p>
       <p>
         <a title="user agent">User agents</a>
-        <em title="must" class="rfc2119">must</em> implement the Push API to be
+        MUST implement the Push API to be
         HTTPS-only. SSL-only support provides better protection for the user
         against man-in-the-middle attacks intended to obtain push registration
         data. Browsers may ignore this rule for development purposes only.
       </p>
       <p>
         Permissions that are preserved beyond the current browsing session
-        <em title="must" class="rfc2119">must</em> be revocable.
+        MUST be revocable.
       </p>
     </section>
     <section class='informative' id="pushframework">
@@ -885,8 +883,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         If a <a>push message</a>
         or an indication about a <a>push registration</a> being no longer valid is
         received and the <a>webapp</a>
-        is not active in a browser window, the <a>user agent</a> <em title="must" class=
-        "rfc2119">must</em> invoke the <a>webapp</a> if possible, and deliver the <a>push message</a> to it. Examples
+        is not active in a browser window, the <a>user agent</a> MUST invoke the <a>webapp</a> if possible, and deliver the <a>push message</a> to it. Examples
         of cases in which <a title="webapp">webapps</a>
         should be invokable include:
       </p>
