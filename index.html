@@ -62,14 +62,15 @@
       </p>
       <p>
         <a class="internalDFN" href="#dfn-push-message">Push messages</a> may
-        be delivered via various methods, either via standardized protocols
-        (e.g. Server-Sent Events [[SSE]], the GSM Short Message Service
-        [[GSM-SMS]], SIP MESSAGE [[RFC3428]], or OMA Push [[OMA-PUSH]]), or via
-        browser-specific methods. The specific method to be used by a <a class=
-        "internalDFN" href="#dfn-webapp">webapp</a> is either selected by the
-        user through a <a class="internalDFN" href="#dfn-push-extension">push
-        service extension</a>, or by the browser. The Push API is defined to
-        promote compatibility with any delivery method.
+        be delivered to the <a class="internalDFN" href="#dfn-user-agent">user
+        agent</a> via various methods, either via standardized protocols (e.g.
+        Server-Sent Events [[SSE]], the GSM Short Message Service [[GSM-SMS]],
+        SIP MESSAGE [[RFC3428]], or OMA Push [[OMA-PUSH]]), or via <a class=
+        "internalDFN" href="#dfn-user-agent">user agent</a> specific methods.
+        The method to be used is selected by the <a class="internalDFN" href=
+        "#dfn-user-agent">user agent</a>, or it may allow the user to select
+        one. The Push API is defined to promote compatibility with any delivery
+        method.
       </p>
     </section>
     <section id='sotd'></section>
@@ -195,12 +196,6 @@
         <dfn id="dfn-service-worker"><a href=
         "http://www.w3.org/TR/service-workers/#dnf-service-worker">Service
         Worker</a></dfn> is defined in [[!SERVICE-WORKERS]].
-      </p>
-      <p>
-        The term <dfn id="dfn-push-extension">push service extension</dfn>
-        refers to a browser extension enabling push service configuration for
-        the user, and thereby enabling Push API binding to event delivery via
-        the service.
       </p>
       <p>
         The term <dfn id="dfn-webapp">webapp</dfn> refers to a Web application,
