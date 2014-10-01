@@ -53,20 +53,18 @@
   <body>
     <section id='abstract'>
       <p>
-        This specification defines a “Push API” that provides <a title="webapp">webapps</a> with
-        scripted access to server-sent messages, for simplicity referred to here as <a title=
-        "push message">push messages</a>, as delivered by <a title="push service">push
-        services</a>. <a title="push service">Push services</a> are a way for <a title=
-        "webapp server">webapp servers</a> to send messages to <a title="webapp">webapps</a>,
-        whether or not the <a>webapp</a> is active in a browser window.
+        The <cite>Push API</cite> provides <a title="webapp">webapps</a> with scripted access to
+        server-sent messages, for simplicity referred to here as <a title="push message">push
+        messages</a>, as delivered by <a title="push service">push services</a>. A <a>push
+        service</a> allows a <a>webapp server</a> to send messages to a <a>webapp</a>, regardless
+        of whether the <a>webapp</a> is currently active on the <a>user agent</a>. The <a>push
+        message</a> will be delivered to a <a>Service Worker</a>, which could then store the
+        message's data or display a notification to the user.
       </p>
       <p>
-        <a title="push message">Push messages</a> may be delivered to the <a>user agent</a> via
-        various methods, either via standardized protocols (e.g. Server-Sent Events [[SSE]], the
-        GSM Short Message Service [[GSM-SMS]], SIP MESSAGE [[RFC3428]], or OMA Push [[OMA-PUSH]]),
-        or via <a>user agent</a> specific methods. The method to be used is selected by the <a>user
-        agent</a>, or it may allow the user to select one. The Push API is defined to promote
-        compatibility with any delivery method.
+        This specification is designed to promote compatibility with any delivery method for
+        <a title="push message">push messages</a> from <a title="push service">push services</a> to
+        <a title="user agent">user agents</a>.
       </p>
     </section>
     <section id='sotd'></section>
