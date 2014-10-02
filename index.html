@@ -632,70 +632,86 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
     </section>
     <section>
       <h2>
-        The <code>push</code> event
+        Events
       </h2>
       <p>
-        The <a>PushEvent</a> interface represents a received <a>push message</a>.
+        The Service Worker specification defines a <code>ServiceWorkerGlobalScope</code> interface
+        [[!SERVICE-WORKERS]], which this specification extends.
       </p>
-      <dl title=
-      "[Constructor(DOMString type, optional PushEventInit eventInitDict), Exposed=ServiceWorker] interface PushEvent : ExtendableEvent"
-      class="idl" data-merge="PushEventInit">
+      <dl title="partial interface ServiceWorkerGlobalScope" class="idl">
         <dt>
-          readonly attribute DOMString? data
+          attribute EventHandler onpush
+        </dt>
+        <dt>
+          attribute EventHandler onpushregistrationlost
         </dt>
       </dl>
-      <p>
-        When getting the <code id="widl-PushMessage-data">data</code> attribute of a
-        <code>PushEvent</code>, the <a>user
-        agent</a> MUST return the message data received by the <a>user agent</a> in the <a>push
-        message</a>, or null if no data was received.
-      </p>
-      <dl title="dictionary PushEventInit : EventInit" class="idl">
-        <dt>
-          DOMString? data
-        </dt>
-      </dl>
-      <p>
-        Upon receiving a <a>push message</a> for a <a>webapp</a> from the <a>push server</a> the
-        <a>user agent</a> MUST run the following steps:
-      </p>
-      <ol>
-        <li>If the <a>Service Worker</a> associated with the <a>webapp</a> is not running, start
-        it.
-        </li>
-        <li>Let <var>scope</var> be the <code>ServiceWorkerGlobalScope</code> of the <a>Service
-        Worker</a> associated with the <a>webapp</a>.
-        </li>
-        <li>Let <var>event</var> be a new <a><code>PushEvent</code></a> whose <code>data</code>
-        attribute is the message data received by the <a>user agent</a> in the <a>push message</a>,
-        or null if no data was received.
-        </li>
-        <li>
-          <a>Queue a task</a> to <a title="fire a simple event">fire <var>event</var> as a simple
-          event</a> named <code>push</code> at <var>scope</var>.
-        </li>
-      </ol>
-    </section>
-    <section>
-      <h2>
-        The <code>pushregistrationlost</code> event
-      </h2>
-      <p>
-        Upon any event that makes a <a>push registration</a> no longer valid, e.g. <a>push
-        server</a> database failure, the <a>user agent</a> MUST run the following steps:
-      </p>
-      <ol>
-        <li>If the <a>Service Worker</a> associated with the <a>webapp</a> is not running, start
-        it.
-        </li>
-        <li>Let <var>scope</var> be the <code>ServiceWorkerGlobalScope</code> of the <a>Service
-        Worker</a> associated with the <a>webapp</a>.
-        </li>
-        <li>
-          <a>Queue a task</a> to <a>fire a simple event</a> named <code>pushregistrationlost</code>
-          at <var>scope</var>.
-        </li>
-      </ol>
+      <section>
+        <h2>
+          The <code>push</code> event
+        </h2>
+        <p>
+          The <a>PushEvent</a> interface represents a received <a>push message</a>.
+        </p>
+        <dl title=
+        "[Constructor(DOMString type, optional PushEventInit eventInitDict), Exposed=ServiceWorker] interface PushEvent : ExtendableEvent"
+        class="idl" data-merge="PushEventInit">
+          <dt>
+            readonly attribute DOMString? data
+          </dt>
+        </dl>
+        <p>
+          When getting the <code id="widl-PushMessage-data">data</code> attribute of a
+          <code>PushEvent</code>, the <a>user agent</a> MUST return the message data received by
+          the <a>user agent</a> in the <a>push message</a>, or null if no data was received.
+        </p>
+        <dl title="dictionary PushEventInit : EventInit" class="idl">
+          <dt>
+            DOMString? data
+          </dt>
+        </dl>
+        <p>
+          Upon receiving a <a>push message</a> for a <a>webapp</a> from the <a>push server</a> the
+          <a>user agent</a> MUST run the following steps:
+        </p>
+        <ol>
+          <li>If the <a>Service Worker</a> associated with the <a>webapp</a> is not running, start
+          it.
+          </li>
+          <li>Let <var>scope</var> be the <code>ServiceWorkerGlobalScope</code> of the <a>Service
+          Worker</a> associated with the <a>webapp</a>.
+          </li>
+          <li>Let <var>event</var> be a new <a><code>PushEvent</code></a> whose <code>data</code>
+          attribute is the message data received by the <a>user agent</a> in the <a>push
+          message</a>, or null if no data was received.
+          </li>
+          <li>
+            <a>Queue a task</a> to <a title="fire a simple event">fire <var>event</var> as a simple
+            event</a> named <code>push</code> at <var>scope</var>.
+          </li>
+        </ol>
+      </section>
+      <section>
+        <h2>
+          The <code>pushregistrationlost</code> event
+        </h2>
+        <p>
+          Upon any event that makes a <a>push registration</a> no longer valid, e.g. <a>push
+          server</a> database failure, the <a>user agent</a> MUST run the following steps:
+        </p>
+        <ol>
+          <li>If the <a>Service Worker</a> associated with the <a>webapp</a> is not running, start
+          it.
+          </li>
+          <li>Let <var>scope</var> be the <code>ServiceWorkerGlobalScope</code> of the <a>Service
+          Worker</a> associated with the <a>webapp</a>.
+          </li>
+          <li>
+            <a>Queue a task</a> to <a>fire a simple event</a> named
+            <code>pushregistrationlost</code> at <var>scope</var>.
+          </li>
+        </ol>
+      </section>
     </section>
     <section>
       <h2>
