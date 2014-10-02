@@ -130,34 +130,23 @@
         Terminology
       </h2>
       <p>
-        The following concepts and interfaces are defined in [[!HTML5]]:
+        <dfn><a href="http://www.w3.org/TR/html5/webappapis.html#queue-a-task">Queue a
+        task</a></dfn> and <dfn><a href=
+        "http://www.w3.org/TR/html5/webappapis.html#fire-a-simple-event">fire a simple
+        event</a></dfn> are defined in [[!HTML5]].
       </p>
-      <ul>
-        <li>
-          <dfn><a href="http://www.w3.org/TR/html5/webappapis.html#queue-a-task">queue a
-          task</a></dfn>
-        </li>
-        <li>
-          <dfn><a href="http://www.w3.org/TR/html5/webappapis.html#fire-a-simple-event">fire a
-          simple event</a></dfn>
-        </li>
-        <li>
-          <dfn><a href="http://www.w3.org/TR/html5/browsers.html#event-handlers">event
-          handler</a></dfn>
-        </li>
-        <li>
-          <dfn><a href="http://www.w3.org/TR/html5/browsers.html#event-handler-event-type">event
-          handler event type</a></dfn>
-        </li>
-      </ul>
       <p>
         <a href=
         'http://people.mozilla.org/~jorendorff/es6-draft.html#sec-promise-objects'><dfn>Promise</dfn></a>
         is defined in [[!ECMASCRIPT]].
       </p>
       <p>
-        <dfn><a href="http://www.w3.org/TR/service-workers/#dnf-service-worker">Service
-        Worker</a></dfn> is defined in [[!SERVICE-WORKERS]].
+        <dfn>EventInit</dfn> is defined in [[!DOM]].
+      </p>
+      <p>
+        <dfn>Service Worker</dfn>, <dfn>ServiceWorkerRegistration</dfn>,
+        <dfn>ServiceWorkerGlobalScope</dfn>, and <dfn>ExtendableEvent</dfn> are defined in
+        [[!SERVICE-WORKERS]].
       </p>
       <p>
         The term <dfn>webapp</dfn> refers to a Web application, i.e. an application implemented
@@ -643,142 +632,70 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
     </section>
     <section>
       <h2>
-        <a>PushMessage</a> interface
+        The <code>push</code> event
       </h2>
       <p>
-        The <a>PushMessage</a> interface represents a received <a>push message</a>.
+        The <a>PushEvent</a> interface represents a received <a>push message</a>.
       </p>
-      <dl title="interface PushMessage" class="idl">
+      <dl title=
+      "[Constructor(DOMString type, optional PushEventInit eventInitDict), Exposed=ServiceWorker] interface PushEvent : ExtendableEvent"
+      class="idl" data-merge="PushEventInit">
         <dt>
           readonly attribute DOMString? data
         </dt>
       </dl>
       <p>
-        When getting the <code id="widl-PushMessage-data">data</code> attribute, the <a>user
+        When getting the <code id="widl-PushMessage-data">data</code> attribute of a
+        <code>PushEvent</code>, the <a>user
         agent</a> MUST return the message data received by the <a>user agent</a> in the <a>push
         message</a>, or null if no data was received.
       </p>
-    </section>
-    <section>
-      <h2>
-        <a>PushRegisterMessage</a> interface
-      </h2>
-      <p class="note">
-        TAG issue: PushRegisterMessage name is confusing as it really occurs when push service
-        failed, not when new registration granted. Suggestion: PushServiceFailure.
-      </p>
-      <p>
-        The <a>PushRegisterMessage</a> interface represents an event related to a <a>push
-        registration</a> that is no longer valid and thus needs to be created again by the
-        <a>webapp</a> by means of a new invocation of the <a><code>register</code></a> method.
-      </p>
-      <dl title="interface PushRegisterMessage" class="idl">
+      <dl title="dictionary PushEventInit : EventInit" class="idl">
         <dt>
-          readonly attribute DOMString registrationId
+          DOMString? data
         </dt>
       </dl>
       <p>
-        When getting the <code id="widl-PushRegisterMessage-registrationId">registrationId</code>
-        attribute, the <a>user agent</a> MUST return the identifier of the <a>push registration</a>
-        to which this event is related.
+        Upon receiving a <a>push message</a> for a <a>webapp</a> from the <a>push server</a> the
+        <a>user agent</a> MUST run the following steps:
       </p>
+      <ol>
+        <li>If the <a>Service Worker</a> associated with the <a>webapp</a> is not running, start
+        it.
+        </li>
+        <li>Let <var>scope</var> be the <code>ServiceWorkerGlobalScope</code> of the <a>Service
+        Worker</a> associated with the <a>webapp</a>.
+        </li>
+        <li>Let <var>event</var> be a new <a><code>PushEvent</code></a> whose <code>data</code>
+        attribute is the message data received by the <a>user agent</a> in the <a>push message</a>,
+        or null if no data was received.
+        </li>
+        <li>
+          <a>Queue a task</a> to <a title="fire a simple event">fire <var>event</var> as a simple
+          event</a> named <code>push</code> at <var>scope</var>.
+        </li>
+      </ol>
     </section>
     <section>
       <h2>
-        Push Events
+        The <code>pushregistrationlost</code> event
       </h2>
-      <p>
-        A <a>webapp</a> that wants to be able to make use of the capabilities provided by this API
-        needs to be registered to receive the following events:
-      </p>
-      <table class="simple">
-        <thead>
-          <tr>
-            <th>
-              name
-            </th>
-            <th>
-              type
-            </th>
-            <th>
-              description
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <strong><dfn><code>push</code></dfn></strong>
-            </td>
-            <td>
-              <a><code>PushMessage</code></a>
-            </td>
-            <td>
-              Incoming push message
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <strong><dfn><code>push-register</code></dfn></strong>
-            </td>
-            <td>
-              <a><code>PushRegisterMessage</code></a>
-            </td>
-            <td>
-              Request to register a specific push registration
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <p>
-        Upon receiving a <a>push message</a> from the <a>push server</a> the <a>user agent</a> MUST
-        run the following steps:
-      </p>
-      <ul>
-        <li>Create a new <a><code>PushMessage</code></a> object
-        </li>
-        <li>Set the <code>data</code> attribute of the <a><code>PushMessage</code></a> object to
-        the message data received by the <a>user agent</a> in the <a>push message</a>, or null if
-        no data was received.
-        </li>
-        <li>Send an event of type <a><code>push</code></a> including the previous
-        <a><code>PushMessage</code></a> object to the <a>webapp</a> to which the <a>push
-        message</a> relates
-        </li>
-      </ul>
       <p>
         Upon any event that makes a <a>push registration</a> no longer valid, e.g. <a>push
         server</a> database failure, the <a>user agent</a> MUST run the following steps:
       </p>
-      <ul>
-        <li>Create a new <a><code>PushRegisterMessage</code></a> object
+      <ol>
+        <li>If the <a>Service Worker</a> associated with the <a>webapp</a> is not running, start
+        it.
         </li>
-        <li>Set the <code>registrationId</code> of the <a><code>PushRegisterMessage</code></a>
-        object to the identifier of the <a>push registration</a> that is no longer valid
+        <li>Let <var>scope</var> be the <code>ServiceWorkerGlobalScope</code> of the <a>Service
+        Worker</a> associated with the <a>webapp</a>.
         </li>
-        <li>Send an event of type <a><code>push-register</code></a> including the previous
-        <a><code>PushRegisterMessage</code></a> object to the <a>webapp</a> to which the <a>push
-        registration</a> relates
+        <li>
+          <a>Queue a task</a> to <a>fire a simple event</a> named <code>pushregistrationlost</code>
+          at <var>scope</var>.
         </li>
-      </ul>
-      <p>
-        If a <a>push message</a> or an indication about a <a>push registration</a> being no longer
-        valid is received and the <a>webapp</a> is not active in a browser window, the <a>user
-        agent</a> MUST invoke the <a>webapp</a> if possible, and deliver the <a>push message</a> to
-        it. Examples of cases in which <a title="webapp">webapps</a> should be invokable include:
-      </p>
-      <ul>
-        <li>The <a>webapp</a> has been installed from a widget package or other installation
-        method.
-        </li>
-        <li>The <a>webapp</a> is persistently cached via the [[!HTML5]] Application Cache.
-        </li>
-        <li>The <a>webapp</a> exists in the browser cache.
-        </li>
-        <li>The browser is able to retrieve the <a>webapp</a> at the absolute URL from where it was
-        accessed when the <code>pushRegistration</code> object was created.
-        </li>
-      </ul>
+      </ol>
     </section>
     <section>
       <h2>
