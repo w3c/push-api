@@ -23,7 +23,7 @@
             {
               name: "Bryan Sullivan",
               company: "AT&T",
-              companyURL: "http://att.com/"
+              companyURL: "http://www.att.com/"
             },
             {
               name: "Eduardo Fullea",
@@ -149,21 +149,27 @@
         Terminology
       </h2>
       <p>
-        The terms <dfn><a href="http://www.w3.org/TR/html5/browsers.html#event-handlers">event
+        The terms <dfn><a href="http://www.w3.org/TR/html5/webappapis.html#event-handlers">event
         handler</a></dfn>, <dfn><a href=
-        "http://www.w3.org/TR/html5/browsers.html#event-handler-event-type">event handler event
+        "http://www.w3.org/TR/html5/webappapis.html#event-handler-event-type">event handler event
         type</a></dfn>, <dfn><a href=
         "http://www.w3.org/TR/html5/webappapis.html#queue-a-task">queue a task</a></dfn>, and
         <dfn><a href="http://www.w3.org/TR/html5/webappapis.html#fire-a-simple-event">fire a simple
         event</a></dfn> are defined in [[!HTML5]].
       </p>
       <p>
-        <a href=
-        'http://people.mozilla.org/~jorendorff/es6-draft.html#sec-promise-objects'><dfn>Promise</dfn></a>
+        <code><a href=
+        'http://people.mozilla.org/~jorendorff/es6-draft.html#sec-promise-objects'><dfn>Promise</dfn></a></code>
         is defined in [[!ECMASCRIPT]].
       </p>
       <p>
-        <dfn>EventInit</dfn> is defined in [[!DOM]].
+        <code><a href="http://www.w3.org/TR/dom/#eventinit"><dfn>EventInit</dfn></a></code>,
+        <code><a href="http://www.w3.org/TR/dom/#domexception"><dfn>DOMException</dfn></a></code>,
+        <code><a href="http://www.w3.org/TR/dom/#aborterror"><dfn>AbortError</dfn></a></code>,
+        <code><a href=
+        "http://www.w3.org/TR/dom/#notfounderror"><dfn>NotFoundError</dfn></a></code>, and
+        <code><a href="http://www.w3.org/TR/dom/#securityerror"><dfn>SecurityError</dfn></a></code>
+        are defined in [[!DOM]].
       </p>
       <p>
         <dfn>Service Worker</dfn>, <dfn>ServiceWorkerRegistration</dfn>,
@@ -433,18 +439,15 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         <li>Return <var>promise</var> and continue the following steps asynchronously.
         </li>
         <li>If the scheme of the document url is not <code>https</code>, reject <var>promise</var>
-        with a <a href="http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a>
-        whose name is "<a href=
-        "http://dom.spec.whatwg.org/#securityerror"><code>SecurityError</code></a>" and terminate
-        these steps.
+        with a <code><a>DOMException</a></code> whose name is "<code><a>SecurityError</a></code>"
+        and terminate these steps.
         </li>
         <li>Ask the user whether they allow the <a>webapp</a> to receive <a title=
         "push message">push messages</a>, unless a prearranged trust relationship applies or the
         user has already granted or denied permission explicitly for this <a>webapp</a>.
         </li>
-        <li>If not granted, reject <var>promise</var> with a <a href=
-        "http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a> whose name is
-        "<a href=
+        <li>If not granted, reject <var>promise</var> with a <code><a>DOMException</a></code> whose
+        name is "<a href=
         "https://www.w3.org/Bugs/Public/show_bug.cgi?id=23033"><code>PermissionDeniedError</code></a>"
         and terminate these steps.
         </li>
@@ -452,9 +455,8 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           <ol>
             <li>Retrieve the <a>push registration</a> associated with the <a>webapp</a>.
             </li>
-            <li>If there is an error, reject <var>promise</var> with a <a href=
-            "http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a> whose name is
-            "<a href="http://dom.spec.whatwg.org/#aborterror"><code>AbortError</code></a>" and
+            <li>If there is an error, reject <var>promise</var> with a
+            <code><a>DOMException</a></code> whose name is "<code><a>AbortError</a></code>" and
             terminate these steps.
             </li>
             <li>When the request has been completed, resolve <var>promise</var> with a
@@ -466,10 +468,8 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         <li>Make a request to the system to create a new <a>push registration</a> for the
         <a>webapp</a>.
         </li>
-        <li>If there is an error, reject <var>promise</var> with a <a href=
-        "http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a> whose name is
-        "<a href="http://dom.spec.whatwg.org/#aborterror"><code>AbortError</code></a>" and
-        terminate these steps.
+        <li>If there is an error, reject <var>promise</var> with a <code><a>DOMException</a></code>
+        whose name is "<code><a>AbortError</a></code>" and terminate these steps.
         </li>
         <li>When the request has been completed, resolve <var>promise</var> with a
         <a><code>PushRegistration</code></a> providing the details of the new <a>push
@@ -492,18 +492,15 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         </li>
         <li>Return <var>promise</var> and continue the following steps asynchronously.
         </li>
-        <li>If the <a>webapp</a> is not registered, reject <var>promise</var> with a <a href=
-        "http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a> whose name is
-        "<a href="http://dom.spec.whatwg.org/#notfounderror"><code>NotFoundError</code></a>" and
+        <li>If the <a>webapp</a> is not registered, reject <var>promise</var> with a
+        <code><a>DOMException</a></code> whose name is "<code><a>NotFoundError</a></code>" and
         terminate these steps.
         </li>
         <li>Make a request to the system to deactivate the <a>push registration</a> associated with
         the <a>webapp</a>.
         </li>
-        <li>If there is an error, reject <var>promise</var> with a <a href=
-        "http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a> whose name is
-        "<a href="http://dom.spec.whatwg.org/#aborterror"><code>AbortError</code></a>" and
-        terminate these steps.
+        <li>If there is an error, reject <var>promise</var> with a <code><a>DOMException</a></code>
+        whose name is "<code><a>AbortError</a></code>" and terminate these steps.
         </li>
         <li>When the request has been completed, resolve <var>promise</var> with a
         <a><code>PushRegistration</code></a> providing the details of the <a>push registration</a>
@@ -520,17 +517,14 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         </li>
         <li>Return <var>promise</var> and continue the following steps asynchronously.
         </li>
-        <li>If the <a>webapp</a> is not registered, reject <var>promise</var> with a <a href=
-        "http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a> whose name is
-        "<a href="http://dom.spec.whatwg.org/#notfounderror"><code>NotFoundError</code></a>" and
+        <li>If the <a>webapp</a> is not registered, reject <var>promise</var> with a
+        <code><a>DOMException</a></code> whose name is "<code><a>NotFoundError</a></code>" and
         terminate these steps.
         </li>
         <li>Retrieve the <a>push registration</a> associated with the <a>webapp</a>.
         </li>
-        <li>If there is an error, reject <var>promise</var> with a <a href=
-        "http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a> whose name is
-        "<a href="http://dom.spec.whatwg.org/#aborterror"><code>AbortError</code></a>" and
-        terminate these steps.
+        <li>If there is an error, reject <var>promise</var> with a <code><a>DOMException</a></code>
+        whose name is "<code><a>AbortError</a></code>" and terminate these steps.
         </li>
         <li>When the request has been completed, resolve <var>promise</var> with a
         <a><code>PushRegistration</code></a> providing the details of the retrieved <a>push
