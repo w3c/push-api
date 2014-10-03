@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" typeof="bibo:Document w3p:WD" about="" property="dcterms:language" content="en">
+<head>
+    <title>
+      Push API
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style type="text/css"></style>
+    
+  <style>/*****************************************************************
+ * ReSpec 3 CSS
+ * Robin Berjon - http://berjon.com/
+ *****************************************************************/
+
+/* --- INLINES --- */
+em.rfc2119 { 
+    text-transform:     lowercase;
+    font-variant:       small-caps;
+    font-style:         normal;
+    color:              #900;
+}
+
+h1 acronym, h2 acronym, h3 acronym, h4 acronym, h5 acronym, h6 acronym, a acronym,
+h1 abbr, h2 abbr, h3 abbr, h4 abbr, h5 abbr, h6 abbr, a abbr {
+    border: none;
+}
+
+dfn {
+    font-weight:    bold;
+}
+
+a.internalDFN {
+    color:  inherit;
+    border-bottom:  1px solid #99c;
+    text-decoration:    none;
+}
+
+a.externalDFN {
+    color:  inherit;
+    border-bottom:  1px dotted #ccc;
+    text-decoration:    none;
+}
+
+a.bibref {
+    text-decoration:    none;
+}
+
+cite .bibref {
+    font-style: normal;
+}
+
+code {
+    color:  #C83500;
+}
+
+/* --- TOC --- */
+.toc a, .tof a {
+    text-decoration:    none;
+}
+
+a .secno, a .figno {
+    color:  #000;
+}
+
+ul.tof, ol.tof {
+    list-style: none outside none;
+}
+
+.caption {
+    margin-top: 0.5em;
+    font-style:   italic;
+}
+
+/* --- TABLE --- */
+table.simple {
+    border-spacing: 0;
+    border-collapse:    collapse;
+    border-bottom:  3px solid #005a9c;
+}
+
+.simple th {
+    background: #005a9c;
+    color:  #fff;
+    padding:    3px 5px;
+    text-align: left;
+}
+
+.simple th[scope="row"] {
+    background: inherit;
+    color:  inherit;
+    border-top: 1px solid #ddd;
+}
+
+.simple td {
+    padding:    3px 10px;
+    border-top: 1px solid #ddd;
+}
+
+.simple tr:nth-child(even) {
+    background: #f0f6ff;
+}
+
+/* --- DL --- */
+.section dd > p:first-child {
+    margin-top: 0;
+}
+
+.section dd > p:last-child {
+    margin-bottom: 0;
+}
+
+.section dd {
+    margin-bottom:  1em;
+}
+
+.section dl.attrs dd, .section dl.eldef dd {
+    margin-bottom:  0;
+}
+
+@media print {
+    .removeOnSave {
+        display: none;
+    }
+}
+</style><style>/* --- EXAMPLES --- */
+div.example-title {
+    min-width: 7.5em;
+    color: #b9ab2d;
+}
+div.example-title span {
+    text-transform: uppercase;   
+}
+aside.example, div.example, div.illegal-example {
+    padding: 0.5em;
+    margin: 1em 0;
+    position: relative;
+    clear: both;
+}
+div.illegal-example { color: red }
+div.illegal-example p { color: black }
+aside.example, div.example {
+    padding: .5em;
+    border-left-width: .5em;
+    border-left-style: solid;
+    border-color: #e0cb52;
+    background: #fcfaee;    
+}
+
+aside.example div.example {
+    border-left-width: .1em;
+    border-color: #999;
+    background: #fff;
+}
+aside.example div.example div.example-title {
+    color: #999;
+}
+</style><style>/* --- ISSUES/NOTES --- */
+div.issue-title, div.note-title {
+    padding-right:  1em;
+    min-width: 7.5em;
+    color: #b9ab2d;
+}
+div.issue-title { color: #e05252; }
+div.note-title { color: #2b2; }
+div.issue-title span, div.note-title span {
+    text-transform: uppercase;
+}
+div.note, div.issue {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+.note > p:first-child, .issue > p:first-child { margin-top: 0 }
+.issue, .note {
+    padding: .5em;
+    border-left-width: .5em;
+    border-left-style: solid;
+}
+div.issue, div.note {
+    padding: 1em 1.2em 0.5em;
+    margin: 1em 0;
+    position: relative;
+    clear: both;
+}
+span.note, span.issue { padding: .1em .5em .15em; }
+
+.issue {
+    border-color: #e05252;
+    background: #fbe9e9;
+}
+.note {
+    border-color: #52e052;
+    background: #e9fbe9;
+}
+
+
+</style><style>/* HIGHLIGHTS */
+code.prettyprint {
+    color:  inherit;
+}
+
+/* this from google-code-prettify */
+.pln{color:#000}@media screen{.str{color:#080}.kwd{color:#008}.com{color:#800}.typ{color:#606}.lit{color:#066}.pun,.opn,.clo{color:#660}.tag{color:#008}.atn{color:#606}.atv{color:#080}.dec,.var{color:#606}.fun{color:red}}@media print,projection{.str{color:#060}.kwd{color:#006;font-weight:bold}.com{color:#600;font-style:italic}.typ{color:#404;font-weight:bold}.lit{color:#044}.pun,.opn,.clo{color:#440}.tag{color:#006;font-weight:bold}.atn{color:#404}.atv{color:#060}}ol.linenums{margin-top:0;margin-bottom:0}li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8{list-style-type:none}li.L1,li.L3,li.L5,li.L7,li.L9{background:#eee}
+</style><style>/* --- WEB IDL --- */
+pre.idl {
+    border-top: 1px solid #90b8de;
+    border-bottom: 1px solid #90b8de;
+    padding:    1em;
+    line-height:    120%;
+}
+
+pre.idl::before {
+    content:    "WebIDL";
+    display:    block;
+    width:      150px;
+    background: #90b8de;
+    color:  #fff;
+    font-family:    initial;
+    padding:    3px;
+    font-weight:    bold;
+    margin: -1em 0 1em -1em;
+}
+
+.idlType {
+    color:  #ff4500;
+    font-weight:    bold;
+    text-decoration:    none;
+}
+
+/*.idlModule*/
+/*.idlModuleID*/
+/*.idlInterface*/
+.idlInterfaceID, .idlDictionaryID, .idlCallbackID, .idlEnumID {
+    font-weight:    bold;
+    color:  #005a9c;
+}
+a.idlEnumItem {
+    color:  #000;
+    border-bottom:  1px dotted #ccc;
+    text-decoration: none;
+}
+
+.idlSuperclass {
+    font-style: italic;
+    color:  #005a9c;
+}
+
+/*.idlAttribute*/
+.idlAttrType, .idlFieldType, .idlMemberType {
+    color:  #005a9c;
+}
+.idlAttrName, .idlFieldName, .idlMemberName {
+    color:  #ff4500;
+}
+.idlAttrName a, .idlFieldName a, .idlMemberName a {
+    color:  #ff4500;
+    border-bottom:  1px dotted #ff4500;
+    text-decoration: none;
+}
+
+/*.idlMethod*/
+.idlMethType, .idlCallbackType {
+    color:  #005a9c;
+}
+.idlMethName {
+    color:  #ff4500;
+}
+.idlMethName a {
+    color:  #ff4500;
+    border-bottom:  1px dotted #ff4500;
+    text-decoration: none;
+}
+
+/*.idlCtor*/
+.idlCtorName {
+    color:  #ff4500;
+}
+.idlCtorName a {
+    color:  #ff4500;
+    border-bottom:  1px dotted #ff4500;
+    text-decoration: none;
+}
+
+/*.idlParam*/
+.idlParamType {
+    color:  #005a9c;
+}
+.idlParamName, .idlDefaultValue {
+    font-style: italic;
+}
+
+.extAttr {
+    color:  #666;
+}
+
+/*.idlSectionComment*/
+.idlSectionComment {
+    color: gray;
+}
+
+/*.idlConst*/
+.idlConstType {
+    color:  #005a9c;
+}
+.idlConstName {
+    color:  #ff4500;
+}
+.idlConstName a {
+    color:  #ff4500;
+    border-bottom:  1px dotted #ff4500;
+    text-decoration: none;
+}
+
+/*.idlException*/
+.idlExceptionID {
+    font-weight:    bold;
+    color:  #c00;
+}
+
+.idlTypedefID, .idlTypedefType {
+    color:  #005a9c;
+}
+
+.idlRaises, .idlRaises a.idlType, .idlRaises a.idlType code, .excName a, .excName a code {
+    color:  #c00;
+    font-weight:    normal;
+}
+
+.excName a {
+    font-family:    monospace;
+}
+
+.idlRaises a.idlType, .excName a.idlType {
+    border-bottom:  1px dotted #c00;
+}
+
+.excGetSetTrue, .excGetSetFalse, .prmNullTrue, .prmNullFalse, .prmOptTrue, .prmOptFalse {
+    width:  45px;
+    text-align: center;
+}
+.excGetSetTrue, .prmNullTrue, .prmOptTrue { color:  #0c0; }
+.excGetSetFalse, .prmNullFalse, .prmOptFalse { color:  #c00; }
+
+.idlImplements a {
+    font-weight:    bold;
+}
+
+dl.attributes, dl.methods, dl.constants, dl.constructors, dl.fields, dl.dictionary-members {
+    margin-left:    2em;
+}
+
+.attributes dt, .methods dt, .constants dt, .constructors dt, .fields dt, .dictionary-members dt {
+    font-weight:    normal;
+}
+
+.attributes dt code, .methods dt code, .constants dt code, .constructors dt code, .fields dt code, .dictionary-members dt code {
+    font-weight:    bold;
+    color:  #000;
+    font-family:    monospace;
+}
+
+.attributes dt code, .fields dt code, .dictionary-members dt code {
+    background:  #ffffd2;
+}
+
+.attributes dt .idlAttrType code, .fields dt .idlFieldType code, .dictionary-members dt .idlMemberType code {
+    color:  #005a9c;
+    background:  transparent;
+    font-family:    inherit;
+    font-weight:    normal;
+    font-style: italic;
+}
+
+.methods dt code {
+    background:  #d9e6f8;
+}
+
+.constants dt code {
+    background:  #ddffd2;
+}
+
+.constructors dt code {
+    background:  #cfc;
+}
+
+.attributes dd, .methods dd, .constants dd, .constructors dd, .fields dd, .dictionary-members dd {
+    margin-bottom:  1em;
+}
+
+table.parameters, table.exceptions {
+    border-spacing: 0;
+    border-collapse:    collapse;
+    margin: 0.5em 0;
+    width:  100%;
+}
+table.parameters { border-bottom:  1px solid #90b8de; }
+table.exceptions { border-bottom:  1px solid #deb890; }
+
+.parameters th, .exceptions th {
+    color:  #fff;
+    padding:    3px 5px;
+    text-align: left;
+    font-family:    initial;
+    font-weight:    normal;
+    text-shadow:    #666 1px 1px 0;
+}
+.parameters th { background: #90b8de; }
+.exceptions th { background: #deb890; }
+
+.parameters td, .exceptions td {
+    padding:    3px 10px;
+    border-top: 1px solid #ddd;
+    vertical-align: top;
+}
+
+.parameters tr:first-child td, .exceptions tr:first-child td {
+    border-top: none;
+}
+
+.parameters td.prmName, .exceptions td.excName, .exceptions td.excCodeName {
+    width:  100px;
+}
+
+.parameters td.prmType {
+    width:  120px;
+}
+
+table.exceptions table {
+    border-spacing: 0;
+    border-collapse:    collapse;
+    width:  100%;
+}
+</style><link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/W3C-WD"><!--[if lt IE 9]><script src='https://www.w3.org/2008/site/js/html5shiv.js'></script><![endif]--></head>
+  <body class="h-entry" role="document" id="respecDocument"><div class="head" role="contentinfo" id="respecHeader">
+  <p>
+      
+        
+            <a href="http://www.w3.org/"><img width="72" height="48" src="https://www.w3.org/Icons/w3c_home" alt="W3C"></a>
+        
+      
+  </p>
+  <h1 class="title p-name" id="title" property="dcterms:title">Push API</h1>
+  
+  <h2 property="dcterms:issued" datatype="xsd:dateTime" content="2014-10-06T23:00:00.000Z" id="w3c-working-draft-07-october-2014"><abbr title="World Wide Web Consortium">W3C</abbr> Working Draft <time class="dt-published" datetime="2014-10-07">07 October 2014</time></h2>
+  <dl>
+    
+      <dt>This version:</dt>
+      <dd><a class="u-url" href="http://www.w3.org/TR/2014/WD-push-api-20141007/">http://www.w3.org/TR/2014/WD-push-api-20141007/</a></dd>
+      <dt>Latest published version:</dt>
+      <dd><a href="http://www.w3.org/TR/push-api/">http://www.w3.org/TR/push-api/</a></dd>
+    
+    
+      <dt>Latest editor's draft:</dt>
+      <dd><a href="http://w3c.github.io/push-api/">http://w3c.github.io/push-api/</a></dd>
+    
+    
+    
+    
+    
+    
+      <dt>Previous version:</dt>
+      <dd><a rel="dcterms:replaces" href="http://www.w3.org/TR/2013/WD-push-api-20130815/">http://www.w3.org/TR/2013/WD-push-api-20130815/</a></dd>
+    
+    
+    <dt>Editors:</dt>
+    <dd class="p-author h-card vcard" rel="bibo:editor" inlist=""><span typeof="foaf:Person"><span property="foaf:name" class="p-name fn">Bryan Sullivan</span>, <a rel="foaf:workplaceHomepage" class="p-org org h-org h-card" href="http://att.com/">AT&amp;T</a></span>
+</dd>
+<dd class="p-author h-card vcard" rel="bibo:editor" inlist=""><span typeof="foaf:Person"><span property="foaf:name" class="p-name fn">Eduardo Fullea</span>, <a rel="foaf:workplaceHomepage" class="p-org org h-org h-card" href="http://www.telefonica.com/">Telefonica</a></span>
+</dd>
+<dd class="p-author h-card vcard" rel="bibo:editor" inlist=""><span typeof="foaf:Person"><span property="foaf:name" class="p-name fn">Michaël van Ouwerkerk</span>, <a rel="foaf:workplaceHomepage" class="p-org org h-org h-card" href="https://www.google.com/">Google</a></span>
+</dd>
+
+    
+    
+      
+        
+          <dt>Participate:</dt>
+          
+             
+                
+                  <dd>
+                    <a href="http://lists.w3.org/Archives/Public/public-webapps/">
+                      Mailing list
+                    </a>
+                  </dd>
+                
+             
+                
+                  <dd>
+                    <a href="https://github.com/w3c/push-api/issues">
+                      Browse open issues
+                    </a>
+                  </dd>
+                
+             
+                
+                  <dd>
+                    <a href="https://github.com/w3c/push-api/issues/new">
+                      File a bug
+                    </a>
+                  </dd>
+                
+             
+          
+        
+      
+    
+  </dl>
+  
+  
+  
+  
+    
+      <p class="copyright">
+        <a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> ©
+        2014
+        
+        <a href="http://www.w3.org/"><abbr title="World Wide Web Consortium">W3C</abbr></a><sup>®</sup>
+        (<a href="http://www.csail.mit.edu/"><abbr title="Massachusetts Institute of Technology">MIT</abbr></a>,
+        <a href="http://www.ercim.eu/"><abbr title="European Research Consortium for Informatics and Mathematics">ERCIM</abbr></a>,
+        <a href="http://www.keio.ac.jp/">Keio</a>, <a href="http://ev.buaa.edu.cn/">Beihang</a>), 
+        
+        All Rights Reserved.
+        
+        <abbr title="World Wide Web Consortium">W3C</abbr> <a href="http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer">liability</a>,
+        <a href="http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks">trademark</a> and
+        
+          <a href="http://www.w3.org/Consortium/Legal/copyright-documents">document use</a>
+        
+        rules apply.
+      </p>
+    
+  
+  <hr>
+</div>
+    <section id="abstract" class="introductory" property="dcterms:abstract" datatype="" typeof="bibo:Chapter" resource="#abstract" rel="bibo:Chapter"><h2 role="heading" id="h2_abstract">Abstract</h2>
+      <p>
+        The <cite>Push API</cite> provides <a title="webapp" href="#dfn-webapp" class="internalDFN">webapps</a> with scripted access to
+        server-sent messages, for simplicity referred to here as <a title="push message" href="#dfn-push-message" class="internalDFN">push
+        messages</a>, as delivered by <a title="push service" href="#dfn-push-service" class="internalDFN">push services</a>. A <a href="#dfn-push-service" class="internalDFN">push
+        service</a> allows a <a href="#dfn-webapp-server" class="internalDFN">webapp server</a> to send messages to a <a href="#dfn-webapp" class="internalDFN">webapp</a>, regardless
+        of whether the <a href="#dfn-webapp" class="internalDFN">webapp</a> is currently active on the <a href="#dfn-user-agent" class="internalDFN">user agent</a>. The <a href="#dfn-push-message" class="internalDFN">push
+        message</a> will be delivered to a <a href="#dfn-service-worker" class="internalDFN">Service Worker</a>, which could then store the
+        message's data or display a notification to the user.
+      </p>
+      <p>
+        This specification is designed to promote compatibility with any delivery method for
+        <a title="push message" href="#dfn-push-message" class="internalDFN">push messages</a> from <a title="push service" href="#dfn-push-service" class="internalDFN">push services</a> to
+        <a title="user agent" href="#dfn-user-agent" class="internalDFN">user agents</a>.
+      </p>
+    </section><section id="sotd" class="introductory" typeof="bibo:Chapter" resource="#sotd" rel="bibo:Chapter"><h2 role="heading" id="h2_sotd">Status of This Document</h2>
+  
+    
+      
+        <p>
+          <em>This section describes the status of this document at the time of its publication.
+          Other documents may supersede this document. A list of current <abbr title="World Wide Web Consortium">W3C</abbr> publications and the
+          latest revision of this technical report can be found in the <a href="http://www.w3.org/TR/"><abbr title="World Wide Web Consortium">W3C</abbr> technical reports index</a> at
+          http://www.w3.org/TR/.</em>
+        </p>
+        
+        <p>
+          This document was published by the <a href="http://www.w3.org/2008/webapps/">Web Applications Working Group</a> as a Working Draft.
+          
+            This document is intended to become a <abbr title="World Wide Web Consortium">W3C</abbr> Recommendation.
+          
+          
+            If you wish to make comments regarding this document, please send them to 
+            <a href="mailto:public-webapps@w3.org?subject=%5BPush%20API%5D">public-webapps@w3.org</a> 
+            (<a href="mailto:public-webapps-request@w3.org?subject=subscribe">subscribe</a>,
+            <a href="http://lists.w3.org/Archives/Public/public-webapps/">archives</a>)
+              with <code>[Push API]</code> at the start of your email's subject.
+          
+          
+          
+          
+            All comments are welcome.
+          
+        </p>
+        
+        
+          <p>
+            Publication as a Working Draft does not imply endorsement by the <abbr title="World Wide Web Consortium">W3C</abbr>
+            Membership. This is a draft document and may be updated, replaced or obsoleted by other
+            documents at any time. It is inappropriate to cite this document as other than work in
+            progress.
+          </p>
+        
+        
+        
+        <p>
+          
+            This document was produced by a group operating under the 
+            <a id="sotd_patent" about="" rel="w3p:patentRules" href="http://www.w3.org/Consortium/Patent-Policy-20040205/">5 February 2004 <abbr title="World Wide Web Consortium">W3C</abbr> Patent
+            Policy</a>.
+          
+          
+          
+            
+              <abbr title="World Wide Web Consortium">W3C</abbr> maintains a <a href="http://www.w3.org/2004/01/pp-impl/42538/status" rel="disclosure">public list of any patent
+              disclosures</a> 
+            
+            made in connection with the deliverables of the group; that page also includes
+            instructions for disclosing a patent. An individual who has actual knowledge of a patent
+            which the individual believes contains
+            <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#def-essential">Essential
+            Claim(s)</a> must disclose the information in accordance with
+            <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#sec-Disclosure">section
+            6 of the <abbr title="World Wide Web Consortium">W3C</abbr> Patent Policy</a>.
+          
+          
+        </p>
+        
+          <p>This document is governed by the <a id="w3c_process_revision" href="http://www.w3.org/2014/Process-20140801/">1 August 2014 <abbr title="World Wide Web Consortium">W3C</abbr> Process Document</a>.
+          </p>
+        
+        
+      
+    
+  
+</section><section id="toc"><h2 class="introductory" role="heading" id="h2_toc">Table of Contents</h2><ul class="toc" role="directory" id="respecContents"><li class="tocline"><a href="#introduction" class="tocxref"><span class="secno">1. </span>
+        Introduction
+      </a></li><li class="tocline"><a href="#conformance" class="tocxref"><span class="secno">2. </span>Conformance</a></li><li class="tocline"><a href="#terminology" class="tocxref"><span class="secno">3. </span>
+        Terminology
+      </a></li><li class="tocline"><a href="#security-and-privacy-considerations" class="tocxref"><span class="secno">4. </span>
+        Security and privacy considerations
+      </a></li><li class="tocline"><a href="#pushframework" class="tocxref"><span class="secno">5. </span>
+        Push Framework
+      </a><ul class="toc"><li class="tocline"><a href="#example" class="tocxref"><span class="secno">5.1 </span>
+          Example
+        </a></li><li class="tocline"><a href="#sequence-diagram" class="tocxref"><span class="secno">5.2 </span>
+          Sequence diagram
+        </a></li><li class="tocline"><a href="#push-server-discovery-and-api-use" class="tocxref"><span class="secno">5.3 </span>
+          Push Server Discovery and API Use
+        </a></li></ul></li><li class="tocline"><a href="#extensions-to-the-serviceworkerregistration-interface" class="tocxref"><span class="secno">6. </span>
+        Extensions to the <span class="formerLink"><code>ServiceWorkerRegistration</code></span> interface
+      </a></li><li class="tocline"><a href="#pushregistrationmanager-interface" class="tocxref"><span class="secno">7. </span>
+        <span class="formerLink"><code>PushRegistrationManager</code></span> interface
+      </a><ul class="toc"><li class="tocline"><a href="#push-registration-persistence" class="tocxref"><span class="secno">7.1 </span>
+          Push Registration Persistence
+        </a></li><li class="tocline"><a href="#push-registration-uniqueness" class="tocxref"><span class="secno">7.2 </span>
+          Push Registration Uniqueness
+        </a></li></ul></li><li class="tocline"><a href="#pushregistration-interface" class="tocxref"><span class="secno">8. </span>
+        <span class="formerLink"><code>PushRegistration</code></span> interface
+      </a></li><li class="tocline"><a href="#events" class="tocxref"><span class="secno">9. </span>
+        Events
+      </a><ul class="toc"><li class="tocline"><a href="#the-push-event" class="tocxref"><span class="secno">9.1 </span>
+          The <code>push</code> event
+        </a></li><li class="tocline"><a href="#the-pushregistrationlost-event" class="tocxref"><span class="secno">9.2 </span>
+          The <code>pushregistrationlost</code> event
+        </a></li></ul></li><li class="tocline"><a href="#enumerations" class="tocxref"><span class="secno">10. </span>
+        Enumerations
+      </a></li><li class="tocline"><a href="#acknowledgements" class="tocxref"><span class="secno">A. </span>
+        Acknowledgements
+      </a></li><li class="tocline"><a href="#references" class="tocxref"><span class="secno">B. </span>References</a><ul class="toc"><li class="tocline"><a href="#normative-references" class="tocxref"><span class="secno">B.1 </span>Normative references</a></li><li class="tocline"><a href="#informative-references" class="tocxref"><span class="secno">B.2 </span>Informative references</a></li></ul></li></ul></section>
+    
+    <section class="informative" id="introduction" typeof="bibo:Chapter" resource="#introduction" rel="bibo:Chapter">
+      <!--OddPage--><h2 role="heading" id="h2_introduction"><span class="secno">1. </span>
+        Introduction
+      </h2><p><em>This section is non-normative.</em></p>
+      <p>
+        As defined here, <a title="push service" href="#dfn-push-service" class="internalDFN">push services</a> support delivery of <a href="#dfn-webapp-server" class="internalDFN">webapp
+        server</a> messages in the following contexts and related use cases:
+      </p>
+      <ul>
+        <li>the user is actively involved in the use of a <a href="#dfn-webapp" class="internalDFN">webapp</a>: this relates to any normal
+        use case in which a <a href="#dfn-webapp" class="internalDFN">webapp</a> user may benefit from <a title="push message" href="#dfn-push-message" class="internalDFN">push
+        messages</a> while the user is actively using the <a href="#dfn-webapp" class="internalDFN">webapp</a>
+        </li>
+        <li>the user is not actively involved in the use of a <a href="#dfn-webapp" class="internalDFN">webapp</a>, but the <a href="#dfn-webapp" class="internalDFN">webapp</a>
+        is active in a window of the browser or executing as a web worker: this relates to use
+        cases such as social networking, messaging, web feed readers, etc in which the user may not
+        be actively using a <a href="#dfn-webapp" class="internalDFN">webapp</a> but still benefits from <a title="push message" href="#dfn-push-message" class="internalDFN">push
+        messages</a> being sent to (or via) the <a href="#dfn-webapp" class="internalDFN">webapp</a>, to keep the user up-to-date
+        </li>
+        <li>the <a href="#dfn-webapp" class="internalDFN">webapp</a> is not currently active in a browser window: this relates to use
+        cases in which the user may close the <a href="#dfn-webapp" class="internalDFN">webapp</a>, but still benefits from the
+        <a href="#dfn-webapp" class="internalDFN">webapp</a> being able to be restarted when a <a href="#dfn-push-message" class="internalDFN">push message</a> is received, e.g. the
+        WebRTC use case in which an incoming call can invoke the WebRTC <a href="#dfn-webapp" class="internalDFN">webapp</a>
+        </li>
+        <li>multiple <a title="webapp" href="#dfn-webapp" class="internalDFN">webapps</a> are running, but <a title="push message" href="#dfn-push-message" class="internalDFN">push
+        messages</a> are delivered only to the <a href="#dfn-webapp" class="internalDFN">webapp</a> that requested them, e.g. any normal
+        use case in which multiple <a title="webapp" href="#dfn-webapp" class="internalDFN">webapps</a> are active in the browser and
+        utilizing <a title="push service" href="#dfn-push-service" class="internalDFN">push services</a>
+        </li>
+        <li>multiple instances of the same <a href="#dfn-webapp" class="internalDFN">webapp</a> are active in the browser, and <a title="push message" href="#dfn-push-message" class="internalDFN">push messages</a> specific to each instance of the <a href="#dfn-webapp" class="internalDFN">webapp</a> are
+        delivered only to the specific instance, e.g. when a mail <a href="#dfn-webapp" class="internalDFN">webapp</a> is active in two
+        windows using different mail accounts
+        </li>
+        <li>multiple instances of the same <a href="#dfn-webapp" class="internalDFN">webapp</a> are active in different browsers, and push
+        messages are delivered to a set of instances of the <a href="#dfn-webapp" class="internalDFN">webapp</a>, e.g. when a mail
+        <a href="#dfn-webapp" class="internalDFN">webapp</a> is active in two browsers using the same email account
+        </li>
+        <li>multiple instances of the same <a href="#dfn-webapp" class="internalDFN">webapp</a> are active in different browsers, and push
+        messages are delivered to all instances of the <a href="#dfn-webapp" class="internalDFN">webapp</a>, e.g. when a message is to be
+        broadcasted to all users of the <a href="#dfn-webapp" class="internalDFN">webapp</a>
+        </li>
+      </ul>
+    </section>
+    <section id="conformance" typeof="bibo:Chapter" resource="#conformance" rel="bibo:Chapter"><!--OddPage--><h2 role="heading" id="h2_conformance"><span class="secno">2. </span>Conformance</h2>
+<p>
+  As well as sections marked as non-normative, all authoring guidelines, diagrams, examples,
+  and notes in this specification are non-normative. Everything else in this specification is
+  normative.
+</p>
+<p>
+  The key words <em class="rfc2119" title="MUST">MUST</em>, <em class="rfc2119" title="MUST NOT">MUST NOT</em>, <em class="rfc2119" title="REQUIRED">REQUIRED</em>, <em class="rfc2119" title="SHOULD">SHOULD</em>, <em class="rfc2119" title="SHOULD NOT">SHOULD NOT</em>, <em class="rfc2119" title="RECOMMENDED">RECOMMENDED</em>, <em class="rfc2119" title="MAY">MAY</em>,
+  and <em class="rfc2119" title="OPTIONAL">OPTIONAL</em> in this specification are to be interpreted as described in [<cite><a class="bibref" href="#bib-RFC2119">RFC2119</a></cite>].
+</p>
+
+      <p>
+        This specification defines conformance criteria that apply to a single product: the
+        <dfn id="dfn-user-agent">user agent</dfn> that implements the interfaces that it contains.
+      </p>
+      <p>
+        Implementations that use ECMAScript to implement the APIs defined in this specification
+        <em class="rfc2119" title="MUST">MUST</em> implement them in a manner consistent with the ECMAScript Bindings defined in the Web
+        IDL specification [<cite><a class="bibref" href="#bib-WEBIDL">WEBIDL</a></cite>].
+      </p>
+    </section>
+    <section id="terminology">
+      <!--OddPage--><h2 role="heading" id="h2_terminology"><span class="secno">3. </span>
+        Terminology
+      </h2>
+      <p>
+        <dfn id="dfn-queue-a-task"><a href="http://www.w3.org/TR/html5/webappapis.html#queue-a-task">Queue a
+        task</a></dfn> and <dfn id="dfn-fire-a-simple-event"><a href="http://www.w3.org/TR/html5/webappapis.html#fire-a-simple-event">fire a simple
+        event</a></dfn> are defined in [<cite><a class="bibref" href="#bib-HTML5">HTML5</a></cite>].
+      </p>
+      <p>
+        <a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-promise-objects"><dfn id="dfn-promise">Promise</dfn></a>
+        is defined in [<cite><a class="bibref" href="#bib-ECMASCRIPT">ECMASCRIPT</a></cite>].
+      </p>
+      <p>
+        <dfn id="dfn-eventinit">EventInit</dfn> is defined in [<cite><a class="bibref" href="#bib-DOM">DOM</a></cite>].
+      </p>
+      <p>
+        <dfn id="dfn-service-worker">Service Worker</dfn>, <dfn id="dfn-serviceworkerregistration">ServiceWorkerRegistration</dfn>,
+        <dfn id="dfn-serviceworkerglobalscope">ServiceWorkerGlobalScope</dfn>, and <dfn id="dfn-extendableevent">ExtendableEvent</dfn> are defined in
+        [<cite><a class="bibref" href="#bib-SERVICE-WORKERS">SERVICE-WORKERS</a></cite>].
+      </p>
+      <p>
+        The term <dfn id="dfn-webapp">webapp</dfn> refers to a Web application, i.e. an application implemented
+        using Web technologies, and executing within the context of a Web <a href="#dfn-user-agent" class="internalDFN">user agent</a>, e.g. a
+        Web browser or other Web runtime environment.
+      </p>
+      <p>
+        The term <dfn id="dfn-webapp-server">webapp server</dfn> refers to server-side components of a <a href="#dfn-webapp" class="internalDFN">webapp</a>.
+      </p>
+      <p>
+        The term <dfn id="dfn-push-message">push message</dfn> refers to an indication to a <a href="#dfn-webapp" class="internalDFN">webapp</a> that there is
+        new information for it from the <a href="#dfn-webapp-server" class="internalDFN">webapp server</a>, all or part of which <em class="rfc2119" title="MAY">MAY</em> be contained
+        in the <a href="#dfn-push-message" class="internalDFN">push message</a> itself.
+      </p>
+      <p>
+        The term <dfn id="dfn-push-registration">push registration</dfn> refers to each logical channel aimed at delivering
+        <a title="push message" href="#dfn-push-message" class="internalDFN">push messages</a> from an <a href="#dfn-webapp-server" class="internalDFN">webapp server</a> to a <a href="#dfn-webapp" class="internalDFN">webapp</a>,
+        which is created by a distinct registration of such <a href="#dfn-webapp" class="internalDFN">webapp</a> via this Push API.
+      </p>
+      <p>
+        The term <dfn id="dfn-push-service">push service</dfn> refers to an overall end-to-end system that allows
+        <a title="webapp server" href="#dfn-webapp-server" class="internalDFN">webapp servers</a> to send <a title="push message" href="#dfn-push-message" class="internalDFN">push
+        messages</a> to a <a href="#dfn-webapp" class="internalDFN">webapp</a>.
+      </p>
+      <p>
+        The term <dfn id="dfn-push-server">push server</dfn> refers to the <a href="#dfn-push-service" class="internalDFN">push service</a> access point via which
+        <a title="webapp server" href="#dfn-webapp-server" class="internalDFN">webapp-servers</a> can initiate <a href="#dfn-push-message" class="internalDFN">push message</a> delivery. Push
+        servers typically expose APIs specific to the <a href="#dfn-push-service" class="internalDFN">push service</a>, e.g. for <a href="#dfn-push-message" class="internalDFN">push
+        message</a> delivery initiation.
+      </p>
+      <p>
+        The term <dfn id="dfn-express-permission">express permission</dfn> refers to an act by the user, e.g. via user
+        interface or host device platform features, via which the user approves the permission of a
+        <a href="#dfn-webapp" class="internalDFN">webapp</a> to access the Push API.
+      </p>
+    </section>
+    <section id="security-and-privacy-considerations">
+      <!--OddPage--><h2 role="heading" id="h2_security-and-privacy-considerations"><span class="secno">4. </span>
+        Security and privacy considerations
+      </h2>
+      <p>
+        <a title="user agent" href="#dfn-user-agent" class="internalDFN">User agents</a> <em class="rfc2119" title="MUST NOT">MUST NOT</em> provide Push API access to <a title="webapp" href="#dfn-webapp" class="internalDFN">webapps</a> without the <a href="#dfn-express-permission" class="internalDFN">express permission</a> of the user. <a title="user agent" href="#dfn-user-agent" class="internalDFN">User agents</a> <em class="rfc2119" title="MUST">MUST</em> acquire consent for permission through a user interface
+        for each call to the <code>register()</code> method, unless a prearranged trust
+        relationship applies.
+      </p>
+      <p>
+        <a title="user agent" href="#dfn-user-agent" class="internalDFN">User agents</a> <em class="rfc2119" title="MAY">MAY</em> support prearranged trust relationships that do
+        not require such per-request user interfaces.
+      </p>
+      <p>
+        <a title="user agent" href="#dfn-user-agent" class="internalDFN">User agents</a> <em class="rfc2119" title="MUST">MUST</em> implement the Push API to be HTTPS-only.
+        SSL-only support provides better protection for the user against man-in-the-middle attacks
+        intended to obtain push registration data. Browsers may ignore this rule for development
+        purposes only.
+      </p>
+      <p>
+        Permissions that are preserved beyond the current browsing session <em class="rfc2119" title="MUST">MUST</em> be revocable.
+      </p>
+    </section>
+    <section class="informative" id="pushframework" typeof="bibo:Chapter" resource="#pushframework" rel="bibo:Chapter">
+      <!--OddPage--><h2 role="heading" id="h2_pushframework"><span class="secno">5. </span>
+        Push Framework
+      </h2><p><em>This section is non-normative.</em></p>
+      <p>
+        Although <a title="push service" href="#dfn-push-service" class="internalDFN">push services</a> are expected to differ in deployment, a
+        typical deployment is expected to have the following general entities and example operation
+        for delivery of <a title="push message" href="#dfn-push-message" class="internalDFN">push messages</a>:
+      </p>
+      <ul>
+        <li>
+          <a title="webapp server" href="#dfn-webapp-server" class="internalDFN">Webapp servers</a> request delivery of a <a href="#dfn-push-message" class="internalDFN">push message</a> to
+          a <a href="#dfn-webapp" class="internalDFN">webapp</a> via a RESTful API exposed by a <a href="#dfn-push-server" class="internalDFN">push server</a>
+        </li>
+        <li>The <a href="#dfn-push-server" class="internalDFN">push server</a> delivers the message to a specific <a href="#dfn-user-agent" class="internalDFN">user agent</a>
+        </li>
+        <li>The <a href="#dfn-user-agent" class="internalDFN">user agent</a> delivers the <a href="#dfn-push-message" class="internalDFN">push message</a> to the specific <a href="#dfn-webapp" class="internalDFN">webapp</a>
+        intended to receive it.
+        </li>
+      </ul>
+      <p>
+        This overall framework allows <a title="webapp server" href="#dfn-webapp-server" class="internalDFN">webapp servers</a> to inform
+        <a title="webapp" href="#dfn-webapp" class="internalDFN">webapps</a> that new data is available at the <a title="webapp server" href="#dfn-webapp-server" class="internalDFN">webapp server</a>, or pass the new data directly to the <a href="#dfn-webapp" class="internalDFN">webapp</a> in
+        the <a href="#dfn-push-message" class="internalDFN">push message</a>.
+      </p>
+      <p>
+        The push API enables delivery of arbitrary application data to <a title="webapp" href="#dfn-webapp" class="internalDFN">webapps</a>, and makes no assumptions about the over-the-air/wire protocol used by
+        <a title="push service" href="#dfn-push-service" class="internalDFN">push services</a>. As such, the details of what types of data flow
+        through a <a title="push service" href="#dfn-push-service" class="internalDFN">push services</a> for a particular <a href="#dfn-webapp" class="internalDFN">webapp</a> are
+        specific to the <a href="#dfn-push-service" class="internalDFN">push service</a> and <a href="#dfn-webapp" class="internalDFN">webapp</a>. As needed, clarification about what
+        data flows over-the-air/wire should be sought from <a href="#dfn-push-service" class="internalDFN">push service</a> operators or
+        <a href="#dfn-webapp" class="internalDFN">webapp</a> developers.
+      </p>
+      <p>
+        The following code and diagram illustrate a hypothetical use of the push API.
+      </p>
+      <section class="informative" id="example">
+        <h3 role="heading" id="h3_example"><span class="secno">5.1 </span>
+          Example
+        </h3><p><em>This section is non-normative.</em></p>
+        <div class="example"><div class="example-title"><span>Example 1</span></div><pre class="example highlight prettyprint prettyprinted"><span class="com">// https://example.com/serviceworker.js</span><span class="pln">
+</span><span class="kwd">this</span><span class="pun">.</span><span class="pln">onpush </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="kwd">event</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="kwd">event</span><span class="pun">.</span><span class="pln">data</span><span class="pun">);</span><span class="pln">
+  </span><span class="com">// From here we can write the data to IndexedDB, send it to any open windows,</span><span class="pln">
+  </span><span class="com">// display a notification, etc.</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+
+</span><span class="com">// https://example.com/webapp.js</span><span class="pln">
+navigator</span><span class="pun">.</span><span class="pln">serviceWorker</span><span class="pun">.</span><span class="pln">ready</span><span class="pun">.</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">serviceWorkerRegistration</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  serviceWorkerRegistration</span><span class="pun">.</span><span class="pln">pushRegistrationManager</span><span class="pun">.</span><span class="kwd">register</span><span class="pun">().</span><span class="kwd">then</span><span class="pun">(</span><span class="pln">
+    </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">pushRegistration</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="pln">pushRegistration</span><span class="pun">.</span><span class="pln">registrationId</span><span class="pun">);</span><span class="pln">
+      console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="pln">pushRegistration</span><span class="pun">.</span><span class="pln">endpoint</span><span class="pun">);</span><span class="pln">
+      </span><span class="com">// The push registration details needed by the application server to push</span><span class="pln">
+      </span><span class="com">// messages to the push service are now available, and can be sent to the</span><span class="pln">
+      </span><span class="com">// application server using, for example, an XMLHttpRequest.</span><span class="pln">
+    </span><span class="pun">},</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">error</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      </span><span class="com">// During development it often helps to log errors to the console. In a</span><span class="pln">
+      </span><span class="com">// production environment it might make sense to also report information</span><span class="pln">
+      </span><span class="com">// about errors back to the application server.</span><span class="pln">
+      console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="pln">error</span><span class="pun">);</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+  </span><span class="pun">});</span><span class="pln">
+</span><span class="pun">});</span></pre></div>
+      </section>
+      <section class="informative" id="sequence-diagram">
+        <h3 role="heading" id="h3_sequence-diagram"><span class="secno">5.2 </span>
+          Sequence diagram
+        </h3><p><em>This section is non-normative.</em></p>
+        <figure id="fig-example-flow-of-events-for-registration-message-delivery-and-unregistration">
+          <a href="sequence_diagram.png"><img src="sequence_diagram.png" width="800" alt="Example flow of events for registration, message delivery, and unregistration"></a>
+          <figcaption>Fig. <span class="figno">1</span> <span class="fig-title">
+            Example flow of events for registration, message delivery, and unregistration
+          </span></figcaption>
+        </figure>
+      </section>
+      <section id="push-server-discovery-and-api-use">
+        <h3 role="heading" id="h3_push-server-discovery-and-api-use"><span class="secno">5.3 </span>
+          Push Server Discovery and API Use
+        </h3>
+        <p>
+          This specification does not define either specific normative methods via which webapps
+          can determine the applicable push system, or initiate push requests through that system
+          via a push server API. While these limitations add complexity for webapp developers, they
+          reflect the current reality of a diversity of push systems, for which convergence at
+          least in push server APIs, is not expected to be a short-term possibility. While a
+          converged push server API is a worthwhile goal and may be addressed in a different
+          specification, the Push API defined here has been designed to enable the current variety
+          of push systems to be used as appropriate for the webapp host device or software
+          platform. This section provides examples of how a webapp can be designed to work with a
+          variety of hypothetical push systems as needed.
+        </p>
+        <p>
+          The Push API provides several interface parameters and attributes that can enable a
+          webapp to deliver and obtain the necessary push system specific data enabling use of that
+          particular push system. These parameters and attributes include:
+        </p>
+        <ul>
+          <li>The <code>registrationId</code> of a <code>PushRegistration</code>, as an opaque
+          string to the Push API, may be used by push systems to provide meaningful data to the <a href="#dfn-webapp-server" class="internalDFN">
+            webapp server</a> through the webapp. For example, the <code>registrationId</code> may
+            be used as a push server API request parameter or request body element for specific
+            push systems.
+          </li>
+          <li>As a URI, the <code>endpoint</code> of a <code>PushRegistration</code> provides a
+          flexible means for push systems to deliver webapp-specific registration and/or push
+          server API parameters to the <a href="#dfn-webapp-server" class="internalDFN">webapp server</a>, through the webapp.
+          </li>
+        </ul>
+        <p>
+          Push systems that are compatible with the Push API will be expected to clarify how these
+          data are used in the push server APIs of the specific system, e.g. through their
+          developer programs. Examples of considerations include:
+        </p>
+        <ul>
+          <li>The URI used by the <a href="#dfn-webapp-server" class="internalDFN">webapp server</a> to issue push server API requests, which may
+          be based upon the <code>endpoint</code>, and for a particular push server API request
+          require additional parameters e.g. the <code>registrationId</code>.
+          </li>
+          <li>The push server API request body, which may require that the <code>endpoint</code> or
+          <code>registrationId</code> be present in some body element.
+          </li>
+          <li>The <code>pushRegistration</code> attributes may only be used by the <a href="#dfn-webapp-server" class="internalDFN">webapp
+          server</a> to associate the webapp to a specific push service registration, with the
+          details of the push server API relying upon other pre-configured data.
+          </li>
+        </ul>
+        <p>
+          The Push API does not provide any <code>pushRegistration</code> attributes that
+          normatively identify the particular push system that applies to the registration. Webapps
+          that are designed to work with a single push system are assumed to know inherently how to
+          use the push server API of that system. For such webapps, a key consideration is ensuring
+          that if the webapp is used on a device or browser that does not support the necessary
+          push system, that either the user is informed that the push-dependent webapp functions
+          will not work, or the webapp must use alternate methods e.g. [<cite><a class="bibref" href="#bib-websockets">websockets</a></cite>] or [<cite><a class="bibref" href="#bib-SSE">SSE</a></cite>] to
+          deliver the server-initiated data.
+        </p>
+        <p>
+          Prior to use of a push server API, <a title="webapp server" href="#dfn-webapp-server" class="internalDFN">webapp servers</a> that are
+          designed to work with multiple push systems may need to determine the applicable system
+          by parsing the <code>endpoint</code> to detect the push system from the URI domain.
+        </p>
+      </section>
+    </section>
+    <section id="extensions-to-the-serviceworkerregistration-interface">
+      <!--OddPage--><h2 role="heading" id="h2_extensions-to-the-serviceworkerregistration-interface"><span class="secno">6. </span>
+        Extensions to the <a href="#idl-def-ServiceWorkerRegistration" class="idlType"><code>ServiceWorkerRegistration</code></a> interface
+      </h2>
+      <p>
+        The Service Worker specification defines a <code>ServiceWorkerRegistration</code> interface
+        [<cite><a class="bibref" href="#bib-SERVICE-WORKERS">SERVICE-WORKERS</a></cite>], which this specification extends.
+      </p>
+      <pre class="idl"><span class="idlInterface" id="idl-def-ServiceWorkerRegistration">partial interface <span class="idlInterfaceID">ServiceWorkerRegistration</span> {
+<span class="idlAttribute">    readonly    attribute <span class="idlAttrType"><a href="#idl-def-PushRegistrationManager" class="idlType"><code>PushRegistrationManager</code></a></span> <span class="idlAttrName"><a href="#widl-ServiceWorkerRegistration-pushRegistrationManager">pushRegistrationManager</a></span>;</span>
+};</span></pre>
+    </section>
+    <section id="pushregistrationmanager-interface">
+      <!--OddPage--><h2 role="heading" id="h2_pushregistrationmanager-interface"><span class="secno">7. </span>
+        <a href="#idl-def-PushRegistrationManager" class="idlType"><code>PushRegistrationManager</code></a> interface
+      </h2>
+      <p>
+        The <a href="#idl-def-PushRegistrationManager" class="idlType"><code>PushRegistrationManager</code></a> interface defines the operations that enable <a title="webapp" href="#dfn-webapp" class="internalDFN">webapps</a> to establish access to <a title="push service" href="#dfn-push-service" class="internalDFN">push services</a>. Note
+        that just a single <a href="#dfn-push-registration" class="internalDFN">push registration</a> is allowed per <a href="#dfn-webapp" class="internalDFN">webapp</a>.
+      </p>
+      <pre class="idl"><span class="idlInterface" id="idl-def-PushRegistrationManager">interface <span class="idlInterfaceID">PushRegistrationManager</span> {
+<span class="idlMethod">    <span class="idlMethType">Promise&lt;<a href="#idl-def-PushRegistration" class="idlType"><code>PushRegistration</code></a>&gt;</span>     <span class="idlMethName"><a href="#widl-PushRegistrationManager-register-Promise-PushRegistration">register</a></span> ();</span>
+<span class="idlMethod">    <span class="idlMethType">Promise&lt;<a href="#idl-def-PushRegistration" class="idlType"><code>PushRegistration</code></a>&gt;</span>     <span class="idlMethName"><a href="#widl-PushRegistrationManager-unregister-Promise-PushRegistration">unregister</a></span> ();</span>
+<span class="idlMethod">    <span class="idlMethType">Promise&lt;<a href="#idl-def-PushRegistration" class="idlType"><code>PushRegistration</code></a>&gt;</span>     <span class="idlMethName"><a href="#widl-PushRegistrationManager-getRegistration-Promise-PushRegistration">getRegistration</a></span> ();</span>
+<span class="idlMethod">    <span class="idlMethType">Promise&lt;<a href="#idl-def-PushPermissionStatus" class="idlType"><code>PushPermissionStatus</code></a>&gt;</span> <span class="idlMethName"><a href="#widl-PushRegistrationManager-hasPermission-Promise-PushPermissionStatus">hasPermission</a></span> ();</span>
+};</span></pre>
+      <p>
+        The <dfn id="dfn-register"><code>register</code></dfn> method when invoked <em class="rfc2119" title="MUST">MUST</em> run the following steps:
+      </p>
+      <ol>
+        <li>Let <var>promise</var> be a new <a href="#dfn-promise" class="internalDFN"><code>Promise</code></a>.
+        </li>
+        <li>Return <var>promise</var> and continue the following steps asynchronously.
+        </li>
+        <li>If the scheme of the document url is not <code>https</code>, reject <var>promise</var>
+        with a <a href="http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a>
+        whose name is "<a href="http://dom.spec.whatwg.org/#securityerror"><code>SecurityError</code></a>" and terminate
+        these steps.
+        </li>
+        <li>Ask the user whether they allow the <a href="#dfn-webapp" class="internalDFN">webapp</a> to receive <a title="push message" href="#dfn-push-message" class="internalDFN">push messages</a>, unless a prearranged trust relationship applies or the
+        user has already granted or denied permission explicitly for this <a href="#dfn-webapp" class="internalDFN">webapp</a>.
+        </li>
+        <li>If not granted, reject <var>promise</var> with a <a href="http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a> whose name is
+        "<a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=23033"><code>PermissionDeniedError</code></a>"
+        and terminate these steps.
+        </li>
+        <li>If the <a href="#dfn-webapp" class="internalDFN">webapp</a> is already registered, run the following substeps:
+          <ol>
+            <li>Retrieve the <a href="#dfn-push-registration" class="internalDFN">push registration</a> associated with the <a href="#dfn-webapp" class="internalDFN">webapp</a>.
+            </li>
+            <li>If there is an error, reject <var>promise</var> with a <a href="http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a> whose name is
+            "<a href="http://dom.spec.whatwg.org/#aborterror"><code>AbortError</code></a>" and
+            terminate these steps.
+            </li>
+            <li>When the request has been completed, resolve <var>promise</var> with a
+            <a href="#idl-def-PushRegistration" class="idlType"><code>PushRegistration</code></a> providing the details of the retrieved <a href="#dfn-push-registration" class="internalDFN">push
+            registration</a>.
+            </li>
+          </ol>
+        </li>
+        <li>Make a request to the system to create a new <a href="#dfn-push-registration" class="internalDFN">push registration</a> for the
+        <a href="#dfn-webapp" class="internalDFN">webapp</a>.
+        </li>
+        <li>If there is an error, reject <var>promise</var> with a <a href="http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a> whose name is
+        "<a href="http://dom.spec.whatwg.org/#aborterror"><code>AbortError</code></a>" and
+        terminate these steps.
+        </li>
+        <li>When the request has been completed, resolve <var>promise</var> with a
+        <a href="#idl-def-PushRegistration" class="idlType"><code>PushRegistration</code></a> providing the details of the new <a href="#dfn-push-registration" class="internalDFN">push
+        registration</a>.
+        </li>
+      </ol>
+      <div class="note"><div class="note-title" aria-level="1" role="heading" id="h_note_1"><span>Note</span></div><p class="">
+        <a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=23033"><code>PermissionDeniedError</code></a>
+        has not yet been defined in a specification, this document currently links to the bug for
+        defining it.
+      </p></div>
+      <p>
+        The <dfn id="dfn-unregister"><code>unregister</code></dfn> method when invoked <em class="rfc2119" title="MUST">MUST</em> run the following steps:
+      </p>
+      <ol>
+        <li>Let <var>promise</var> be a new <a href="#dfn-promise" class="internalDFN"><code>Promise</code></a>.
+        </li>
+        <li>Return <var>promise</var> and continue the following steps asynchronously.
+        </li>
+        <li>If the <a href="#dfn-webapp" class="internalDFN">webapp</a> is not registered, reject <var>promise</var> with a <a href="http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a> whose name is
+        "<a href="http://dom.spec.whatwg.org/#notfounderror"><code>NotFoundError</code></a>" and
+        terminate these steps.
+        </li>
+        <li>Make a request to the system to deactivate the <a href="#dfn-push-registration" class="internalDFN">push registration</a> associated with
+        the <a href="#dfn-webapp" class="internalDFN">webapp</a>.
+        </li>
+        <li>If there is an error, reject <var>promise</var> with a <a href="http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a> whose name is
+        "<a href="http://dom.spec.whatwg.org/#aborterror"><code>AbortError</code></a>" and
+        terminate these steps.
+        </li>
+        <li>When the request has been completed, resolve <var>promise</var> with a
+        <a href="#idl-def-PushRegistration" class="idlType"><code>PushRegistration</code></a> providing the details of the <a href="#dfn-push-registration" class="internalDFN">push registration</a>
+        which has been unregistered.
+        </li>
+      </ol>
+      <p>
+        The <dfn id="dfn-getregistration"><code>getRegistration</code></dfn> method when invoked <em class="rfc2119" title="MUST">MUST</em> run the following
+        steps:
+      </p>
+      <ol>
+        <li>Let <var>promise</var> be a new <a href="#dfn-promise" class="internalDFN"><code>Promise</code></a>.
+        </li>
+        <li>Return <var>promise</var> and continue the following steps asynchronously.
+        </li>
+        <li>If the <a href="#dfn-webapp" class="internalDFN">webapp</a> is not registered, reject <var>promise</var> with a <a href="http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a> whose name is
+        "<a href="http://dom.spec.whatwg.org/#notfounderror"><code>NotFoundError</code></a>" and
+        terminate these steps.
+        </li>
+        <li>Retrieve the <a href="#dfn-push-registration" class="internalDFN">push registration</a> associated with the <a href="#dfn-webapp" class="internalDFN">webapp</a>.
+        </li>
+        <li>If there is an error, reject <var>promise</var> with a <a href="http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a> whose name is
+        "<a href="http://dom.spec.whatwg.org/#aborterror"><code>AbortError</code></a>" and
+        terminate these steps.
+        </li>
+        <li>When the request has been completed, resolve <var>promise</var> with a
+        <a href="#idl-def-PushRegistration" class="idlType"><code>PushRegistration</code></a> providing the details of the retrieved <a href="#dfn-push-registration" class="internalDFN">push
+        registration</a>.
+        </li>
+      </ol>
+      <p>
+        The <dfn id="dfn-haspermission"><code>hasPermission</code></dfn> method when invoked <em class="rfc2119" title="MUST">MUST</em> run the following steps:
+      </p>
+      <ol>
+        <li>Let <var>promise</var> be a new <a href="#dfn-promise" class="internalDFN"><code>Promise</code></a>.
+        </li>
+        <li>Return <var>promise</var> and continue the following steps asynchronously.
+        </li>
+        <li>Retrieve the push permission status (<a href="#idl-def-PushPermissionStatus" class="idlType"><code>PushPermissionStatus</code></a>) of the
+        requesting <a href="#dfn-webapp" class="internalDFN">webapp</a>
+        </li>
+        <li>If there is an error, reject <var>promise</var> with no arguments and terminate these
+        steps.
+        </li>
+        <li>When the request has been completed, resolve <var>promise</var> with
+        <a href="#idl-def-PushPermissionStatus" class="idlType"><code>PushPermissionStatus</code></a> providing the push permission status.
+        </li>
+      </ol>
+      <p>
+        Permission to use the push service can be persistent, that is, it does not need to be
+        reconfirmed for subsequent registrations if a valid permission exists.
+      </p>
+      <p>
+        If there is a need to ask for permission, it needs to be done by invoking the
+        <a href="#dfn-register" class="internalDFN"><code>register</code></a> method.
+      </p>
+      <section id="push-registration-persistence">
+        <h3 role="heading" id="h3_push-registration-persistence"><span class="secno">7.1 </span>
+          Push Registration Persistence
+        </h3>
+        <p>
+          To facilitate persistence of push registrations when a <a href="#dfn-webapp" class="internalDFN">webapp</a> is closed, it can
+          use a <a href="#dfn-service-worker" class="internalDFN">Service Worker</a> to register for and receive push events. In that case, even
+          if the <a href="#dfn-webapp" class="internalDFN">webapp</a> parent window is closed, the <code>pushRegistration</code> object
+          will still enable delivery of <a title="push message" href="#dfn-push-message" class="internalDFN">push messages</a>, through the
+          <a href="#dfn-service-worker" class="internalDFN">Service Worker</a>. The <a title="push message" href="#dfn-push-message" class="internalDFN">push messages</a>, can then be
+          processed by the <a href="#dfn-service-worker" class="internalDFN">Service Worker</a>, e.g. including one or more of the following
+          actions:
+        </p>
+        <ul>
+          <li>store the <a title="push message" href="#dfn-push-message" class="internalDFN">push messages</a> for later access by the
+          <a href="#dfn-webapp" class="internalDFN">webapp</a> when reinvoked by the user
+          </li>
+          <li>invoke/reconstruct the <a href="#dfn-webapp" class="internalDFN">webapp</a>, a process that is not described here (expected
+          to be clarified in [<cite><a class="bibref" href="#bib-SERVICE-WORKERS">SERVICE-WORKERS</a></cite>])
+          </li>
+          <li>delivery of the <a title="push message" href="#dfn-push-message" class="internalDFN">push messages</a> data to the to the
+          <a href="#dfn-webapp" class="internalDFN">webapp</a> as necessary through other means, e.g. [<cite><a class="bibref" href="#bib-webmessaging">webmessaging</a></cite>].
+          </li>
+        </ul>
+        <p>
+          If a <a href="#dfn-webapp" class="internalDFN">webapp</a> creates a <a href="#dfn-push-registration" class="internalDFN">push registration</a> without using a <a href="#dfn-service-worker" class="internalDFN">Service
+          Worker</a>, the <code>pushRegistration</code> object will persist only as long as the
+          <a href="#dfn-webapp" class="internalDFN">webapp</a> window is open.
+        </p>
+      </section>
+      <section id="push-registration-uniqueness">
+        <h3 role="heading" id="h3_push-registration-uniqueness"><span class="secno">7.2 </span>
+          Push Registration Uniqueness
+        </h3>
+        <p>
+          Each <a href="#dfn-push-registration" class="internalDFN">push registration</a> is unique, i.e. a single instance specific to each
+          <a href="#dfn-webapp" class="internalDFN">webapp</a> and call to the <code>register</code> interface.
+        </p>
+        <p>
+          <a title="webapp" href="#dfn-webapp" class="internalDFN">webapps</a> that create multiple <a title="push registration" href="#dfn-push-registration" class="internalDFN">push
+          registrations</a> are responsible for mapping the individual registrations to specific
+          app functions as necessary. For example, the <a href="#dfn-webapp" class="internalDFN">webapp</a> or <a href="#dfn-webapp-server" class="internalDFN">webapp server</a> can
+          associate a specific <code>pushRegistration</code> to a particular function of the app
+          through JavaScript.
+        </p>
+      </section>
+    </section>
+    <section id="pushregistration-interface">
+      <!--OddPage--><h2 role="heading" id="h2_pushregistration-interface"><span class="secno">8. </span>
+        <a href="#idl-def-PushRegistration" class="idlType"><code>PushRegistration</code></a> interface
+      </h2>
+      <p>
+        The <a href="#idl-def-PushRegistration" class="idlType"><code>PushRegistration</code></a> interface contains information about a specific channel used by
+        a <a href="#dfn-webapp" class="internalDFN">webapp</a> to receive <a title="push message" href="#dfn-push-message" class="internalDFN">push messages</a>.
+      </p>
+      <pre class="idl"><span class="idlInterface" id="idl-def-PushRegistration">interface <span class="idlInterfaceID">PushRegistration</span> {
+<span class="idlAttribute">    readonly    attribute <span class="idlAttrType">DOMString</span> <span class="idlAttrName"><a href="#widl-PushRegistration-endpoint">endpoint</a></span>;</span>
+<span class="idlAttribute">    readonly    attribute <span class="idlAttrType">DOMString</span> <span class="idlAttrName"><a href="#widl-PushRegistration-registrationId">registrationId</a></span>;</span>
+};</span></pre>
+      <p>
+        When getting the <code id="widl-PushRegistration-endpoint">endpoint</code> attribute, the
+        <a href="#dfn-user-agent" class="internalDFN">user agent</a> <em class="rfc2119" title="MUST">MUST</em> return the absolute URL exposed by the <a href="#dfn-push-server" class="internalDFN">push server</a> where the
+        <a href="#dfn-webapp-server" class="internalDFN">webapp server</a> can send <a title="push message" href="#dfn-push-message" class="internalDFN">push messages</a> to this
+        <a href="#dfn-webapp" class="internalDFN">webapp</a>. The value of <code>endpoint</code> may be the same for multiple <a title="webapp" href="#dfn-webapp" class="internalDFN">webapps</a> / <a href="#dfn-webapp" class="internalDFN">webapp</a> instances running on multiple devices.
+      </p>
+      <p>
+        When getting the <code id="widl-PushRegistration-registrationId">registrationId</code>
+        attribute, the <a href="#dfn-user-agent" class="internalDFN">user agent</a> <em class="rfc2119" title="MUST">MUST</em> return a univocal identifier of this <a href="#dfn-push-registration" class="internalDFN">push
+        registration</a> in the <a href="#dfn-push-server" class="internalDFN">push server</a>. It is used by the <a href="#dfn-webapp-server" class="internalDFN">webapp server</a> to
+        indicate the target of the <a title="push message" href="#dfn-push-message" class="internalDFN">push messages</a> that it submits to the
+        <a href="#dfn-push-server" class="internalDFN">push server</a>. Each pair of <code>registrationId</code> and <code>endpoint</code> is
+        expected to be unique and specific to a particular <a href="#dfn-webapp" class="internalDFN">webapp</a> instance running on a
+        specific device.
+      </p>
+    </section>
+    <section id="events">
+      <!--OddPage--><h2 role="heading" id="h2_events"><span class="secno">9. </span>
+        Events
+      </h2>
+      <p>
+        The Service Worker specification defines a <code>ServiceWorkerGlobalScope</code> interface
+        [<cite><a class="bibref" href="#bib-SERVICE-WORKERS">SERVICE-WORKERS</a></cite>], which this specification extends.
+      </p>
+      <pre class="idl"><span class="idlInterface" id="idl-def-ServiceWorkerGlobalScope">partial interface <span class="idlInterfaceID">ServiceWorkerGlobalScope</span> {
+<span class="idlAttribute">                attribute <span class="idlAttrType">EventHandler</span> <span class="idlAttrName"><a href="#widl-ServiceWorkerGlobalScope-onpush">onpush</a></span>;</span>
+<span class="idlAttribute">                attribute <span class="idlAttrType">EventHandler</span> <span class="idlAttrName"><a href="#widl-ServiceWorkerGlobalScope-onpushregistrationlost">onpushregistrationlost</a></span>;</span>
+};</span></pre>
+      <section id="the-push-event">
+        <h3 role="heading" id="h3_the-push-event"><span class="secno">9.1 </span>
+          The <code>push</code> event
+        </h3>
+        <p>
+          The <a href="#idl-def-PushEvent" class="idlType"><code>PushEvent</code></a> interface represents a received <a href="#dfn-push-message" class="internalDFN">push message</a>.
+        </p>
+        <pre class="idl"><span class="idlInterface" id="idl-def-PushEvent"><span class="idlDictionary" id="idl-def-PushEventInit">dictionary <span class="idlDictionaryID">PushEventInit</span> : <span class="idlSuperclass"><a href="#dfn-eventinit" class="internalDFN">EventInit</a></span> {
+<span class="idlMember">    <span class="idlMemberType">DOMString?</span> <span class="idlMemberName"><a href="#widl-PushEventInit-data">data</a></span>;</span>
+};</span><br><br>[<span class="extAttr">Constructor(DOMString type, optional PushEventInit eventInitDict), Exposed=ServiceWorker</span>]
+interface <span class="idlInterfaceID">PushEvent</span> : <span class="idlSuperclass"><a href="#dfn-extendableevent" class="internalDFN">ExtendableEvent</a></span> {
+<span class="idlAttribute">    readonly    attribute <span class="idlAttrType">DOMString?</span> <span class="idlAttrName"><a href="#widl-PushEvent-data">data</a></span>;</span>
+};</span></pre>
+        <p>
+          When getting the <code id="widl-PushMessage-data">data</code> attribute of a
+          <code>PushEvent</code>, the <a href="#dfn-user-agent" class="internalDFN">user agent</a> <em class="rfc2119" title="MUST">MUST</em> return the message data received by
+          the <a href="#dfn-user-agent" class="internalDFN">user agent</a> in the <a href="#dfn-push-message" class="internalDFN">push message</a>, or null if no data was received.
+        </p>
+        
+        <p>
+          Upon receiving a <a href="#dfn-push-message" class="internalDFN">push message</a> for a <a href="#dfn-webapp" class="internalDFN">webapp</a> from the <a href="#dfn-push-service" class="internalDFN">push service</a> the
+          <a href="#dfn-user-agent" class="internalDFN">user agent</a> <em class="rfc2119" title="MUST">MUST</em> run the following steps:
+        </p>
+        <ol>
+          <li>If the <a href="#dfn-service-worker" class="internalDFN">Service Worker</a> associated with the <a href="#dfn-webapp" class="internalDFN">webapp</a> is not running, start
+          it.
+          </li>
+          <li>Let <var>scope</var> be the <code>ServiceWorkerGlobalScope</code> of the <a href="#dfn-service-worker" class="internalDFN">Service
+          Worker</a> associated with the <a href="#dfn-webapp" class="internalDFN">webapp</a>.
+          </li>
+          <li>Let <var>event</var> be a new <a href="#idl-def-PushEvent" class="idlType"><code>PushEvent</code></a> whose <code>data</code>
+          attribute is the message data received by the <a href="#dfn-user-agent" class="internalDFN">user agent</a> in the <a href="#dfn-push-message" class="internalDFN">push
+          message</a>, or null if no data was received.
+          </li>
+          <li>
+            <a href="#dfn-queue-a-task" class="internalDFN">Queue a task</a> to <a title="fire a simple event" href="#dfn-fire-a-simple-event" class="internalDFN">fire <var>event</var> as a simple
+            event</a> named <code>push</code> at <var>scope</var>.
+          </li>
+        </ol>
+      </section>
+      <section id="the-pushregistrationlost-event">
+        <h3 role="heading" id="h3_the-pushregistrationlost-event"><span class="secno">9.2 </span>
+          The <code>pushregistrationlost</code> event
+        </h3>
+        <p>
+          Upon any event that makes a <a href="#dfn-push-registration" class="internalDFN">push registration</a> no longer valid, e.g. <a href="#dfn-push-server" class="internalDFN">push
+          server</a> database failure, the <a href="#dfn-user-agent" class="internalDFN">user agent</a> <em class="rfc2119" title="MUST">MUST</em> run the following steps:
+        </p>
+        <ol>
+          <li>If the <a href="#dfn-service-worker" class="internalDFN">Service Worker</a> associated with the <a href="#dfn-webapp" class="internalDFN">webapp</a> is not running, start
+          it.
+          </li>
+          <li>Let <var>scope</var> be the <code>ServiceWorkerGlobalScope</code> of the <a href="#dfn-service-worker" class="internalDFN">Service
+          Worker</a> associated with the <a href="#dfn-webapp" class="internalDFN">webapp</a>.
+          </li>
+          <li>
+            <a href="#dfn-queue-a-task" class="internalDFN">Queue a task</a> to <a href="#dfn-fire-a-simple-event" class="internalDFN">fire a simple event</a> named
+            <code>pushregistrationlost</code> at <var>scope</var>.
+          </li>
+        </ol>
+      </section>
+    </section>
+    <section id="enumerations">
+      <!--OddPage--><h2 role="heading" id="h2_enumerations"><span class="secno">10. </span>
+        Enumerations
+      </h2>
+      <pre class="idl"><span class="idlEnum" id="idl-def-PushPermissionStatus">enum <span class="idlEnumID">PushPermissionStatus</span> {
+    "<a href="#idl-def-PushPermissionStatus.granted" class="idlEnumItem">granted</a>",
+    "<a href="#idl-def-PushPermissionStatus.denied" class="idlEnumItem">denied</a>",
+    "<a href="#idl-def-PushPermissionStatus.default" class="idlEnumItem">default</a>"
+};</span></pre>
+      <table class="simple">
+        <tbody><tr>
+          <th colspan="2">
+            Enumeration description
+          </th>
+        </tr>
+        <tr>
+          <td>
+            <code id="idl-def-PushPermissionStatus.granted">granted</code>
+          </td>
+          <td>
+            The <a href="#dfn-webapp" class="internalDFN">webapp</a> has permission to use Push API.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code id="idl-def-PushPermissionStatus.denied">denied</code>
+          </td>
+          <td>
+            The <a href="#dfn-webapp" class="internalDFN">webapp</a> has been denied permission to use Push API.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code id="idl-def-PushPermissionStatus.default">default</code>
+          </td>
+          <td>
+            The <a href="#dfn-webapp" class="internalDFN">webapp</a> needs to ask for permission in order to use Push API.
+          </td>
+        </tr>
+      </tbody></table>
+    </section>
+    <section class="appendix" id="acknowledgements">
+      <!--OddPage--><h2 role="heading" id="h2_acknowledgements"><span class="secno">A. </span>
+        Acknowledgements
+      </h2>
+      <p>
+        The editors would like to express their gratitude to the Mozilla and Telefónica Digital
+        teams implementing the Firefox OS Push message solution and specially to Doug Turner,
+        Nikhil Marathe, Fernando R. Sela, Guillermo López, Antonio Amaya, José Manuel Cantera and
+        Albert Crespell, for their technical guidance, implementation work and support.
+      </p>
+    </section>
+  
+
+<section id="references" class="appendix" typeof="bibo:Chapter" resource="#references" rel="bibo:Chapter"><!--OddPage--><h2 role="heading" id="h2_references"><span class="secno">B. </span>References</h2><section id="normative-references" typeof="bibo:Chapter" resource="#normative-references" rel="bibo:Chapter"><h3 role="heading" id="h3_normative-references"><span class="secno">B.1 </span>Normative references</h3><dl class="bibliography" about=""><dt id="bib-DOM">[DOM]</dt><dd rel="dcterms:requires">Anne van Kesteren; Aryeh Gregor; Ms2ger; Alex Russell; Robin Berjon. <a href="http://www.w3.org/TR/dom/"><cite>W3C DOM4</cite></a>. 10 July 2014. W3C Last Call Working Draft. URL: <a href="http://www.w3.org/TR/dom/">http://www.w3.org/TR/dom/</a>
+</dd><dt id="bib-ECMASCRIPT">[ECMASCRIPT]</dt><dd rel="dcterms:requires">Allen Wirfs-Brock. <a href="http://people.mozilla.org/~jorendorff/es6-draft.html"><cite>ECMA-262 ECMAScript Language Specification, Edition 6</cite></a>. Draft. URL: <a href="http://people.mozilla.org/~jorendorff/es6-draft.html">http://people.mozilla.org/~jorendorff/es6-draft.html</a>
+</dd><dt id="bib-HTML5">[HTML5]</dt><dd rel="dcterms:requires">Robin Berjon; Steve Faulkner; Travis Leithead; Erika Doyle Navara; Edward O'Connor; Silvia Pfeiffer. <a href="http://www.w3.org/TR/html5/"><cite>HTML5</cite></a>. 16 September 2014. W3C Proposed Recommendation. URL: <a href="http://www.w3.org/TR/html5/">http://www.w3.org/TR/html5/</a>
+</dd><dt id="bib-RFC2119">[RFC2119]</dt><dd rel="dcterms:requires">S. Bradner. <a href="http://www.ietf.org/rfc/rfc2119.txt"><cite>Key words for use in RFCs to Indicate Requirement Levels</cite></a>. March 1997. Best Current Practice. URL: <a href="http://www.ietf.org/rfc/rfc2119.txt">http://www.ietf.org/rfc/rfc2119.txt</a>
+</dd><dt id="bib-SERVICE-WORKERS">[SERVICE-WORKERS]</dt><dd rel="dcterms:requires">Alex Russell; Jungkee Song. <a href="http://www.w3.org/TR/service-workers/"><cite>Service Workers</cite></a>. 8 May 2014. W3C Working Draft. URL: <a href="http://www.w3.org/TR/service-workers/">http://www.w3.org/TR/service-workers/</a>
+</dd><dt id="bib-WEBIDL">[WEBIDL]</dt><dd rel="dcterms:requires">Cameron McCormack. <a href="http://www.w3.org/TR/WebIDL/"><cite>Web IDL</cite></a>. 19 April 2012. W3C Candidate Recommendation. URL: <a href="http://www.w3.org/TR/WebIDL/">http://www.w3.org/TR/WebIDL/</a>
+</dd></dl></section><section id="informative-references" typeof="bibo:Chapter" resource="#informative-references" rel="bibo:Chapter"><h3 role="heading" id="h3_informative-references"><span class="secno">B.2 </span>Informative references</h3><dl class="bibliography" about=""><dt id="bib-SSE">[SSE]</dt><dd rel="dcterms:references">Ian Hickson. <a href="http://www.w3.org/TR/eventsource/"><cite>Server-Sent Events</cite></a>. 11 December 2012. W3C Candidate Recommendation. URL: <a href="http://www.w3.org/TR/eventsource/">http://www.w3.org/TR/eventsource/</a>
+</dd><dt id="bib-webmessaging">[webmessaging]</dt><dd rel="dcterms:references">Ian Hickson. <a href="http://www.w3.org/TR/webmessaging/"><cite>HTML5 Web Messaging</cite></a>. 1 May 2012. W3C Candidate Recommendation. URL: <a href="http://www.w3.org/TR/webmessaging/">http://www.w3.org/TR/webmessaging/</a>
+</dd><dt id="bib-websockets">[websockets]</dt><dd rel="dcterms:references">Ian Hickson. <a href="http://www.w3.org/TR/websockets/"><cite>The WebSocket API</cite></a>. 20 September 2012. W3C Candidate Recommendation. URL: <a href="http://www.w3.org/TR/websockets/">http://www.w3.org/TR/websockets/</a>
+</dd></dl></section></section></body></html>
