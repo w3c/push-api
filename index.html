@@ -149,9 +149,12 @@
         Terminology
       </h2>
       <p>
-        <dfn><a href="http://www.w3.org/TR/html5/webappapis.html#queue-a-task">Queue a
-        task</a></dfn> and <dfn><a href=
-        "http://www.w3.org/TR/html5/webappapis.html#fire-a-simple-event">fire a simple
+        The terms <dfn><a href="http://www.w3.org/TR/html5/browsers.html#event-handlers">event
+        handler</a></dfn>, <dfn><a href=
+        "http://www.w3.org/TR/html5/browsers.html#event-handler-event-type">event handler event
+        type</a></dfn>, <dfn><a href=
+        "http://www.w3.org/TR/html5/webappapis.html#queue-a-task">queue a task</a></dfn>, and
+        <dfn><a href="http://www.w3.org/TR/html5/webappapis.html#fire-a-simple-event">fire a simple
         event</a></dfn> are defined in [[!HTML5]].
       </p>
       <p>
@@ -389,6 +392,12 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           readonly attribute PushRegistrationManager pushRegistrationManager
         </dt>
       </dl>
+      <p>
+        The <code><dfn id=
+        "widl-ServiceWorkerRegistration-pushRegistrationManager">pushRegistrationManager</dfn></code>
+        attribute exposes the <code>PushRegistrationManager</code> for the <a>Service Worker</a>
+        identified by the <code>ServiceWorkerRegistration</code>.
+      </p>
     </section>
     <section>
       <h2>
@@ -403,38 +412,20 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         <dt>
           Promise&lt;PushRegistration&gt; register ()
         </dt>
-        <dd>
-          This method allows a <a>webapp</a> to create a new <a>push registration</a> to receive
-          <a title="push message">push messages</a>. It returns a <a><code>Promise</code></a> that
-          will allow the caller to be notified about the result of the operation.
-        </dd>
         <dt>
           Promise&lt;PushRegistration&gt; unregister ()
         </dt>
-        <dd>
-          This method allows a <a>webapp</a> to unregister. It returns a
-          <a><code>Promise</code></a> that will allow the caller to be notified about the result of
-          the operation.
-        </dd>
         <dt>
           Promise&lt;PushRegistration&gt; getRegistration ()
         </dt>
-        <dd>
-          This method allows a <a>webapp</a> to retrieve the active <a>push registration</a>. It
-          returns a <a><code>Promise</code></a> that will allow the caller to be notified about the
-          result of the operation.
-        </dd>
         <dt>
           Promise&lt;PushPermissionStatus&gt; hasPermission ()
         </dt>
-        <dd>
-          This method allows a <a>webapp</a> to check whether user has granted permission to use
-          push service. It returns a <a><code>Promise</code></a> that will allow the caller to be
-          notified about the result of the operation.
-        </dd>
       </dl>
       <p>
-        The <dfn><code>register</code></dfn> method when invoked MUST run the following steps:
+        The <code><dfn id=
+        "widl-PushRegistrationManager-register-Promise-PushRegistration">register</dfn></code>
+        method when invoked MUST run the following steps:
       </p>
       <ol>
         <li>Let <var>promise</var> be a new <a><code>Promise</code></a>.
@@ -492,7 +483,9 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         defining it.
       </p>
       <p>
-        The <dfn><code>unregister</code></dfn> method when invoked MUST run the following steps:
+        The <code><dfn id=
+        "widl-PushRegistrationManager-unregister-Promise-PushRegistration">unregister</dfn></code>
+        method when invoked MUST run the following steps:
       </p>
       <ol>
         <li>Let <var>promise</var> be a new <a><code>Promise</code></a>.
@@ -518,8 +511,9 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         </li>
       </ol>
       <p>
-        The <dfn><code>getRegistration</code></dfn> method when invoked MUST run the following
-        steps:
+        The <code><dfn id=
+        "widl-PushRegistrationManager-getRegistration-Promise-PushRegistration">getRegistration</dfn></code>
+        method when invoked MUST run the following steps:
       </p>
       <ol>
         <li>Let <var>promise</var> be a new <a><code>Promise</code></a>.
@@ -544,7 +538,9 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         </li>
       </ol>
       <p>
-        The <dfn><code>hasPermission</code></dfn> method when invoked MUST run the following steps:
+        The <code><dfn id=
+        "widl-PushRegistrationManager-hasPermission-Promise-PushPermissionStatus">hasPermission</dfn></code>
+        method when invoked MUST run the following steps:
       </p>
       <ol>
         <li>Let <var>promise</var> be a new <a><code>Promise</code></a>.
@@ -633,20 +629,21 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         </dt>
       </dl>
       <p>
-        When getting the <code id="widl-PushRegistration-endpoint">endpoint</code> attribute, the
-        <a>user agent</a> MUST return the absolute URL exposed by the <a>push server</a> where the
-        <a>webapp server</a> can send <a title="push message">push messages</a> to this
-        <a>webapp</a>. The value of <code>endpoint</code> may be the same for multiple <a title=
-        "webapp">webapps</a> / <a>webapp</a> instances running on multiple devices.
+        When getting the <code><dfn id="widl-PushRegistration-endpoint">endpoint</dfn></code>
+        attribute, the <a>user agent</a> MUST return the absolute URL exposed by the <a>push
+        server</a> where the <a>webapp server</a> can send <a title="push message">push
+        messages</a> to this <a>webapp</a>. The value of <code>endpoint</code> may be the same for
+        multiple <a title="webapp">webapps</a> / <a>webapp</a> instances running on multiple
+        devices.
       </p>
       <p>
-        When getting the <code id="widl-PushRegistration-registrationId">registrationId</code>
-        attribute, the <a>user agent</a> MUST return a univocal identifier of this <a>push
-        registration</a> in the <a>push server</a>. It is used by the <a>webapp server</a> to
-        indicate the target of the <a title="push message">push messages</a> that it submits to the
-        <a>push server</a>. Each pair of <code>registrationId</code> and <code>endpoint</code> is
-        expected to be unique and specific to a particular <a>webapp</a> instance running on a
-        specific device.
+        When getting the <code><dfn id=
+        "widl-PushRegistration-registrationId">registrationId</dfn></code> attribute, the <a>user
+        agent</a> MUST return a univocal identifier of this <a>push registration</a> in the <a>push
+        server</a>. It is used by the <a>webapp server</a> to indicate the target of the <a title=
+        "push message">push messages</a> that it submits to the <a>push server</a>. Each pair of
+        <code>registrationId</code> and <code>endpoint</code> is expected to be unique and specific
+        to a particular <a>webapp</a> instance running on a specific device.
       </p>
     </section>
     <section>
@@ -665,6 +662,17 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           attribute EventHandler onpushregistrationlost
         </dt>
       </dl>
+      <p>
+        The <code><dfn id="widl-ServiceWorkerGlobalScope-onpush">onpush</dfn></code> attribute is
+        an <a>event handler</a> whose corresponding <a>event handler event type</a> is
+        <code>push</code>.
+      </p>
+      <p>
+        The <code><dfn id=
+        "widl-ServiceWorkerGlobalScope-onpushregistrationlost">onpushregistrationlost</dfn></code>
+        attribute is an <a>event handler</a> whose corresponding <a>event handler event type</a> is
+        <code>pushregistrationlost</code>.
+      </p>
       <section>
         <h2>
           The <code>push</code> event
@@ -680,7 +688,13 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           </dt>
         </dl>
         <p>
-          When getting the <code id="widl-PushMessage-data">data</code> attribute of a
+          When getting the <code id="widl-PushEventInit-data">data</code> attribute of a
+          <code>PushEventInit</code> object, the <a>user agent</a> MUST return the message data
+          received by the <a>user agent</a> in the <a>push message</a>, or null if no data was
+          received.
+        </p>
+        <p>
+          When getting the <code id="widl-PushEvent-data">data</code> attribute of a
           <code>PushEvent</code>, the <a>user agent</a> MUST return the message data received by
           the <a>user agent</a> in the <a>push message</a>, or null if no data was received.
         </p>
