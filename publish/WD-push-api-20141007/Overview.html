@@ -723,8 +723,10 @@ table.exceptions table {
         Terminology
       </h2>
       <p>
-        <dfn id="dfn-queue-a-task"><a href="http://www.w3.org/TR/html5/webappapis.html#queue-a-task">Queue a
-        task</a></dfn> and <dfn id="dfn-fire-a-simple-event"><a href="http://www.w3.org/TR/html5/webappapis.html#fire-a-simple-event">fire a simple
+        The terms <dfn id="dfn-event-handler"><a href="http://www.w3.org/TR/html5/browsers.html#event-handlers">event
+        handler</a></dfn>, <dfn id="dfn-event-handler-event-type"><a href="http://www.w3.org/TR/html5/browsers.html#event-handler-event-type">event handler event
+        type</a></dfn>, <dfn id="dfn-queue-a-task"><a href="http://www.w3.org/TR/html5/webappapis.html#queue-a-task">queue a task</a></dfn>, and
+        <dfn id="dfn-fire-a-simple-event"><a href="http://www.w3.org/TR/html5/webappapis.html#fire-a-simple-event">fire a simple
         event</a></dfn> are defined in [<cite><a class="bibref" href="#bib-HTML5">HTML5</a></cite>].
       </p>
       <p>
@@ -952,6 +954,11 @@ navigator</span><span class="pun">.</span><span class="pln">serviceWorker</span>
       <pre class="idl"><span class="idlInterface" id="idl-def-ServiceWorkerRegistration">partial interface <span class="idlInterfaceID">ServiceWorkerRegistration</span> {
 <span class="idlAttribute">    readonly    attribute <span class="idlAttrType"><a href="#idl-def-PushRegistrationManager" class="idlType"><code>PushRegistrationManager</code></a></span> <span class="idlAttrName"><a href="#widl-ServiceWorkerRegistration-pushRegistrationManager">pushRegistrationManager</a></span>;</span>
 };</span></pre>
+      <p>
+        The <code><dfn id="widl-ServiceWorkerRegistration-pushRegistrationManager">pushRegistrationManager</dfn></code>
+        attribute exposes the <code>PushRegistrationManager</code> for the <a href="#dfn-service-worker" class="internalDFN">Service Worker</a>
+        identified by the <code>ServiceWorkerRegistration</code>.
+      </p>
     </section>
     <section id="pushregistrationmanager-interface">
       <!--OddPage--><h2 role="heading" id="h2_pushregistrationmanager-interface"><span class="secno">7. </span>
@@ -968,7 +975,8 @@ navigator</span><span class="pun">.</span><span class="pln">serviceWorker</span>
 <span class="idlMethod">    <span class="idlMethType">Promise&lt;<a href="#idl-def-PushPermissionStatus" class="idlType"><code>PushPermissionStatus</code></a>&gt;</span> <span class="idlMethName"><a href="#widl-PushRegistrationManager-hasPermission-Promise-PushPermissionStatus">hasPermission</a></span> ();</span>
 };</span></pre>
       <p>
-        The <dfn id="dfn-register"><code>register</code></dfn> method when invoked <em class="rfc2119" title="MUST">MUST</em> run the following steps:
+        The <code><dfn id="widl-PushRegistrationManager-register-Promise-PushRegistration">register</dfn></code>
+        method when invoked <em class="rfc2119" title="MUST">MUST</em> run the following steps:
       </p>
       <ol>
         <li>Let <var>promise</var> be a new <a href="#dfn-promise" class="internalDFN"><code>Promise</code></a>.
@@ -1019,7 +1027,8 @@ navigator</span><span class="pun">.</span><span class="pln">serviceWorker</span>
         defining it.
       </p></div>
       <p>
-        The <dfn id="dfn-unregister"><code>unregister</code></dfn> method when invoked <em class="rfc2119" title="MUST">MUST</em> run the following steps:
+        The <code><dfn id="widl-PushRegistrationManager-unregister-Promise-PushRegistration">unregister</dfn></code>
+        method when invoked <em class="rfc2119" title="MUST">MUST</em> run the following steps:
       </p>
       <ol>
         <li>Let <var>promise</var> be a new <a href="#dfn-promise" class="internalDFN"><code>Promise</code></a>.
@@ -1043,8 +1052,8 @@ navigator</span><span class="pun">.</span><span class="pln">serviceWorker</span>
         </li>
       </ol>
       <p>
-        The <dfn id="dfn-getregistration"><code>getRegistration</code></dfn> method when invoked <em class="rfc2119" title="MUST">MUST</em> run the following
-        steps:
+        The <code><dfn id="widl-PushRegistrationManager-getRegistration-Promise-PushRegistration">getRegistration</dfn></code>
+        method when invoked <em class="rfc2119" title="MUST">MUST</em> run the following steps:
       </p>
       <ol>
         <li>Let <var>promise</var> be a new <a href="#dfn-promise" class="internalDFN"><code>Promise</code></a>.
@@ -1067,7 +1076,8 @@ navigator</span><span class="pun">.</span><span class="pln">serviceWorker</span>
         </li>
       </ol>
       <p>
-        The <dfn id="dfn-haspermission"><code>hasPermission</code></dfn> method when invoked <em class="rfc2119" title="MUST">MUST</em> run the following steps:
+        The <code><dfn id="widl-PushRegistrationManager-hasPermission-Promise-PushPermissionStatus">hasPermission</dfn></code>
+        method when invoked <em class="rfc2119" title="MUST">MUST</em> run the following steps:
       </p>
       <ol>
         <li>Let <var>promise</var> be a new <a href="#dfn-promise" class="internalDFN"><code>Promise</code></a>.
@@ -1090,7 +1100,7 @@ navigator</span><span class="pun">.</span><span class="pln">serviceWorker</span>
       </p>
       <p>
         If there is a need to ask for permission, it needs to be done by invoking the
-        <a href="#dfn-register" class="internalDFN"><code>register</code></a> method.
+        <a href="#widl-PushRegistrationManager-register-Promise-PushRegistration" class="internalDFN"><code>register</code></a> method.
       </p>
       <section id="push-registration-persistence">
         <h3 role="heading" id="h3_push-registration-persistence"><span class="secno">7.1 </span>
@@ -1152,19 +1162,19 @@ navigator</span><span class="pun">.</span><span class="pln">serviceWorker</span>
 <span class="idlAttribute">    readonly    attribute <span class="idlAttrType">DOMString</span> <span class="idlAttrName"><a href="#widl-PushRegistration-registrationId">registrationId</a></span>;</span>
 };</span></pre>
       <p>
-        When getting the <code id="widl-PushRegistration-endpoint">endpoint</code> attribute, the
-        <a href="#dfn-user-agent" class="internalDFN">user agent</a> <em class="rfc2119" title="MUST">MUST</em> return the absolute URL exposed by the <a href="#dfn-push-server" class="internalDFN">push server</a> where the
-        <a href="#dfn-webapp-server" class="internalDFN">webapp server</a> can send <a title="push message" href="#dfn-push-message" class="internalDFN">push messages</a> to this
-        <a href="#dfn-webapp" class="internalDFN">webapp</a>. The value of <code>endpoint</code> may be the same for multiple <a title="webapp" href="#dfn-webapp" class="internalDFN">webapps</a> / <a href="#dfn-webapp" class="internalDFN">webapp</a> instances running on multiple devices.
+        When getting the <code><dfn id="widl-PushRegistration-endpoint">endpoint</dfn></code>
+        attribute, the <a href="#dfn-user-agent" class="internalDFN">user agent</a> <em class="rfc2119" title="MUST">MUST</em> return the absolute URL exposed by the <a href="#dfn-push-server" class="internalDFN">push
+        server</a> where the <a href="#dfn-webapp-server" class="internalDFN">webapp server</a> can send <a title="push message" href="#dfn-push-message" class="internalDFN">push
+        messages</a> to this <a href="#dfn-webapp" class="internalDFN">webapp</a>. The value of <code>endpoint</code> may be the same for
+        multiple <a title="webapp" href="#dfn-webapp" class="internalDFN">webapps</a> / <a href="#dfn-webapp" class="internalDFN">webapp</a> instances running on multiple
+        devices.
       </p>
       <p>
-        When getting the <code id="widl-PushRegistration-registrationId">registrationId</code>
-        attribute, the <a href="#dfn-user-agent" class="internalDFN">user agent</a> <em class="rfc2119" title="MUST">MUST</em> return a univocal identifier of this <a href="#dfn-push-registration" class="internalDFN">push
-        registration</a> in the <a href="#dfn-push-server" class="internalDFN">push server</a>. It is used by the <a href="#dfn-webapp-server" class="internalDFN">webapp server</a> to
-        indicate the target of the <a title="push message" href="#dfn-push-message" class="internalDFN">push messages</a> that it submits to the
-        <a href="#dfn-push-server" class="internalDFN">push server</a>. Each pair of <code>registrationId</code> and <code>endpoint</code> is
-        expected to be unique and specific to a particular <a href="#dfn-webapp" class="internalDFN">webapp</a> instance running on a
-        specific device.
+        When getting the <code><dfn id="widl-PushRegistration-registrationId">registrationId</dfn></code> attribute, the <a href="#dfn-user-agent" class="internalDFN">user
+        agent</a> <em class="rfc2119" title="MUST">MUST</em> return a univocal identifier of this <a href="#dfn-push-registration" class="internalDFN">push registration</a> in the <a href="#dfn-push-server" class="internalDFN">push
+        server</a>. It is used by the <a href="#dfn-webapp-server" class="internalDFN">webapp server</a> to indicate the target of the <a title="push message" href="#dfn-push-message" class="internalDFN">push messages</a> that it submits to the <a href="#dfn-push-server" class="internalDFN">push server</a>. Each pair of
+        <code>registrationId</code> and <code>endpoint</code> is expected to be unique and specific
+        to a particular <a href="#dfn-webapp" class="internalDFN">webapp</a> instance running on a specific device.
       </p>
     </section>
     <section id="events">
@@ -1179,6 +1189,16 @@ navigator</span><span class="pun">.</span><span class="pln">serviceWorker</span>
 <span class="idlAttribute">                attribute <span class="idlAttrType">EventHandler</span> <span class="idlAttrName"><a href="#widl-ServiceWorkerGlobalScope-onpush">onpush</a></span>;</span>
 <span class="idlAttribute">                attribute <span class="idlAttrType">EventHandler</span> <span class="idlAttrName"><a href="#widl-ServiceWorkerGlobalScope-onpushregistrationlost">onpushregistrationlost</a></span>;</span>
 };</span></pre>
+      <p>
+        The <code><dfn id="widl-ServiceWorkerGlobalScope-onpush">onpush</dfn></code> attribute is
+        an <a href="#dfn-event-handler" class="internalDFN">event handler</a> whose corresponding <a href="#dfn-event-handler-event-type" class="internalDFN">event handler event type</a> is
+        <code>push</code>.
+      </p>
+      <p>
+        The <code><dfn id="widl-ServiceWorkerGlobalScope-onpushregistrationlost">onpushregistrationlost</dfn></code>
+        attribute is an <a href="#dfn-event-handler" class="internalDFN">event handler</a> whose corresponding <a href="#dfn-event-handler-event-type" class="internalDFN">event handler event type</a> is
+        <code>pushregistrationlost</code>.
+      </p>
       <section id="the-push-event">
         <h3 role="heading" id="h3_the-push-event"><span class="secno">9.1 </span>
           The <code>push</code> event
@@ -1193,7 +1213,13 @@ interface <span class="idlInterfaceID">PushEvent</span> : <span class="idlSuperc
 <span class="idlAttribute">    readonly    attribute <span class="idlAttrType">DOMString?</span> <span class="idlAttrName"><a href="#widl-PushEvent-data">data</a></span>;</span>
 };</span></pre>
         <p>
-          When getting the <code id="widl-PushMessage-data">data</code> attribute of a
+          When getting the <code id="widl-PushEventInit-data">data</code> attribute of a
+          <code>PushEventInit</code> object, the <a href="#dfn-user-agent" class="internalDFN">user agent</a> <em class="rfc2119" title="MUST">MUST</em> return the message data
+          received by the <a href="#dfn-user-agent" class="internalDFN">user agent</a> in the <a href="#dfn-push-message" class="internalDFN">push message</a>, or null if no data was
+          received.
+        </p>
+        <p>
+          When getting the <code id="widl-PushEvent-data">data</code> attribute of a
           <code>PushEvent</code>, the <a href="#dfn-user-agent" class="internalDFN">user agent</a> <em class="rfc2119" title="MUST">MUST</em> return the message data received by
           the <a href="#dfn-user-agent" class="internalDFN">user agent</a> in the <a href="#dfn-push-message" class="internalDFN">push message</a>, or null if no data was received.
         </p>
