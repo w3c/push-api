@@ -463,7 +463,7 @@ table.exceptions table {
     
     
     <dt>Editors:</dt>
-    <dd class="p-author h-card vcard" rel="bibo:editor" inlist=""><span typeof="foaf:Person"><span property="foaf:name" class="p-name fn">Bryan Sullivan</span>, <a rel="foaf:workplaceHomepage" class="p-org org h-org h-card" href="http://att.com/">AT&amp;T</a></span>
+    <dd class="p-author h-card vcard" rel="bibo:editor" inlist=""><span typeof="foaf:Person"><span property="foaf:name" class="p-name fn">Bryan Sullivan</span>, <a rel="foaf:workplaceHomepage" class="p-org org h-org h-card" href="http://www.att.com/">AT&amp;T</a></span>
 </dd>
 <dd class="p-author h-card vcard" rel="bibo:editor" inlist=""><span typeof="foaf:Person"><span property="foaf:name" class="p-name fn">Eduardo Fullea</span>, <a rel="foaf:workplaceHomepage" class="p-org org h-org h-card" href="http://www.telefonica.com/">Telefonica</a></span>
 </dd>
@@ -723,18 +723,23 @@ table.exceptions table {
         Terminology
       </h2>
       <p>
-        The terms <dfn id="dfn-event-handler"><a href="http://www.w3.org/TR/html5/browsers.html#event-handlers">event
-        handler</a></dfn>, <dfn id="dfn-event-handler-event-type"><a href="http://www.w3.org/TR/html5/browsers.html#event-handler-event-type">event handler event
+        The terms <dfn id="dfn-event-handler"><a href="http://www.w3.org/TR/html5/webappapis.html#event-handlers">event
+        handler</a></dfn>, <dfn id="dfn-event-handler-event-type"><a href="http://www.w3.org/TR/html5/webappapis.html#event-handler-event-type">event handler event
         type</a></dfn>, <dfn id="dfn-queue-a-task"><a href="http://www.w3.org/TR/html5/webappapis.html#queue-a-task">queue a task</a></dfn>, and
         <dfn id="dfn-fire-a-simple-event"><a href="http://www.w3.org/TR/html5/webappapis.html#fire-a-simple-event">fire a simple
         event</a></dfn> are defined in [<cite><a class="bibref" href="#bib-HTML5">HTML5</a></cite>].
       </p>
       <p>
-        <a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-promise-objects"><dfn id="dfn-promise">Promise</dfn></a>
+        <code><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-promise-objects"><dfn id="dfn-promise">Promise</dfn></a></code>
         is defined in [<cite><a class="bibref" href="#bib-ECMASCRIPT">ECMASCRIPT</a></cite>].
       </p>
       <p>
-        <dfn id="dfn-eventinit">EventInit</dfn> is defined in [<cite><a class="bibref" href="#bib-DOM">DOM</a></cite>].
+        <code><a href="http://www.w3.org/TR/dom/#eventinit"><dfn id="dfn-eventinit">EventInit</dfn></a></code>,
+        <code><a href="http://www.w3.org/TR/dom/#domexception"><dfn id="dfn-domexception">DOMException</dfn></a></code>,
+        <code><a href="http://www.w3.org/TR/dom/#aborterror"><dfn id="dfn-aborterror">AbortError</dfn></a></code>,
+        <code><a href="http://www.w3.org/TR/dom/#notfounderror"><dfn id="dfn-notfounderror">NotFoundError</dfn></a></code>, and
+        <code><a href="http://www.w3.org/TR/dom/#securityerror"><dfn id="dfn-securityerror">SecurityError</dfn></a></code>
+        are defined in [<cite><a class="bibref" href="#bib-DOM">DOM</a></cite>].
       </p>
       <p>
         <dfn id="dfn-service-worker">Service Worker</dfn>, <dfn id="dfn-serviceworkerregistration">ServiceWorkerRegistration</dfn>,
@@ -984,23 +989,22 @@ navigator</span><span class="pun">.</span><span class="pln">serviceWorker</span>
         <li>Return <var>promise</var> and continue the following steps asynchronously.
         </li>
         <li>If the scheme of the document url is not <code>https</code>, reject <var>promise</var>
-        with a <a href="http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a>
-        whose name is "<a href="http://dom.spec.whatwg.org/#securityerror"><code>SecurityError</code></a>" and terminate
-        these steps.
+        with a <code><a href="#dfn-domexception" class="internalDFN">DOMException</a></code> whose name is "<code><a href="#dfn-securityerror" class="internalDFN">SecurityError</a></code>"
+        and terminate these steps.
         </li>
         <li>Ask the user whether they allow the <a href="#dfn-webapp" class="internalDFN">webapp</a> to receive <a title="push message" href="#dfn-push-message" class="internalDFN">push messages</a>, unless a prearranged trust relationship applies or the
         user has already granted or denied permission explicitly for this <a href="#dfn-webapp" class="internalDFN">webapp</a>.
         </li>
-        <li>If not granted, reject <var>promise</var> with a <a href="http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a> whose name is
-        "<a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=23033"><code>PermissionDeniedError</code></a>"
+        <li>If not granted, reject <var>promise</var> with a <code><a href="#dfn-domexception" class="internalDFN">DOMException</a></code> whose
+        name is "<a href="https://www.w3.org/Bugs/Public/show_bug.cgi?id=23033"><code>PermissionDeniedError</code></a>"
         and terminate these steps.
         </li>
         <li>If the <a href="#dfn-webapp" class="internalDFN">webapp</a> is already registered, run the following substeps:
           <ol>
             <li>Retrieve the <a href="#dfn-push-registration" class="internalDFN">push registration</a> associated with the <a href="#dfn-webapp" class="internalDFN">webapp</a>.
             </li>
-            <li>If there is an error, reject <var>promise</var> with a <a href="http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a> whose name is
-            "<a href="http://dom.spec.whatwg.org/#aborterror"><code>AbortError</code></a>" and
+            <li>If there is an error, reject <var>promise</var> with a
+            <code><a href="#dfn-domexception" class="internalDFN">DOMException</a></code> whose name is "<code><a href="#dfn-aborterror" class="internalDFN">AbortError</a></code>" and
             terminate these steps.
             </li>
             <li>When the request has been completed, resolve <var>promise</var> with a
@@ -1012,9 +1016,8 @@ navigator</span><span class="pun">.</span><span class="pln">serviceWorker</span>
         <li>Make a request to the system to create a new <a href="#dfn-push-registration" class="internalDFN">push registration</a> for the
         <a href="#dfn-webapp" class="internalDFN">webapp</a>.
         </li>
-        <li>If there is an error, reject <var>promise</var> with a <a href="http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a> whose name is
-        "<a href="http://dom.spec.whatwg.org/#aborterror"><code>AbortError</code></a>" and
-        terminate these steps.
+        <li>If there is an error, reject <var>promise</var> with a <code><a href="#dfn-domexception" class="internalDFN">DOMException</a></code>
+        whose name is "<code><a href="#dfn-aborterror" class="internalDFN">AbortError</a></code>" and terminate these steps.
         </li>
         <li>When the request has been completed, resolve <var>promise</var> with a
         <a href="#idl-def-PushRegistration" class="idlType"><code>PushRegistration</code></a> providing the details of the new <a href="#dfn-push-registration" class="internalDFN">push
@@ -1035,16 +1038,15 @@ navigator</span><span class="pun">.</span><span class="pln">serviceWorker</span>
         </li>
         <li>Return <var>promise</var> and continue the following steps asynchronously.
         </li>
-        <li>If the <a href="#dfn-webapp" class="internalDFN">webapp</a> is not registered, reject <var>promise</var> with a <a href="http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a> whose name is
-        "<a href="http://dom.spec.whatwg.org/#notfounderror"><code>NotFoundError</code></a>" and
+        <li>If the <a href="#dfn-webapp" class="internalDFN">webapp</a> is not registered, reject <var>promise</var> with a
+        <code><a href="#dfn-domexception" class="internalDFN">DOMException</a></code> whose name is "<code><a href="#dfn-notfounderror" class="internalDFN">NotFoundError</a></code>" and
         terminate these steps.
         </li>
         <li>Make a request to the system to deactivate the <a href="#dfn-push-registration" class="internalDFN">push registration</a> associated with
         the <a href="#dfn-webapp" class="internalDFN">webapp</a>.
         </li>
-        <li>If there is an error, reject <var>promise</var> with a <a href="http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a> whose name is
-        "<a href="http://dom.spec.whatwg.org/#aborterror"><code>AbortError</code></a>" and
-        terminate these steps.
+        <li>If there is an error, reject <var>promise</var> with a <code><a href="#dfn-domexception" class="internalDFN">DOMException</a></code>
+        whose name is "<code><a href="#dfn-aborterror" class="internalDFN">AbortError</a></code>" and terminate these steps.
         </li>
         <li>When the request has been completed, resolve <var>promise</var> with a
         <a href="#idl-def-PushRegistration" class="idlType"><code>PushRegistration</code></a> providing the details of the <a href="#dfn-push-registration" class="internalDFN">push registration</a>
@@ -1060,15 +1062,14 @@ navigator</span><span class="pun">.</span><span class="pln">serviceWorker</span>
         </li>
         <li>Return <var>promise</var> and continue the following steps asynchronously.
         </li>
-        <li>If the <a href="#dfn-webapp" class="internalDFN">webapp</a> is not registered, reject <var>promise</var> with a <a href="http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a> whose name is
-        "<a href="http://dom.spec.whatwg.org/#notfounderror"><code>NotFoundError</code></a>" and
+        <li>If the <a href="#dfn-webapp" class="internalDFN">webapp</a> is not registered, reject <var>promise</var> with a
+        <code><a href="#dfn-domexception" class="internalDFN">DOMException</a></code> whose name is "<code><a href="#dfn-notfounderror" class="internalDFN">NotFoundError</a></code>" and
         terminate these steps.
         </li>
         <li>Retrieve the <a href="#dfn-push-registration" class="internalDFN">push registration</a> associated with the <a href="#dfn-webapp" class="internalDFN">webapp</a>.
         </li>
-        <li>If there is an error, reject <var>promise</var> with a <a href="http://dom.spec.whatwg.org/#domexception"><code>DOMException</code></a> whose name is
-        "<a href="http://dom.spec.whatwg.org/#aborterror"><code>AbortError</code></a>" and
-        terminate these steps.
+        <li>If there is an error, reject <var>promise</var> with a <code><a href="#dfn-domexception" class="internalDFN">DOMException</a></code>
+        whose name is "<code><a href="#dfn-aborterror" class="internalDFN">AbortError</a></code>" and terminate these steps.
         </li>
         <li>When the request has been completed, resolve <var>promise</var> with a
         <a href="#idl-def-PushRegistration" class="idlType"><code>PushRegistration</code></a> providing the details of the retrieved <a href="#dfn-push-registration" class="internalDFN">push
