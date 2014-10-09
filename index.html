@@ -633,7 +633,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       <p>
         When getting the <code><dfn id=
         "widl-PushRegistration-registrationId">registrationId</dfn></code> attribute, the <a>user
-        agent</a> MUST return a univocal identifier of this <a>push registration</a> in the <a>push
+        agent</a> MUST return the canonical identifier of this <a>push registration</a> in the <a>push
         server</a>. It is used by the <a>webapp server</a> to indicate the target of the <a title=
         "push message">push messages</a> that it submits to the <a>push server</a>. Each pair of
         <code>registrationId</code> and <code>endpoint</code> is expected to be unique and specific
