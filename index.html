@@ -414,9 +414,14 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         "webapp">webapps</a> to establish access to <a title="push service">push services</a>. Note
         that just a single <a>push registration</a> is allowed per <a>webapp</a>.
       </p>
-      <dl title="interface PushRegistrationManager" class="idl">
+      <dl title="dictionary PushRegisterOptions" class="idl">
         <dt>
-          Promise&lt;PushRegistration&gt; register ()
+          boolean userVisibleOnly = false
+        </dt>
+      </dl>
+      <dl title="interface PushRegistrationManager" class="idl" data-merge="PushRegisterOptions">
+        <dt>
+          Promise&lt;PushRegistration&gt; register (optional PushRegisterOptions options)
         </dt>
         <dt>
           Promise&lt;PushRegistration&gt; unregister ()
@@ -425,13 +430,13 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           Promise&lt;PushRegistration&gt; getRegistration ()
         </dt>
         <dt>
-          Promise&lt;PushPermissionStatus&gt; hasPermission ()
+          Promise&lt;PushPermissionStatus&gt; hasPermission (optional PushRegisterOptions options)
         </dt>
       </dl>
       <p>
         The <code><dfn id=
-        "widl-PushRegistrationManager-register-Promise-PushRegistration">register</dfn></code>
-        method when invoked MUST run the following steps:
+        "widl-PushRegistrationManager-register-Promise-PushRegistration--PushRegisterOptions-options">
+        register</dfn></code> method when invoked MUST run the following steps:
       </p>
       <ol>
         <li>Let <var>promise</var> be a new <a><code>Promise</code></a>.
@@ -444,7 +449,10 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         </li>
         <li>Ask the user whether they allow the <a>webapp</a> to receive <a title=
         "push message">push messages</a>, unless a prearranged trust relationship applies or the
-        user has already granted or denied permission explicitly for this <a>webapp</a>.
+        user has already granted or denied permission explicitly for this <a>webapp</a>. This may
+        depend on the value of <a href=
+        "#idl-def-PushRegisterOptions"><code>userVisibleOnly</code></a> — see <a href=
+        "#widl-PushRegisterOptions-userVisibleOnly"></a>.
         </li>
         <li>If not granted, reject <var>promise</var> with a <code><a>DOMException</a></code> whose
         name is "<a href=
@@ -533,8 +541,8 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       </ol>
       <p>
         The <code><dfn id=
-        "widl-PushRegistrationManager-hasPermission-Promise-PushPermissionStatus">hasPermission</dfn></code>
-        method when invoked MUST run the following steps:
+        "widl-PushRegistrationManager-hasPermission-Promise-PushPermissionStatus--PushRegisterOptions-options">
+        hasPermission</dfn></code> method when invoked MUST run the following steps:
       </p>
       <ol>
         <li>Let <var>promise</var> be a new <a><code>Promise</code></a>.
@@ -542,7 +550,9 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         <li>Return <var>promise</var> and continue the following steps asynchronously.
         </li>
         <li>Retrieve the push permission status (<a><code>PushPermissionStatus</code></a>) of the
-        requesting <a>webapp</a>
+        requesting <a>webapp</a>. This may depend on the value of <a href=
+        "#idl-def-PushRegisterOptions"><code>userVisibleOnly</code></a> — see <a href=
+        "#widl-PushRegisterOptions-userVisibleOnly"></a>.
         </li>
         <li>If there is an error, reject <var>promise</var> with no arguments and terminate these
         steps.
@@ -559,6 +569,41 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         If there is a need to ask for permission, it needs to be done by invoking the
         <a><code>register</code></a> method.
       </p>
+      <section id="widl-PushRegisterOptions-userVisibleOnly">
+        <h3>
+          Registering for userVisibleOnly Push
+        </h3>
+        <p>
+          If a <a>webapp</a> passes <code>true</code> for the <a href=
+          "#idl-def-PushRegisterOptions"><code>userVisibleOnly</code></a> parameter to
+          <a><code>register</code></a>, they are committing to show user-visible UI (such as a
+          notification) for every <a>push message</a> that the <a>webapp server</a> sends to the
+          <a>webapp</a>.
+        </p>
+        <p>
+          In exchange, the <a>user agent</a> MAY show different UI for the
+          <a><code>register</code></a> method (some <a title="user agent">user agents</a> may even
+          always reject with a "<a href=
+          "https://www.w3.org/Bugs/Public/show_bug.cgi?id=23033"><code>PermissionDeniedError</code></a>"
+          unless <a href="#idl-def-PushRegisterOptions"><code>userVisibleOnly</code></a> is
+          <code>true</code>). Other <a title="user agent">user agents</a> might simply ignore it.
+        </p>
+        <p>
+          However, <a title="user agent">user agents</a> MAY penalize <a title="webapp">webapps</a>
+          that pass <code>true</code> for <a href=
+          "#idl-def-PushRegisterOptions"><code>userVisibleOnly</code></a> then break the commitment
+          above (for example by throttling <a title="push message">push messages</a>, or showing a
+          generic notification to the user whenever the <a>webapp</a> fails to show user-visible UI
+          after receiving a <a>push message</a>).
+        </p>
+        <p>
+          If a <a>user agent</a> chooses to handle the <a><code>register</code></a> method
+          differently depending on the value of the <a href=
+          "#idl-def-PushRegisterOptions"><code>userVisibleOnly</code></a> flag, it MUST reflect
+          that appropriately when <a><code>hasPermission</code></a> is called with the same value
+          for <a href="#idl-def-PushRegisterOptions"><code>userVisibleOnly</code></a>.
+        </p>
+      </section>
       <section>
         <h3>
           Push Registration Persistence
