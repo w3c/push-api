@@ -674,8 +674,8 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         </dt>
       </dl>
       <p>
-        Objects implementing <a><code>PushMessageData</code></a> gain an associated
-        <dfn>bytes</dfn> (a byte sequence, initially empty).
+        <a><code>PushMessageData</code></a> objects have an associated <dfn>bytes</dfn> (a byte
+        sequence, initially empty).
       </p>
       <p>
         The <code><dfn id="widl-PushMessageData-arrayBuffer-ArrayBuffer">arrayBuffer()</dfn></code>
@@ -733,7 +733,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           The <a>PushEvent</a> interface represents a received <a>push message</a>.
         </p>
         <dl title=
-        "[Constructor(DOMString type, optional PushEventInit eventInitDict), Exposed=ServiceWorker] interface PushEvent : ExtendableEvent"
+        "[Constructor(DOMString type, PushEventInit eventInitDict), Exposed=ServiceWorker] interface PushEvent : ExtendableEvent"
         class="idl" data-merge="PushEventInit">
           <dt>
             readonly attribute PushMessageData data
@@ -741,7 +741,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         </dl>
         <dl title="dictionary PushEventInit : EventInit" class="idl">
           <dt>
-            PushMessageData data
+            required PushMessageData data
           </dt>
         </dl>
         <p>
@@ -755,10 +755,11 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           <li>Let <var>scope</var> be the <code>ServiceWorkerGlobalScope</code> of the <a>Service
           Worker</a> associated with the <a>webapp</a>.
           </li>
-          <li>Let <var>event</var> be a new <a><code>PushEvent</code></a>, whose <code>data</code>
-          attribute is a new <a><code>PushMessageData</code></a>, whose <a>bytes</a> is the binary
-          message data received by the <a>user agent</a> in the <a>push message</a>, or an empty
-          byte sequence if no data was received.
+          <li>Let <var>event</var> be a new <a><code>PushEvent</code></a>, whose <code><dfn id=
+          "widl-PushEvent-data">data</dfn></code> attribute is a new
+          <a><code>PushMessageData</code></a>, whose <a>bytes</a> is the binary message data
+          received by the <a>user agent</a> in the <a>push message</a>, or an empty byte sequence
+          if no data was received.
           </li>
           <li>
             <a>Queue a task</a> to <a title="fire a simple event">fire <var>event</var> as a simple
