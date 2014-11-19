@@ -159,19 +159,19 @@
       </p>
       <p>
         <code><a href=
-        'http://people.mozilla.org/~jorendorff/es6-draft.html#sec-promise-objects'><dfn>Promise</dfn></a></code>
-        is defined in [[!ECMASCRIPT]].
+        'http://people.mozilla.org/~jorendorff/es6-draft.html#sec-promise-objects'><dfn>Promise</dfn></a></code>,
+        and <code><a href=
+        "https://people.mozilla.org/~jorendorff/es6-draft.html#sec-json.parse"><dfn>JSON.parse</dfn></a></code>
+        are defined in [[!ECMASCRIPT]].
       </p>
       <p>
         <code><a href="http://www.w3.org/TR/dom/#eventinit"><dfn>EventInit</dfn></a></code>,
         <code><a href="http://www.w3.org/TR/dom/#domexception"><dfn>DOMException</dfn></a></code>,
         <code><a href="http://www.w3.org/TR/dom/#aborterror"><dfn>AbortError</dfn></a></code>,
         <code><a href=
-        "http://www.w3.org/TR/dom/#notfounderror"><dfn>NotFoundError</dfn></a></code>,
-        <code><a href=
-        "http://www.w3.org/TR/dom/#securityerror"><dfn>SecurityError</dfn></a></code>, and <a href=
-        "http://www.w3.org/TR/dom/#concept-event-constructor"><dfn>steps for constructing
-        events</dfn></a> are defined in [[!DOM]].
+        "http://www.w3.org/TR/dom/#notfounderror"><dfn>NotFoundError</dfn></a></code>, and
+        <code><a href="http://www.w3.org/TR/dom/#securityerror"><dfn>SecurityError</dfn></a></code>
+        are defined in [[!DOM]].
       </p>
       <p>
         <dfn>Service Worker</dfn>, <dfn>ServiceWorkerRegistration</dfn>,
@@ -179,17 +179,17 @@
         [[!SERVICE-WORKERS]].
       </p>
       <p>
-        <code><a href="https://fetch.spec.whatwg.org/#body"><dfn>Body</dfn></a></code>,
-        <code><a href="https://fetch.spec.whatwg.org/#bodyinit"><dfn>BodyInit</dfn></a></code>,
-        <a href="https://fetch.spec.whatwg.org/#concept-bodyinit-extract"><dfn>extracting</dfn></a>
-        a BodyInit, and the Body mixin's <a href=
-        "https://fetch.spec.whatwg.org/#concept-body-body"><dfn>associated body</dfn></a> are
-        defined in [[!FETCH]].
+        The algorithm <a href="http://www.w3.org/TR/encoding/#utf-8-decode"><dfn>utf-8
+        decode</dfn></a> is defined in [[!ENCODING]].
+      </p>
+      <p>
+        <code><a href="http://www.w3.org/TR/FileAPI/#blob"><dfn>Blob</dfn></a></code> is defined in
+        [[!FILEAPI]].
       </p>
       <p>
         <code><a href=
-        "https://heycam.github.io/webidl/#common-BufferSource"><dfn>BufferSource</dfn></a></code>
-        is defined in [[!WEBIDL]].
+        "http://heycam.github.io/webidl/#idl-ArrayBuffer"><dfn>ArrayBuffer</dfn></a></code> is
+        defined in [[!WEBIDL]].
       </p>
       <p>
         The term <dfn>webapp</dfn> refers to a Web application, i.e. an application implemented
@@ -657,6 +657,49 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
     </section>
     <section>
       <h2>
+        <code>PushMessageData</code> interface
+      </h2>
+      <dl title="interface PushMessageData" class="idl">
+        <dt>
+          ArrayBuffer arrayBuffer ()
+        </dt>
+        <dt>
+          Blob blob ()
+        </dt>
+        <dt>
+          JSON json ()
+        </dt>
+        <dt>
+          USVString text ()
+        </dt>
+      </dl>
+      <p>
+        Objects implementing <a><code>PushMessageData</code></a> gain an associated
+        <dfn>bytes</dfn> (a byte sequence, initially empty).
+      </p>
+      <p>
+        The <code><dfn id="widl-PushMessageData-arrayBuffer-ArrayBuffer">arrayBuffer()</dfn></code>
+        method, when invoked, MUST return an <a><code>ArrayBuffer</code></a> whose contents are
+        <var>bytes</var>.
+      </p>
+      <p>
+        The <code><dfn id="widl-PushMessageData-blob-Blob">blob()</dfn></code> method, when
+        invoked, MUST return a <a><code>Blob</code></a> whose contents are <var>bytes</var> and
+        <var>type</var> is not provided.
+      </p>
+      <p>
+        The <code><dfn id="widl-PushMessageData-json-JSON">json()</dfn></code> method, when
+        invoked, MUST return the result of invoking the initial value of
+        <a><code>JSON.parse</code></a> with the result of running <a>utf-8 decode</a> on
+        <var>bytes</var> as argument. This may throw an exception.
+      </p>
+      <p>
+        The <code><dfn id="widl-PushMessageData-text-USVString">text()</dfn></code> method, when
+        invoked, MUST return the result of running <a>utf-8 decode</a> on <var>bytes</var>.
+      </p>
+    </section>
+    <section>
+      <h2>
         Events
       </h2>
       <p>
@@ -693,12 +736,12 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         "[Constructor(DOMString type, optional PushEventInit eventInitDict), Exposed=ServiceWorker] interface PushEvent : ExtendableEvent"
         class="idl" data-merge="PushEventInit">
           <dt>
-            readonly attribute Body data
+            readonly attribute PushMessageData data
           </dt>
         </dl>
         <dl title="dictionary PushEventInit : EventInit" class="idl">
           <dt>
-            BodyInit data
+            PushMessageData data
           </dt>
         </dl>
         <p>
@@ -712,27 +755,16 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           <li>Let <var>scope</var> be the <code>ServiceWorkerGlobalScope</code> of the <a>Service
           Worker</a> associated with the <a>webapp</a>.
           </li>
-          <li>Let <var>event</var> be a new <a><code>PushEvent</code></a> whose
-          <a><code>PushEventInit</code></a>'s <code>data</code> member is a <a>BufferSource</a> of
-          the binary message data received by the <a>user agent</a> in the <a>push message</a>
-          (this MUST be empty if no data was received).
+          <li>Let <var>event</var> be a new <a><code>PushEvent</code></a>, whose <code>data</code>
+          attribute is a new <a><code>PushMessageData</code></a>, whose <a>bytes</a> is the binary
+          message data received by the <a>user agent</a> in the <a>push message</a>, or an empty
+          byte sequence if no data was received.
           </li>
           <li>
             <a>Queue a task</a> to <a title="fire a simple event">fire <var>event</var> as a simple
             event</a> named <code>push</code> at <var>scope</var>.
           </li>
         </ol>
-        <p>
-          When a constructor of the <a><code>PushEvent</code></a> interface, or of an interface
-          that inherits from the <a><code>PushEvent</code></a> interface, is invoked, the usual
-          <a>steps for constructing events</a> MUST be modified as follows: if the
-          <var>eventInitDict</var> contains a dictionary member with key "<code id=
-          "widl-PushEventInit-data">data</code>" and value of type <a><code>BodyInit</code></a>,
-          then instead of setting the <code>data</code> attribute of the event to the value of that
-          dictionary member, set the <code id="widl-PushEvent-data">data</code> attribute's
-          <a>associated body</a> to the byte stream that is the result of <a>extracting</a> that
-          dictionary member.
-        </p>
       </section>
       <section>
         <h2>
