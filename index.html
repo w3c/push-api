@@ -179,17 +179,24 @@
         [[!SERVICE-WORKERS]].
       </p>
       <p>
-        The algorithm <a href="http://www.w3.org/TR/encoding/#utf-8-decode"><dfn>utf-8
-        decode</dfn></a> is defined in [[!ENCODING]].
+        The algorithms <a href="http://www.w3.org/TR/encoding/#utf-8-encode"><dfn>utf-8
+        encode</dfn></a>, and <a href="http://www.w3.org/TR/encoding/#utf-8-decode"><dfn>utf-8
+        decode</dfn></a> are defined in [[!ENCODING]].
       </p>
       <p>
         <code><a href="http://www.w3.org/TR/FileAPI/#blob"><dfn>Blob</dfn></a></code> is defined in
         [[!FILEAPI]].
       </p>
       <p>
+        <code><a href="https://heycam.github.io/webidl/#idl-any"><dfn>Any</dfn></a></code>,
         <code><a href=
-        "http://heycam.github.io/webidl/#idl-ArrayBuffer"><dfn>ArrayBuffer</dfn></a></code> is
-        defined in [[!WEBIDL]].
+        "http://heycam.github.io/webidl/#idl-ArrayBuffer"><dfn>ArrayBuffer</dfn></a></code>,
+        <code><a href=
+        "http://heycam.github.io/webidl/#common-BufferSource"><dfn>BufferSource</dfn></a></code>,
+        <a href="http://heycam.github.io/webidl/#dfn-get-buffer-source-copy"><dfn>get a copy of the
+        bytes held by the buffer source</dfn></a>, and <code><a href=
+        "http://heycam.github.io/webidl/#idl-USVString"><dfn>USVString</dfn></a></code> are defined
+        in [[!WEBIDL]].
       </p>
       <p>
         The term <dfn>webapp</dfn> refers to a Web application, i.e. an application implemented
@@ -659,7 +666,11 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       <h2>
         <code>PushMessageData</code> interface
       </h2>
-      <dl title="interface PushMessageData" class="idl">
+      <div class="idl" title="typedef (Blob or BufferSource or USVString) PushMessageDataInit">
+      </div>
+      <dl title=
+      "[Constructor(PushMessageDataInit init), Exposed=ServiceWorker] interface PushMessageData"
+      class="idl" data-merge="PushMessageDataInit">
         <dt>
           ArrayBuffer arrayBuffer ()
         </dt>
@@ -667,7 +678,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           Blob blob ()
         </dt>
         <dt>
-          JSON json ()
+          Any json ()
         </dt>
         <dt>
           USVString text ()
@@ -675,7 +686,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       </dl>
       <p>
         <a><code>PushMessageData</code></a> objects have an associated <dfn>bytes</dfn> (a byte
-        sequence, initially empty).
+        sequence) set on creation.
       </p>
       <p>
         The <code><dfn id="widl-PushMessageData-arrayBuffer-ArrayBuffer">arrayBuffer()</dfn></code>
@@ -688,7 +699,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         <var>type</var> is not provided.
       </p>
       <p>
-        The <code><dfn id="widl-PushMessageData-json-JSON">json()</dfn></code> method, when
+        The <code><dfn id="widl-PushMessageData-json-Any">json()</dfn></code> method, when
         invoked, MUST return the result of invoking the initial value of
         <a><code>JSON.parse</code></a> with the result of running <a>utf-8 decode</a> on
         <var>bytes</var> as argument. This may throw an exception.
@@ -697,6 +708,53 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         The <code><dfn id="widl-PushMessageData-text-USVString">text()</dfn></code> method, when
         invoked, MUST return the result of running <a>utf-8 decode</a> on <var>bytes</var>.
       </p>
+      <p>
+        The <code><dfn>PushMessageData(<var>init</var>)</dfn></code> constructor must return a new
+        <a><code>PushMessageData</code></a> object with <a>bytes</a> set to the result of <a title=
+        "extract a byte sequence">extracting a byte sequence</a> from <var>init</var>.
+      </p>
+      <p>
+        To <dfn>extract a byte sequence</dfn> from <var>object</var>, run these steps:
+      </p>
+      <ol>
+        <li>
+          <p>
+            Let <var>bytes</var> be an empty byte sequence.
+          </p>
+        </li>
+        <li>
+          <p>
+            Switch on <var>object</var>'s type:
+          </p>
+          <dl>
+            <dt>
+              <a><code>Blob</code></a>
+            </dt>
+            <dd>
+              Set <var>bytes</var> to a copy of <var>object</var>'s contents.
+            </dd>
+            <dt>
+              <a><code>BufferSource</code></a>
+            </dt>
+            <dd>
+              Set <var>bytes</var> to a <a title=
+              "get a copy of the bytes held by the buffer source">copy of</a> <var>object</var>.
+            </dd>
+            <dt>
+              <a><code>USVString</code></a>
+            </dt>
+            <dd>
+              Set <var>bytes</var> to the result of running <a>utf-8 encode</a> on
+              <var>object</var>.
+            </dd>
+          </dl>
+        </li>
+        <li>
+          <p>
+            Return <var>bytes</var>.
+          </p>
+        </li>
+      </ol>
     </section>
     <section>
       <h2>
