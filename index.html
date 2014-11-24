@@ -621,6 +621,9 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         <dt>
           readonly attribute DOMString registrationId
         </dt>
+        <dt>
+          readonly attribute Key[] encryptionKeys;
+        </dt>
       </dl>
       <p>
         When getting the <code><dfn id="widl-PushRegistration-endpoint">endpoint</dfn></code>
@@ -638,6 +641,15 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         "push message">push messages</a> that it submits to the <a>push server</a>. Each pair of
         <code>registrationId</code> and <code>endpoint</code> is expected to be unique and specific
         to a particular <a>webapp</a> instance running on a specific device.
+      </p>
+      <p>
+        When getting the <code><dfn id=
+        "widl-PushRegistration-encryptionKeys">encryptionKeys</dfn></code> attribute, the <a>user
+        agent</a> MAY return one or more encryption keys as defined in the <a href="http://www.w3.org/TR/WebCryptoAPI/#dfn-Key">
+        WebCrypto API </a>.
+       The web developer would use Key.algorithm to detect what encryption algorithm (and any necessary parameters)
+       each key is for, then export the key (to upload to their server) in the KeyFormat of their choice using
+       crypto.subtle.exportKey(KeyFormat, Key).
       </p>
     </section>
     <section>
