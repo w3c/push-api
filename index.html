@@ -706,8 +706,14 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         The <code><dfn id="widl-PushMessageData-text-USVString">text()</dfn></code> method, when
         invoked, MUST return the result of running <a>utf-8 decode</a> on <var>bytes</var>.
       </p>
-      <div class="idl" title="typedef (Blob or BufferSource or USVString) PushMessageDataInit">
-      </div>
+      <div class="idl" title="typedef USVString PushMessageDataInit"></div>
+      <p class="note">
+        In future, <a><code>PushMessageDataInit</code></a> is likely to be a union type that
+        includes types such as <a><code>Blob</code></a> and <a><code>BufferSource</code></a>. The
+        <a title="extract a byte sequence">algorithm</a> below would be extended, rather like the
+        Fetch standard's <a href="https://fetch.spec.whatwg.org/#concept-bodyinit-extract">extract
+        a byte stream</a> algorithm.
+      </p>
       <p>
         To <dfn>extract a byte sequence</dfn> from <var>object</var>, run these steps:
       </p>
@@ -722,19 +728,6 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
             Switch on <var>object</var>'s type:
           </p>
           <dl>
-            <dt>
-              <a><code>Blob</code></a>
-            </dt>
-            <dd>
-              Set <var>bytes</var> to a copy of <var>object</var>'s contents.
-            </dd>
-            <dt>
-              <a><code>BufferSource</code></a>
-            </dt>
-            <dd>
-              Set <var>bytes</var> to a <a title=
-              "get a copy of the bytes held by the buffer source">copy of</a> <var>object</var>.
-            </dd>
             <dt>
               <a><code>USVString</code></a>
             </dt>
@@ -808,11 +801,10 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           <li>Let <var>scope</var> be the <code>ServiceWorkerGlobalScope</code> of the <a>Service
           Worker</a> associated with the <a>webapp</a>.
           </li>
-          <li>Let <var>event</var> be a new <a><code>PushEvent</code></a>, initialized with a
-          <a><code>PushEventInit</code></a> whose <code>data</code> member is an
-          <a><code>ArrayBuffer</code></a> containing the binary message data received by the
-          <a>user agent</a> in the <a>push message</a>, or an empty <a><code>ArrayBuffer</code></a>
-          if no data was received.
+          <li>Let <var>event</var> be a new <a><code>PushEvent</code></a>, whose <code id=
+          "widl-PushEvent-data">data</code> attribute is a new <a><code>PushMessageData</code></a>
+          with <a>bytes</a> set to the binary message data received by the <a>user agent</a> in the
+          <a>push message</a>, or an empty byte sequence if no data was received.
           </li>
           <li>
             <a>Queue a task</a> to <a title="fire a simple event">fire <var>event</var> as a simple
@@ -826,10 +818,10 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           <var>eventInitDict</var> contains a dictionary member with key "<code id=
           "widl-PushEventInit-data">data</code>" and value of type
           <a><code>PushMessageDataInit</code></a>, then instead of setting the <code>data</code>
-          attribute of the event to the value of that dictionary member, set the <code id=
-          "widl-PushEvent-data">data</code> attribute to a new <a><code>PushMessageData</code></a>
-          with <a>bytes</a> set to the result of <a title="extract a byte sequence">extracting a
-          byte sequence</a> from that dictionary member.
+          attribute of the event to the value of that dictionary member, set the <code>data</code>
+          attribute to a new <a><code>PushMessageData</code></a> with <a>bytes</a> set to the
+          result of <a title="extract a byte sequence">extracting a byte sequence</a> from that
+          dictionary member.
         </p>
       </section>
       <section>
