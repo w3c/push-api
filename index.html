@@ -177,6 +177,9 @@
         [[!SERVICE-WORKERS]].
       </p>
       <p>
+        <code><a href="http://www.w3.org/TR/WebCryptoAPI/#key-interface">Key</a></code> is defined in [[!WEBCRYPTOAPI]].
+      </p>
+      <p>
         The term <dfn>webapp</dfn> refers to a Web application, i.e. an application implemented
         using Web technologies, and executing within the context of a Web <a>user agent</a>, e.g. a
         Web browser or other Web runtime environment.
@@ -645,11 +648,13 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       <p>
         When getting the <code><dfn id=
         "widl-PushRegistration-encryptionKeys">encryptionKeys</dfn></code> attribute, the <a>user
-        agent</a> MAY return one or more encryption keys as defined in the <a href="http://www.w3.org/TR/WebCryptoAPI/#dfn-Key">
-        WebCrypto API </a>.
-       The web developer would use Key.algorithm to detect what encryption algorithm (and any necessary parameters)
-       each key is for, then export the key (to upload to their server) in the KeyFormat of their choice using
-       crypto.subtle.exportKey(KeyFormat, Key).
+        agent</a> MAY return one or more encryption keys.
+      </p>
+      <p class="note">
+        In order to encrypt a message the web developer would use
+        <a href="http://www.w3.org/TR/WebCryptoAPI/#dfn-KeyAlgorithm"> Key.algorithm </a> to detect what encryption algorithm
+        (and any necessary parameters) each key is for, then export the key (to upload to their server) in the KeyFormat
+        of their choice using crypto.subtle.exportKey(KeyFormat, Key).
       </p>
     </section>
     <section>
