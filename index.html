@@ -190,13 +190,12 @@
         [[!FILEAPI]].
       </p>
       <p>
-        <code><a href="https://heycam.github.io/webidl/#idl-any"><dfn>Any</dfn></a></code>,
+        <code><a href="http://www.w3.org/TR/WebIDL/#idl-any"><dfn>Any</dfn></a></code>,
         <code><a href=
         "http://heycam.github.io/webidl/#idl-ArrayBuffer"><dfn>ArrayBuffer</dfn></a></code>,
         <code><a href=
         "http://heycam.github.io/webidl/#common-BufferSource"><dfn>BufferSource</dfn></a></code>,
-        <a href="http://heycam.github.io/webidl/#dfn-get-buffer-source-copy"><dfn>get a copy of the
-        bytes held by the buffer source</dfn></a>, and <code><a href=
+        and <code><a href=
         "http://heycam.github.io/webidl/#idl-USVString"><dfn>USVString</dfn></a></code> are defined
         in [[!WEBIDL]].
       </p>
@@ -666,7 +665,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
     </section>
     <section>
       <h2>
-        <code>PushMessageData</code> interface
+        <a>PushMessageData</a> interface
       </h2>
       <dl title="[NoInterfaceObject] interface PushMessageData" class="idl">
         <dt>
@@ -683,8 +682,8 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         </dt>
       </dl>
       <p>
-        <a><code>PushMessageData</code></a> objects have an associated <dfn>bytes</dfn> (a byte
-        sequence) set on creation.
+        <a>PushMessageData</a> objects have an associated <dfn>bytes</dfn> (a byte sequence) set on
+        creation.
       </p>
       <p>
         The <code><dfn id="widl-PushMessageData-arrayBuffer-ArrayBuffer">arrayBuffer()</dfn></code>
@@ -699,8 +698,8 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       <p>
         The <code><dfn id="widl-PushMessageData-json-Any">json()</dfn></code> method, when invoked,
         MUST return the result of invoking the initial value of <a><code>JSON.parse</code></a> with
-        the result of running <a>utf-8 decode</a> on <var>bytes</var> as argument. This may throw
-        an exception.
+        the result of running <a>utf-8 decode</a> on <var>bytes</var> as argument. Re-throw any
+        exceptions thrown by <a><code>JSON.parse</code></a>.
       </p>
       <p>
         The <code><dfn id="widl-PushMessageData-text-USVString">text()</dfn></code> method, when
@@ -708,25 +707,19 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       </p>
       <div class="idl" title="typedef USVString PushMessageDataInit"></div>
       <p class="note">
-        In future, <a><code>PushMessageDataInit</code></a> is likely to be a union type that
-        includes types such as <a><code>Blob</code></a> and <a><code>BufferSource</code></a>. The
-        <a title="extract a byte sequence">algorithm</a> below would be extended, rather like the
-        Fetch standard's <a href="https://fetch.spec.whatwg.org/#concept-bodyinit-extract">extract
-        a byte stream</a> algorithm.
+        In future, <a>PushMessageDataInit</a> is likely to be a union type that includes types such
+        as <a><code>Blob</code></a> and <a><code>BufferSource</code></a>. The <a title=
+        "extract a byte sequence">algorithm</a> below would be extended, rather like the Fetch
+        standard's <a href="https://fetch.spec.whatwg.org/#concept-bodyinit-extract">extract a byte
+        stream</a> algorithm.
       </p>
       <p>
         To <dfn>extract a byte sequence</dfn> from <var>object</var>, run these steps:
       </p>
       <ol>
-        <li>
-          <p>
-            Let <var>bytes</var> be an empty byte sequence.
-          </p>
+        <li>Let <var>bytes</var> be an empty byte sequence.
         </li>
-        <li>
-          <p>
-            Switch on <var>object</var>'s type:
-          </p>
+        <li>Switch on <var>object</var>'s type:
           <dl>
             <dt>
               <a><code>USVString</code></a>
@@ -737,10 +730,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
             </dd>
           </dl>
         </li>
-        <li>
-          <p>
-            Return <var>bytes</var>.
-          </p>
+        <li>Return <var>bytes</var>.
         </li>
       </ol>
     </section>
@@ -779,7 +769,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           The <a>PushEvent</a> interface represents a received <a>push message</a>.
         </p>
         <dl title=
-        "[Constructor(DOMString type, PushEventInit eventInitDict), Exposed=ServiceWorker] interface PushEvent : ExtendableEvent"
+        "[Constructor(DOMString type, optional PushEventInit eventInitDict), Exposed=ServiceWorker] interface PushEvent : ExtendableEvent"
         class="idl" data-merge="PushEventInit">
           <dt>
             readonly attribute PushMessageData data
@@ -787,7 +777,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         </dl>
         <dl title="dictionary PushEventInit : EventInit" class="idl">
           <dt>
-            required PushMessageDataInit data
+            PushMessageDataInit data
           </dt>
         </dl>
         <p>
@@ -801,10 +791,10 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           <li>Let <var>scope</var> be the <code>ServiceWorkerGlobalScope</code> of the <a>Service
           Worker</a> associated with the <a>webapp</a>.
           </li>
-          <li>Let <var>event</var> be a new <a><code>PushEvent</code></a>, whose <code id=
-          "widl-PushEvent-data">data</code> attribute is a new <a><code>PushMessageData</code></a>
-          with <a>bytes</a> set to the binary message data received by the <a>user agent</a> in the
-          <a>push message</a>, or an empty byte sequence if no data was received.
+          <li>Let <var>event</var> be a new <a>PushEvent</a>, whose <code id="widl-PushEvent-data">
+            data</code> attribute is a new <a>PushMessageData</a> with <a>bytes</a> set to the
+            binary message data received by the <a>user agent</a> in the <a>push message</a>, or an
+            empty byte sequence if no data was received.
           </li>
           <li>
             <a>Queue a task</a> to <a title="fire a simple event">fire <var>event</var> as a simple
@@ -812,16 +802,15 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           </li>
         </ol>
         <p>
-          When a constructor of the <a><code>PushEvent</code></a> interface, or of an interface
-          that inherits from the <a><code>PushEvent</code></a> interface, is invoked, the usual
-          <a>steps for constructing events</a> MUST be modified as follows: if the
-          <var>eventInitDict</var> contains a dictionary member with key "<code id=
-          "widl-PushEventInit-data">data</code>" and value of type
-          <a><code>PushMessageDataInit</code></a>, then instead of setting the <code>data</code>
-          attribute of the event to the value of that dictionary member, set the <code>data</code>
-          attribute to a new <a><code>PushMessageData</code></a> with <a>bytes</a> set to the
-          result of <a title="extract a byte sequence">extracting a byte sequence</a> from that
-          dictionary member.
+          When a constructor of the <a>PushEvent</a> interface, or of an interface that inherits
+          from the <a>PushEvent</a> interface, is invoked, the usual <a>steps for constructing
+          events</a> MUST be modified as follows: instead of setting the <code>data</code>
+          attribute of the event to the value of the <var>eventInitDict</var>'s "<code id=
+          "widl-PushEventInit-data">data</code>" member, set the <code>data</code> attribute to a
+          new <a>PushMessageData</a> with <a>bytes</a> set to the result of <a title=
+          "extract a byte sequence">extracting a byte sequence</a> from that dictionary member, or
+          an empty byte sequence if <var>eventInitDict</var> is not provided or has no
+          "<code>data</code>" member.
         </p>
       </section>
       <section>
