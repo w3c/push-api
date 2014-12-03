@@ -177,8 +177,8 @@
       </p>
       <p>
         <dfn>Service Worker</dfn>, <dfn>ServiceWorkerRegistration</dfn>,
-        <dfn>ServiceWorkerGlobalScope</dfn>, and <dfn>ExtendableEvent</dfn> are defined in
-        [[!SERVICE-WORKERS]].
+        <dfn>ServiceWorkerGlobalScope</dfn>, <dfn>ExtendableEvent</dfn>, and
+        <dfn>ExtendableEventInit</dfn> are defined in [[!SERVICE-WORKERS]].
       </p>
       <p>
         The algorithms <a href="http://www.w3.org/TR/encoding/#utf-8-encode"><dfn>utf-8
@@ -775,7 +775,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
             readonly attribute PushMessageData data
           </dt>
         </dl>
-        <dl title="dictionary PushEventInit : EventInit" class="idl">
+        <dl title="dictionary PushEventInit : ExtendableEventInit" class="idl">
           <dt>
             PushMessageDataInit data
           </dt>
