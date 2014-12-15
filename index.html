@@ -312,7 +312,7 @@ this.onpush = function(event) {
 
 // https://example.com/webapp.js
 navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
-  serviceWorkerRegistration.pushRegistrationManager.register().then(
+  serviceWorkerRegistration.pushManager.register().then(
     function(pushRegistration) {
       console.log(pushRegistration.registrationId);
       console.log(pushRegistration.endpoint);
@@ -419,26 +419,25 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       </p>
       <dl title="partial interface ServiceWorkerRegistration" class="idl">
         <dt>
-          readonly attribute PushRegistrationManager pushRegistrationManager
+          readonly attribute PushManager pushManager
         </dt>
       </dl>
       <p>
-        The <code><dfn id=
-        "widl-ServiceWorkerRegistration-pushRegistrationManager">pushRegistrationManager</dfn></code>
-        attribute exposes the <code>PushRegistrationManager</code> for the <a>Service Worker</a>
-        identified by the <code>ServiceWorkerRegistration</code>.
+        The <code><dfn id="widl-ServiceWorkerRegistration-pushManager">pushManager</dfn></code>
+        attribute exposes the <code>PushManager</code> for the <a>Service Worker</a> identified by
+        the <code>ServiceWorkerRegistration</code>.
       </p>
     </section>
     <section>
       <h2>
-        <a>PushRegistrationManager</a> interface
+        <a>PushManager</a> interface
       </h2>
       <p>
-        The <a>PushRegistrationManager</a> interface defines the operations that enable <a title=
+        The <a>PushManager</a> interface defines the operations that enable <a title=
         "webapp">webapps</a> to establish access to <a title="push service">push services</a>. Note
         that just a single <a>push registration</a> is allowed per <a>webapp</a>.
       </p>
-      <dl title="interface PushRegistrationManager" class="idl">
+      <dl title="interface PushManager" class="idl">
         <dt>
           Promise&lt;PushRegistration&gt; register ()
         </dt>
@@ -451,8 +450,8 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       </dl>
       <p>
         The <code><dfn id=
-        "widl-PushRegistrationManager-register-Promise-PushRegistration">register</dfn></code>
-        method when invoked MUST run the following steps:
+        "widl-PushManager-register-Promise-PushRegistration">register</dfn></code> method when
+        invoked MUST run the following steps:
       </p>
       <ol>
         <li>Let <var>promise</var> be a new <a><code>Promise</code></a>.
@@ -505,7 +504,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       </p>
       <p>
         The <code><dfn id=
-        "widl-PushRegistrationManager-getRegistration-Promise-PushRegistration">getRegistration</dfn></code>
+        "widl-PushManager-getRegistration-Promise-PushRegistration">getRegistration</dfn></code>
         method when invoked MUST run the following steps:
       </p>
       <ol>
@@ -529,7 +528,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       </ol>
       <p>
         The <code><dfn id=
-        "widl-PushRegistrationManager-hasPermission-Promise-PushPermissionStatus">hasPermission</dfn></code>
+        "widl-PushManager-hasPermission-Promise-PushPermissionStatus">hasPermission</dfn></code>
         method when invoked MUST run the following steps:
       </p>
       <ol>
