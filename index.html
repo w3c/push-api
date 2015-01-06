@@ -169,8 +169,6 @@
         <code><a href="http://www.w3.org/TR/dom/#domexception"><dfn>DOMException</dfn></a></code>,
         <code><a href="http://www.w3.org/TR/dom/#aborterror"><dfn>AbortError</dfn></a></code>,
         <code><a href=
-        "http://www.w3.org/TR/dom/#notfounderror"><dfn>NotFoundError</dfn></a></code>,
-        <code><a href=
         "http://www.w3.org/TR/dom/#securityerror"><dfn>SecurityError</dfn></a></code>,
         <code><a href="http://www.w3.org/TR/dom/#networkerror"><dfn>NetworkError</dfn></a></code>,
         and <a href="http://www.w3.org/TR/dom/#concept-event-constructor"><dfn>steps for
@@ -442,7 +440,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           Promise&lt;PushRegistration&gt; register ()
         </dt>
         <dt>
-          Promise&lt;PushRegistration&gt; getRegistration ()
+          Promise&lt;PushRegistration?&gt; getRegistration ()
         </dt>
         <dt>
           Promise&lt;PushPermissionStatus&gt; hasPermission ()
@@ -512,14 +510,12 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         </li>
         <li>Return <var>promise</var> and continue the following steps asynchronously.
         </li>
-        <li>If the <a>webapp</a> is not registered, reject <var>promise</var> with a
-        <code><a>DOMException</a></code> whose name is "<code><a>NotFoundError</a></code>" and
-        terminate these steps.
+        <li>If the <a>webapp</a> is not registered, resolve <var>promise</var> with null.
         </li>
         <li>Retrieve the <a>push registration</a> associated with the <a>webapp</a>.
         </li>
         <li>If there is an error, reject <var>promise</var> with a <code><a>DOMException</a></code>
-        whose name is "<code><a>AbortError</a></code>" and terminate these steps.
+        and terminate these steps.
         </li>
         <li>When the request has been completed, resolve <var>promise</var> with a
         <a><code>PushRegistration</code></a> providing the details of the retrieved <a>push
