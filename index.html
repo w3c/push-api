@@ -744,7 +744,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           attribute EventHandler onpush
         </dt>
         <dt>
-          attribute EventHandler onpushsubscriptionlost
+          attribute EventHandler onpushsubscriptionchange
         </dt>
       </dl>
       <p>
@@ -754,9 +754,9 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       </p>
       <p>
         The <code><dfn id=
-        "widl-ServiceWorkerGlobalScope-onpushsubscriptionlost">onpushsubscriptionlost</dfn></code>
+        "widl-ServiceWorkerGlobalScope-onpushsubscriptionchange">onpushsubscriptionchange</dfn></code>
         attribute is an <a>event handler</a> whose corresponding <a>event handler event type</a> is
-        <code>pushsubscriptionlost</code>.
+        <code>pushsubscriptionchange</code>.
       </p>
       <section>
         <h2>
@@ -812,7 +812,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       </section>
       <section>
         <h2>
-          The <code>pushsubscriptionlost</code> event
+          The <code>pushsubscriptionchange</code> event
         </h2>
         <p>
           Upon any event that makes a <a>push subscription</a> no longer valid, e.g. <a>push
@@ -827,7 +827,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           </li>
           <li>
             <a>Queue a task</a> to <a>fire a simple event</a> named
-            <code>pushsubscriptionlost</code> at <var>scope</var>.
+            <code>pushsubscriptionchange</code> at <var>scope</var>.
           </li>
         </ol>
       </section>
