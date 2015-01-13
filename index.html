@@ -467,9 +467,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         user has already granted or denied permission explicitly for this <a>webapp</a>.
         </li>
         <li>If not granted, reject <var>promise</var> with a <code><a>DOMException</a></code> whose
-        name is "<a href=
-        "https://www.w3.org/Bugs/Public/show_bug.cgi?id=23033"><code>PermissionDeniedError</code></a>"
-        and terminate these steps.
+        name is "<code><a>PermissionDeniedError</a></code>" and terminate these steps.
         </li>
         <li>If the <a>webapp</a> is already subscribed, run the following substeps:
           <ol>
@@ -496,12 +494,6 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         subscription</a>.
         </li>
       </ol>
-      <p class="note">
-        <a href=
-        "https://www.w3.org/Bugs/Public/show_bug.cgi?id=23033"><code>PermissionDeniedError</code></a>
-        has not yet been defined in a specification, this document currently links to the bug for
-        defining it.
-      </p>
       <p>
         The <code><dfn id=
         "widl-PushManager-getSubscription-Promise-PushSubscription">getSubscription</dfn></code>
@@ -849,8 +841,11 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       </dl>
       <table class="simple">
         <tr>
-          <th colspan="2">
-            Enumeration description
+          <th>
+            Enumeration
+          </th>
+          <th>
+            Description
           </th>
         </tr>
         <tr>
@@ -858,7 +853,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
             <code id="idl-def-PushPermissionStatus.granted">granted</code>
           </td>
           <td>
-            The <a>webapp</a> has permission to use Push API.
+            The <a>webapp</a> has permission to use the Push API.
           </td>
         </tr>
         <tr>
@@ -866,7 +861,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
             <code id="idl-def-PushPermissionStatus.denied">denied</code>
           </td>
           <td>
-            The <a>webapp</a> has been denied permission to use Push API.
+            The <a>webapp</a> has been denied permission to use the Push API.
           </td>
         </tr>
         <tr>
@@ -874,7 +869,33 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
             <code id="idl-def-PushPermissionStatus.default">default</code>
           </td>
           <td>
-            The <a>webapp</a> needs to ask for permission in order to use Push API.
+            The <a>webapp</a> needs to ask for permission in order to use the Push API.
+          </td>
+        </tr>
+      </table>
+    </section>
+    <section>
+      <h2>
+        Exceptions
+      </h2>
+      <p>
+        The Push API uses the following new <a>DOMException</a> names.
+      </p>
+      <table class="simple">
+        <tr>
+          <th>
+            Name
+          </th>
+          <th>
+            Description
+          </th>
+        </tr>
+        <tr>
+          <td>
+            <code><dfn>PermissionDeniedError</dfn></code>
+          </td>
+          <td>
+            The operation failed because the user denied permission to use the API.
           </td>
         </tr>
       </table>
