@@ -212,9 +212,9 @@
         in the <a>push message</a> itself.
       </p>
       <p>
-        The term <dfn>push registration</dfn> refers to each logical channel aimed at delivering
+        The term <dfn>push subscription</dfn> refers to each logical channel aimed at delivering
         <a title="push message">push messages</a> from an <a>webapp server</a> to a <a>webapp</a>,
-        which is created by a distinct registration of such <a>webapp</a> via this Push API.
+        which is created by a distinct subscription of such <a>webapp</a> via this Push API.
       </p>
       <p>
         The term <dfn>push service</dfn> refers to an overall end-to-end system that allows
@@ -241,7 +241,7 @@
         <a title="user agent">User agents</a> MUST NOT provide Push API access to <a title=
         "webapp">webapps</a> without the <a>express permission</a> of the user. <a title=
         "user agent">User agents</a> MUST acquire consent for permission through a user interface
-        for each call to the <code>register()</code> method, unless a prearranged trust
+        for each call to the <code>subscribe()</code> method, unless a prearranged trust
         relationship applies.
       </p>
       <p>
@@ -251,7 +251,7 @@
       <p>
         <a title="user agent">User agents</a> MUST implement the Push API to be HTTPS-only.
         SSL-only support provides better protection for the user against man-in-the-middle attacks
-        intended to obtain push registration data. Browsers may ignore this rule for development
+        intended to obtain push subscription data. Browsers may ignore this rule for development
         purposes only.
       </p>
       <p>
@@ -310,11 +310,11 @@ this.onpush = function(event) {
 
 // https://example.com/webapp.js
 navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
-  serviceWorkerRegistration.pushManager.register().then(
-    function(pushRegistration) {
-      console.log(pushRegistration.registrationId);
-      console.log(pushRegistration.endpoint);
-      // The push registration details needed by the application server to push
+  serviceWorkerRegistration.pushManager.subscribe().then(
+    function(pushSubscription) {
+      console.log(pushSubscription.subscriptionId);
+      console.log(pushSubscription.endpoint);
+      // The push subscription details needed by the application server to push
       // messages to the push service are now available, and can be sent to the
       // application server using, for example, an XMLHttpRequest.
     }, function(error) {
@@ -333,9 +333,9 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         </h2>
         <figure>
           <a href="sequence_diagram.png"><img src="sequence_diagram.png" width="800" alt=
-          "Example flow of events for registration, message delivery, and unregistration"></a>
+          "Example flow of events for subscription, message delivery, and unsubscription"></a>
           <figcaption>
-            Example flow of events for registration, message delivery, and unregistration
+            Example flow of events for subscription, message delivery, and unsubscription
           </figcaption>
         </figure>
       </section>
@@ -361,14 +361,14 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           particular push system. These parameters and attributes include:
         </p>
         <ul>
-          <li>The <code>registrationId</code> of a <code>PushRegistration</code>, as an opaque
+          <li>The <code>subscriptionId</code> of a <code>PushSubscription</code>, as an opaque
           string to the Push API, may be used by push systems to provide meaningful data to the <a>
-            webapp server</a> through the webapp. For example, the <code>registrationId</code> may
+            webapp server</a> through the webapp. For example, the <code>subscriptionId</code> may
             be used as a push server API request parameter or request body element for specific
             push systems.
           </li>
-          <li>As a URI, the <code>endpoint</code> of a <code>PushRegistration</code> provides a
-          flexible means for push systems to deliver webapp-specific registration and/or push
+          <li>As a URI, the <code>endpoint</code> of a <code>PushSubscription</code> provides a
+          flexible means for push systems to deliver webapp-specific subscription and/or push
           server API parameters to the <a>webapp server</a>, through the webapp.
           </li>
         </ul>
@@ -380,19 +380,19 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         <ul>
           <li>The URI used by the <a>webapp server</a> to issue push server API requests, which may
           be based upon the <code>endpoint</code>, and for a particular push server API request
-          require additional parameters e.g. the <code>registrationId</code>.
+          require additional parameters e.g. the <code>subscriptionId</code>.
           </li>
           <li>The push server API request body, which may require that the <code>endpoint</code> or
-          <code>registrationId</code> be present in some body element.
+          <code>subscriptionId</code> be present in some body element.
           </li>
-          <li>The <code>pushRegistration</code> attributes may only be used by the <a>webapp
-          server</a> to associate the webapp to a specific push service registration, with the
+          <li>The <code>PushSubscription</code> attributes may only be used by the <a>webapp
+          server</a> to associate the webapp to a specific push service subscription, with the
           details of the push server API relying upon other pre-configured data.
           </li>
         </ul>
         <p>
-          The Push API does not provide any <code>pushRegistration</code> attributes that
-          normatively identify the particular push system that applies to the registration. Webapps
+          The Push API does not provide any <code>PushSubscription</code> attributes that
+          normatively identify the particular push system that applies to the subscription. Webapps
           that are designed to work with a single push system are assumed to know inherently how to
           use the push server API of that system. For such webapps, a key consideration is ensuring
           that if the webapp is used on a device or browser that does not support the necessary
@@ -433,14 +433,14 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       <p>
         The <a>PushManager</a> interface defines the operations that enable <a title=
         "webapp">webapps</a> to establish access to <a title="push service">push services</a>. Note
-        that just a single <a>push registration</a> is allowed per <a>webapp</a>.
+        that just a single <a>push subscription</a> is allowed per <a>webapp</a>.
       </p>
       <dl title="interface PushManager" class="idl">
         <dt>
-          Promise&lt;PushRegistration&gt; register ()
+          Promise&lt;PushSubscription&gt; subscribe ()
         </dt>
         <dt>
-          Promise&lt;PushRegistration?&gt; getRegistration ()
+          Promise&lt;PushSubscription?&gt; getSubscription ()
         </dt>
         <dt>
           Promise&lt;PushPermissionStatus&gt; hasPermission ()
@@ -448,7 +448,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       </dl>
       <p>
         The <code><dfn id=
-        "widl-PushManager-register-Promise-PushRegistration">register</dfn></code> method when
+        "widl-PushManager-subscribe-Promise-PushSubscription">subscribe</dfn></code> method when
         invoked MUST run the following steps:
       </p>
       <ol>
@@ -469,29 +469,29 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         "https://www.w3.org/Bugs/Public/show_bug.cgi?id=23033"><code>PermissionDeniedError</code></a>"
         and terminate these steps.
         </li>
-        <li>If the <a>webapp</a> is already registered, run the following substeps:
+        <li>If the <a>webapp</a> is already subscribed, run the following substeps:
           <ol>
-            <li>Retrieve the <a>push registration</a> associated with the <a>webapp</a>.
+            <li>Retrieve the <a>push subscription</a> associated with the <a>webapp</a>.
             </li>
             <li>If there is an error, reject <var>promise</var> with a
             <code><a>DOMException</a></code> whose name is "<code><a>AbortError</a></code>" and
             terminate these steps.
             </li>
             <li>When the request has been completed, resolve <var>promise</var> with a
-            <a><code>PushRegistration</code></a> providing the details of the retrieved <a>push
-            registration</a>.
+            <a><code>PushSubscription</code></a> providing the details of the retrieved <a>push
+            subscription</a>.
             </li>
           </ol>
         </li>
-        <li>Make a request to the system to create a new <a>push registration</a> for the
+        <li>Make a request to the system to create a new <a>push subscription</a> for the
         <a>webapp</a>.
         </li>
         <li>If there is an error, reject <var>promise</var> with a <code><a>DOMException</a></code>
         whose name is "<code><a>AbortError</a></code>" and terminate these steps.
         </li>
         <li>When the request has been completed, resolve <var>promise</var> with a
-        <a><code>PushRegistration</code></a> providing the details of the new <a>push
-        registration</a>.
+        <a><code>PushSubscription</code></a> providing the details of the new <a>push
+        subscription</a>.
         </li>
       </ol>
       <p class="note">
@@ -502,7 +502,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       </p>
       <p>
         The <code><dfn id=
-        "widl-PushManager-getRegistration-Promise-PushRegistration">getRegistration</dfn></code>
+        "widl-PushManager-getSubscription-Promise-PushSubscription">getSubscription</dfn></code>
         method when invoked MUST run the following steps:
       </p>
       <ol>
@@ -510,16 +510,16 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         </li>
         <li>Return <var>promise</var> and continue the following steps asynchronously.
         </li>
-        <li>If the <a>webapp</a> is not registered, resolve <var>promise</var> with null.
+        <li>If the <a>webapp</a> is not subscribed, resolve <var>promise</var> with null.
         </li>
-        <li>Retrieve the <a>push registration</a> associated with the <a>webapp</a>.
+        <li>Retrieve the <a>push subscription</a> associated with the <a>webapp</a>.
         </li>
         <li>If there is an error, reject <var>promise</var> with a <code><a>DOMException</a></code>
-        and terminate these steps.
+        whose name is "<code><a>AbortError</a></code>" and terminate these steps.
         </li>
         <li>When the request has been completed, resolve <var>promise</var> with a
-        <a><code>PushRegistration</code></a> providing the details of the retrieved <a>push
-        registration</a>.
+        <a><code>PushSubscription</code></a> providing the details of the retrieved <a>push
+        subscription</a>.
         </li>
       </ol>
       <p>
@@ -544,20 +544,20 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       </ol>
       <p>
         Permission to use the push service can be persistent, that is, it does not need to be
-        reconfirmed for subsequent registrations if a valid permission exists.
+        reconfirmed for subsequent subscriptions if a valid permission exists.
       </p>
       <p>
         If there is a need to ask for permission, it needs to be done by invoking the
-        <a><code>register</code></a> method.
+        <a><code>subscribe</code></a> method.
       </p>
       <section>
         <h3>
-          Push Registration Persistence
+          Push Subscription Persistence
         </h3>
         <p>
-          To facilitate persistence of push registrations when a <a>webapp</a> is closed, it can
-          use a <a>Service Worker</a> to register for and receive push events. In that case, even
-          if the <a>webapp</a> parent window is closed, the <code>pushRegistration</code> object
+          To facilitate persistence of push subscriptions when a <a>webapp</a> is closed, it can
+          use a <a>Service Worker</a> to subscribe for and receive push events. In that case, even
+          if the <a>webapp</a> parent window is closed, the <code>PushSubscription</code> object
           will still enable delivery of <a title="push message">push messages</a>, through the
           <a>Service Worker</a>. The <a title="push message">push messages</a>, can then be
           processed by the <a>Service Worker</a>, e.g. including one or more of the following
@@ -575,49 +575,49 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           </li>
         </ul>
         <p>
-          If a <a>webapp</a> creates a <a>push registration</a> without using a <a>Service
-          Worker</a>, the <code>pushRegistration</code> object will persist only as long as the
+          If a <a>webapp</a> creates a <a>push subscription</a> without using a <a>Service
+          Worker</a>, the <code>PushSubscription</code> object will persist only as long as the
           <a>webapp</a> window is open.
         </p>
       </section>
       <section>
         <h3>
-          Push Registration Uniqueness
+          Push Subscription Uniqueness
         </h3>
         <p>
-          Each <a>push registration</a> is unique, i.e. a single instance specific to each
-          <a>webapp</a> and call to the <code>register</code> interface.
+          Each <a>push subscription</a> is unique, i.e. a single instance specific to each
+          <a>webapp</a> and call to the <code>subscribe</code> interface.
         </p>
         <p>
-          <a title="webapp">webapps</a> that create multiple <a title="push registration">push
-          registrations</a> are responsible for mapping the individual registrations to specific
+          <a title="webapp">webapps</a> that create multiple <a title="push subscription">push
+          subscriptions</a> are responsible for mapping the individual subscriptions to specific
           app functions as necessary. For example, the <a>webapp</a> or <a>webapp server</a> can
-          associate a specific <code>pushRegistration</code> to a particular function of the app
+          associate a specific <code>PushSubscription</code> to a particular function of the app
           through JavaScript.
         </p>
       </section>
     </section>
     <section>
       <h2>
-        <a>PushRegistration</a> interface
+        <a>PushSubscription</a> interface
       </h2>
       <p>
-        The <a>PushRegistration</a> interface contains information about a specific channel used by
+        The <a>PushSubscription</a> interface contains information about a specific channel used by
         a <a>webapp</a> to receive <a title="push message">push messages</a>.
       </p>
-      <dl title="interface PushRegistration" class="idl">
+      <dl title="interface PushSubscription" class="idl">
         <dt>
-          readonly attribute DOMString endpoint
+          readonly attribute USVString endpoint
         </dt>
         <dt>
-          readonly attribute DOMString registrationId
+          readonly attribute DOMString subscriptionId
         </dt>
         <dt>
-          Promise&lt;boolean&gt; unregister ()
+          Promise&lt;boolean&gt; unsubscribe ()
         </dt>
       </dl>
       <p>
-        When getting the <code><dfn id="widl-PushRegistration-endpoint">endpoint</dfn></code>
+        When getting the <code><dfn id="widl-PushSubscription-endpoint">endpoint</dfn></code>
         attribute, the <a>user agent</a> MUST return the absolute URL exposed by the <a>push
         server</a> where the <a>webapp server</a> can send <a title="push message">push
         messages</a> to this <a>webapp</a>. The value of <code>endpoint</code> may be the same for
@@ -626,16 +626,16 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       </p>
       <p>
         When getting the <code><dfn id=
-        "widl-PushRegistration-registrationId">registrationId</dfn></code> attribute, the <a>user
-        agent</a> MUST return a univocal identifier of this <a>push registration</a> in the <a>push
+        "widl-PushSubscription-subscriptionId">subscriptionId</dfn></code> attribute, the <a>user
+        agent</a> MUST return a univocal identifier of this <a>push subscription</a> in the <a>push
         server</a>. It is used by the <a>webapp server</a> to indicate the target of the <a title=
         "push message">push messages</a> that it submits to the <a>push server</a>. Each pair of
-        <code>registrationId</code> and <code>endpoint</code> is expected to be unique and specific
+        <code>subscriptionId</code> and <code>endpoint</code> is expected to be unique and specific
         to a particular <a>webapp</a> instance running on a specific device.
       </p>
       <p>
         The <code><dfn id=
-        "widl-PushRegistration-unregister-Promise-boolean">unregister</dfn></code> method when
+        "widl-PushSubscription-unsubscribe-Promise-boolean">unsubscribe</dfn></code> method when
         invoked MUST run the following steps:
       </p>
       <ol>
@@ -643,10 +643,10 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         </li>
         <li>Return <var>promise</var> and continue the following steps asynchronously.
         </li>
-        <li>If the <a>webapp</a> is not registered, resolve <var>promise</var> with
+        <li>If the <a>webapp</a> is not subscribed, resolve <var>promise</var> with
         <code>false</code> and terminate these steps.
         </li>
-        <li>Make a request to the system to deactivate the <a>push registration</a> associated with
+        <li>Make a request to the system to deactivate the <a>push subscription</a> associated with
         the <a>webapp</a>.
         </li>
         <li>If it was not possible to access the <a>push server</a>, reject <var>promise</var> with
@@ -740,7 +740,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           attribute EventHandler onpush
         </dt>
         <dt>
-          attribute EventHandler onpushregistrationlost
+          attribute EventHandler onpushsubscriptionchange
         </dt>
       </dl>
       <p>
@@ -750,9 +750,9 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       </p>
       <p>
         The <code><dfn id=
-        "widl-ServiceWorkerGlobalScope-onpushregistrationlost">onpushregistrationlost</dfn></code>
+        "widl-ServiceWorkerGlobalScope-onpushsubscriptionchange">onpushsubscriptionchange</dfn></code>
         attribute is an <a>event handler</a> whose corresponding <a>event handler event type</a> is
-        <code>pushregistrationlost</code>.
+        <code>pushsubscriptionchange</code>.
       </p>
       <section>
         <h2>
@@ -808,10 +808,10 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       </section>
       <section>
         <h2>
-          The <code>pushregistrationlost</code> event
+          The <code>pushsubscriptionchange</code> event
         </h2>
         <p>
-          Upon any event that makes a <a>push registration</a> no longer valid, e.g. <a>push
+          Upon any event that makes a <a>push subscription</a> no longer valid, e.g. <a>push
           server</a> database failure, the <a>user agent</a> MUST run the following steps:
         </p>
         <ol>
@@ -823,7 +823,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           </li>
           <li>
             <a>Queue a task</a> to <a>fire a simple event</a> named
-            <code>pushregistrationlost</code> at <var>scope</var>.
+            <code>pushsubscriptionchange</code> at <var>scope</var>.
           </li>
         </ol>
       </section>
