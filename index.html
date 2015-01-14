@@ -169,8 +169,6 @@
         <code><a href="http://www.w3.org/TR/dom/#domexception"><dfn>DOMException</dfn></a></code>,
         <code><a href="http://www.w3.org/TR/dom/#aborterror"><dfn>AbortError</dfn></a></code>,
         <code><a href=
-        "http://www.w3.org/TR/dom/#notfounderror"><dfn>NotFoundError</dfn></a></code>,
-        <code><a href=
         "http://www.w3.org/TR/dom/#securityerror"><dfn>SecurityError</dfn></a></code>,
         <code><a href="http://www.w3.org/TR/dom/#networkerror"><dfn>NetworkError</dfn></a></code>,
         and <a href="http://www.w3.org/TR/dom/#concept-event-constructor"><dfn>steps for
@@ -442,7 +440,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
           Promise&lt;PushSubscription&gt; subscribe ()
         </dt>
         <dt>
-          Promise&lt;PushSubscription&gt; getSubscription ()
+          Promise&lt;PushSubscription?&gt; getSubscription ()
         </dt>
         <dt>
           Promise&lt;PushPermissionStatus&gt; hasPermission ()
@@ -504,9 +502,7 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         </li>
         <li>Return <var>promise</var> and continue the following steps asynchronously.
         </li>
-        <li>If the <a>webapp</a> is not subscribed, reject <var>promise</var> with a
-        <code><a>DOMException</a></code> whose name is "<code><a>NotFoundError</a></code>" and
-        terminate these steps.
+        <li>If the <a>webapp</a> is not subscribed, resolve <var>promise</var> with null.
         </li>
         <li>Retrieve the <a>push subscription</a> associated with the <a>webapp</a>.
         </li>
