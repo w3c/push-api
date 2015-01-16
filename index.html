@@ -169,15 +169,31 @@
         <code><a href="http://www.w3.org/TR/dom/#domexception"><dfn>DOMException</dfn></a></code>,
         <code><a href="http://www.w3.org/TR/dom/#aborterror"><dfn>AbortError</dfn></a></code>,
         <code><a href=
+        "http://www.w3.org/TR/dom/#invalidstateerror"><dfn>InvalidStateError</dfn></a></code>,
+        <code><a href=
         "http://www.w3.org/TR/dom/#securityerror"><dfn>SecurityError</dfn></a></code>,
         <code><a href="http://www.w3.org/TR/dom/#networkerror"><dfn>NetworkError</dfn></a></code>,
         and <a href="http://www.w3.org/TR/dom/#concept-event-constructor"><dfn>steps for
         constructing events</dfn></a> are defined in [[!DOM]].
       </p>
       <p>
-        <dfn>Service Worker</dfn>, <dfn>ServiceWorkerRegistration</dfn>,
-        <dfn>ServiceWorkerGlobalScope</dfn>, <dfn>ExtendableEvent</dfn>, and
-        <dfn>ExtendableEventInit</dfn> are defined in [[!SERVICE-WORKERS]].
+        The terms <a href="http://www.w3.org/TR/service-workers/#dfn-service-worker"><dfn>service
+        worker</dfn></a>, <a href=
+        "http://www.w3.org/TR/service-workers/#dfn-service-worker-registration"><dfn>service worker
+        registration</dfn></a>, <a href=
+        "http://www.w3.org/TR/service-workers/#dfn-installing-worker"><dfn>installing
+        worker</dfn></a>, <a href=
+        "http://www.w3.org/TR/service-workers/#dfn-waiting-worker"><dfn>waiting worker</dfn></a>,
+        and <a href="http://www.w3.org/TR/service-workers/#dfn-active-worker"><dfn>active
+        worker</dfn></a>, and the types <code><a href=
+        "http://www.w3.org/TR/service-workers/#service-worker-registration-interface"><dfn>ServiceWorkerRegistration</dfn></a></code>,
+        <code><a href=
+        "http://www.w3.org/TR/service-workers/#service-worker-global-scope-interface"><dfn>ServiceWorkerGlobalScope</dfn></a></code>,
+        <code><a href=
+        "http://www.w3.org/TR/service-workers/#extendable-event-interface"><dfn>ExtendableEvent</dfn></a></code>,
+        and <code><a href=
+        "http://www.w3.org/TR/service-workers/#extendable-event-init-dictionary"><dfn>ExtendableEventInit</dfn></a></code>
+        are defined in [[!SERVICE-WORKERS]].
       </p>
       <p>
         The algorithms <a href="http://www.w3.org/TR/encoding/#utf-8-encode"><dfn>utf-8
@@ -304,27 +320,29 @@
 // https://example.com/serviceworker.js
 this.onpush = function(event) {
   console.log(event.data);
-  // From here we can write the data to IndexedDB, send it to any open windows,
-  // display a notification, etc.
+  // From here we can write the data to IndexedDB, send it to any open
+  // windows, display a notification, etc.
 }
 
 // https://example.com/webapp.js
-navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
-  serviceWorkerRegistration.pushManager.subscribe().then(
-    function(pushSubscription) {
-      console.log(pushSubscription.subscriptionId);
-      console.log(pushSubscription.endpoint);
-      // The push subscription details needed by the application server to push
-      // messages to the push service are now available, and can be sent to the
-      // application server using, for example, an XMLHttpRequest.
-    }, function(error) {
-      // During development it often helps to log errors to the console. In a
-      // production environment it might make sense to also report information
-      // about errors back to the application server.
-      console.log(error);
-    }
-  );
-});
+navigator.serviceWorker.register('serviceworker.js').then(
+  function(serviceWorkerRegistration) {
+    serviceWorkerRegistration.pushManager.subscribe().then(
+      function(pushSubscription) {
+        console.log(pushSubscription.subscriptionId);
+        console.log(pushSubscription.endpoint);
+        // The push subscription details needed by the application
+        // server are now available, and can be sent to it using,
+        // for example, an XMLHttpRequest.
+      }, function(error) {
+        // During development it often helps to log errors to the
+        // console. In a production environment it might make sense to
+        // also report information about errors back to the
+        // application server.
+        console.log(error);
+      }
+    );
+  });
 </pre>
       </section>
       <section class="informative">
@@ -422,8 +440,9 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       </dl>
       <p>
         The <code><dfn id="widl-ServiceWorkerRegistration-pushManager">pushManager</dfn></code>
-        attribute exposes the <code>PushManager</code> for the <a>Service Worker</a> identified by
-        the <code>ServiceWorkerRegistration</code>.
+        attribute exposes a <code><a>PushManager</a></code>, which has an associated <a>service
+        worker registration</a> represented by the <code><a>ServiceWorkerRegistration</a></code> on
+        which the attribute is exposed.
       </p>
     </section>
     <section>
@@ -459,6 +478,27 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         <li>If the scheme of the document url is not <code>https</code>, reject <var>promise</var>
         with a <code><a>DOMException</a></code> whose name is "<code><a>SecurityError</a></code>"
         and terminate these steps.
+        </li>
+        <li>Let <var>registration</var> be the <code><a>PushManager</a></code>'s associated
+        <a>service worker registration</a>.
+        </li>
+        <li>If <var>registration</var> has no <a>active worker</a>, run the following substeps:
+          <ol>
+            <li>If <var>registration</var> has no <a>installing worker</a> and no <a>waiting
+            worker</a>, reject <var>promise</var> with a <code><a>DOMException</a></code> whose
+            name is "<code><a>InvalidStateError</a></code>" and terminate these steps.
+            </li>
+            <li>Wait for the <a>installing worker</a> or <a>waiting worker</a> of
+            <var>registration</var> to become its <a>active worker</a>.
+            </li>
+            <li>If <var>registration</var> fails to activate either worker, reject
+            <var>promise</var> with a <code><a>DOMException</a></code> whose name is
+            "<code><a>InvalidStateError</a></code>" and terminate these steps.
+            </li>
+            <li>Once <var>registration</var> has an <a>active worker</a>, proceed with the steps
+            below.
+            </li>
+          </ol>
         </li>
         <li>Ask the user whether they allow the <a>webapp</a> to receive <a title=
         "push message">push messages</a>, unless a prearranged trust relationship applies or the
