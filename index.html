@@ -180,9 +180,12 @@
         The terms <a href="http://www.w3.org/TR/service-workers/#dfn-service-worker"><dfn>service
         worker</dfn></a>, <a href=
         "http://www.w3.org/TR/service-workers/#dfn-service-worker-registration"><dfn>service worker
-        registration</dfn></a>, and <a href=
-        "http://www.w3.org/TR/service-workers/#dfn-active-worker"><dfn>active worker</dfn></a>, and
-        the types <code><a href=
+        registration</dfn></a>, <a href=
+        "http://www.w3.org/TR/service-workers/#dfn-installing-worker"><dfn>installing
+        worker</dfn></a>, <a href=
+        "http://www.w3.org/TR/service-workers/#dfn-waiting-worker"><dfn>waiting worker</dfn></a>,
+        and <a href="http://www.w3.org/TR/service-workers/#dfn-active-worker"><dfn>active
+        worker</dfn></a>, and the types <code><a href=
         "http://www.w3.org/TR/service-workers/#service-worker-registration-interface"><dfn>ServiceWorkerRegistration</dfn></a></code>,
         <code><a href=
         "http://www.w3.org/TR/service-workers/#service-worker-global-scope-interface"><dfn>ServiceWorkerGlobalScope</dfn></a></code>,
@@ -317,27 +320,29 @@
 // https://example.com/serviceworker.js
 this.onpush = function(event) {
   console.log(event.data);
-  // From here we can write the data to IndexedDB, send it to any open windows,
-  // display a notification, etc.
+  // From here we can write the data to IndexedDB, send it to any open
+  // windows, display a notification, etc.
 }
 
 // https://example.com/webapp.js
-navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
-  serviceWorkerRegistration.pushManager.subscribe().then(
-    function(pushSubscription) {
-      console.log(pushSubscription.subscriptionId);
-      console.log(pushSubscription.endpoint);
-      // The push subscription details needed by the application server to push
-      // messages to the push service are now available, and can be sent to the
-      // application server using, for example, an XMLHttpRequest.
-    }, function(error) {
-      // During development it often helps to log errors to the console. In a
-      // production environment it might make sense to also report information
-      // about errors back to the application server.
-      console.log(error);
-    }
-  );
-});
+navigator.serviceWorker.register('serviceworker.js').then(
+  function(serviceWorkerRegistration) {
+    serviceWorkerRegistration.pushManager.subscribe().then(
+      function(pushSubscription) {
+        console.log(pushSubscription.subscriptionId);
+        console.log(pushSubscription.endpoint);
+        // The push subscription details needed by the application
+        // server are now available, and can be sent to it using,
+        // for example, an XMLHttpRequest.
+      }, function(error) {
+        // During development it often helps to log errors to the
+        // console. In a production environment it might make sense to
+        // also report information about errors back to the
+        // application server.
+        console.log(error);
+      }
+    );
+  });
 </pre>
       </section>
       <section class="informative">
@@ -470,14 +475,30 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         </li>
         <li>Return <var>promise</var> and continue the following steps asynchronously.
         </li>
-        <li>If the <code><a>PushManager</a></code>'s associated <a>service worker registration</a>
-        has a null <a>active worker</a>, reject <var>promise</var> with a
-        <code><a>DOMException</a></code> whose name is "<code><a>InvalidStateError</a></code>" and
-        terminate these steps.
-        </li>
         <li>If the scheme of the document url is not <code>https</code>, reject <var>promise</var>
         with a <code><a>DOMException</a></code> whose name is "<code><a>SecurityError</a></code>"
         and terminate these steps.
+        </li>
+        <li>Let <var>registration</var> be the <code><a>PushManager</a></code>'s associated
+        <a>service worker registration</a>.
+        </li>
+        <li>If <var>registration</var> has no <a>active worker</a>, run the following substeps:
+          <ol>
+            <li>If <var>registration</var> has no <a>installing worker</a> and no <a>waiting
+            worker</a>, reject <var>promise</var> with a <code><a>DOMException</a></code> whose
+            name is "<code><a>InvalidStateError</a></code>" and terminate these steps.
+            </li>
+            <li>Wait for the <a>installing worker</a> or <a>waiting worker</a> of
+            <var>registration</var> to become its <a>active worker</a>.
+            </li>
+            <li>If <var>registration</var> fails to activate either worker, reject
+            <var>promise</var> with a <code><a>DOMException</a></code> whose name is
+            "<code><a>InvalidStateError</a></code>" and terminate these steps.
+            </li>
+            <li>Once <var>registration</var> has an <a>active worker</a>, proceed with the steps
+            below.
+            </li>
+          </ol>
         </li>
         <li>Ask the user whether they allow the <a>webapp</a> to receive <a title=
         "push message">push messages</a>, unless a prearranged trust relationship applies or the
@@ -520,11 +541,6 @@ navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         <li>Let <var>promise</var> be a new <a><code>Promise</code></a>.
         </li>
         <li>Return <var>promise</var> and continue the following steps asynchronously.
-        </li>
-        <li>If the <code><a>PushManager</a></code>'s associated <a>service worker registration</a>
-        has a null <a>active worker</a>, reject <var>promise</var> with a
-        <code><a>DOMException</a></code> whose name is "<code><a>InvalidStateError</a></code>" and
-        terminate these steps.
         </li>
         <li>If the <a>webapp</a> is not subscribed, resolve <var>promise</var> with null.
         </li>
