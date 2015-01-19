@@ -843,8 +843,14 @@ navigator.serviceWorker.register('serviceworker.js').then(
           The <code>pushsubscriptionchange</code> event
         </h2>
         <p>
-          Upon any event that makes a <a>push subscription</a> no longer valid, e.g. <a>push
-          server</a> database failure, the <a>user agent</a> MUST run the following steps:
+          The <code>pushsubscriptionchange</code> event indicates that a <a>push subscription</a>
+          has been invalidated, or will soon be invalidated. For example, the <a>push service</a>
+          MAY set an expiration time. A <a>webapp</a> SHOULD attempt to resubscribe while handling
+          this event, in order to continue receiving <a title="push message">push messages</a>.
+        </p>
+        <p>
+          To fire a <code>pushsubscriptionchange</code> event, the <a>user agent</a> MUST run the
+          following steps:
         </p>
         <ol>
           <li>If the <a>Service Worker</a> associated with the <a>webapp</a> is not running, start
