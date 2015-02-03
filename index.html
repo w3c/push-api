@@ -146,7 +146,7 @@
     </section>
     <section>
       <h2>
-        Terminology
+        Dependencies
       </h2>
       <p>
         The terms <dfn><a href="http://www.w3.org/TR/html5/webappapis.html#event-handlers">event
@@ -214,6 +214,11 @@
         "http://heycam.github.io/webidl/#idl-USVString"><dfn>USVString</dfn></a></code> are defined
         in [[!WEBIDL]].
       </p>
+    </section>
+    <section>
+      <h2>
+        Terminology
+      </h2>
       <p>
         The term <dfn>webapp</dfn> refers to a Web application, i.e. an application implemented
         using Web technologies, and executing within the context of a Web <a>user agent</a>, e.g. a
@@ -223,14 +228,28 @@
         The term <dfn>webapp server</dfn> refers to server-side components of a <a>webapp</a>.
       </p>
       <p>
-        The term <dfn>push message</dfn> refers to an indication to a <a>webapp</a> that there is
-        new information for it from the <a>webapp server</a>, all or part of which MAY be contained
-        in the <a>push message</a> itself.
+        A <dfn>push message</dfn> is an indication to a <a>webapp</a> that there is new information
+        for it from the <a>webapp server</a>, all or part of which MAY be contained in the <a>push
+        message</a> itself.
       </p>
       <p>
-        The term <dfn>push subscription</dfn> refers to each logical channel aimed at delivering
-        <a title="push message">push messages</a> from an <a>webapp server</a> to a <a>webapp</a>,
-        which is created by a distinct subscription of such <a>webapp</a> via this Push API.
+        A <dfn>push subscription</dfn> is a message delivery context that is established between
+        the <a>user agent</a> and the <a>push service</a> on behalf of a <a>service worker
+        registration</a>, and it is associated with that <a>service worker registration</a>. A
+        <a>push subscription</a> MUST NOT persist longer than its associated <a>service worker
+        registration</a>, but it MAY be terminated earlier.
+      </p>
+      <p>
+        A <a>push subscription</a> has an associated <dfn>endpoint</dfn>. It MUST be the absolute
+        URL exposed by the <a>push server</a> where the <a>webapp server</a> can send <a title=
+        "push message">push messages</a>. It MAY be the same for all <a title=
+        "push subscription">push subscriptions</a> associated with a <a>push service</a>.
+      </p>
+      <p>
+        A <a>push subscription</a> has an associated <dfn>subscription id</dfn>. It is used by the
+        <a>webapp server</a> to indicate the target of the <a title="push message">push
+        messages</a> that it submits to the <a>push server</a>. Each pair of <a>subscription id</a>
+        and <a>endpoint</a> is expected to be globally unique.
       </p>
       <p>
         The term <dfn>push service</dfn> refers to an overall end-to-end system that allows
@@ -257,21 +276,27 @@
         <a title="user agent">User agents</a> MUST NOT provide Push API access to <a title=
         "webapp">webapps</a> without the <a>express permission</a> of the user. <a title=
         "user agent">User agents</a> MUST acquire consent for permission through a user interface
-        for each call to the <code>subscribe()</code> method, unless a prearranged trust
-        relationship applies.
+        for each call to the <code>subscribe()</code> method, unless a previous permission grant
+        has been persisted, or a prearranged trust relationship applies. Permissions that are
+        preserved beyond the current browsing session MUST be revocable.
       </p>
       <p>
-        <a title="user agent">User agents</a> MAY support prearranged trust relationships that do
-        not require such per-request user interfaces.
+        When a permission is revoked, all <a title="push subscription">push subscriptions</a>
+        created with that permission MUST be terminated.
+      </p>
+      <p>
+        When a <a>service worker registration</a> is unregistered, any associated <a>push
+        subscription</a> MUST be terminated.
+      </p>
+      <p>
+        The <a>subscription id</a> of a terminated <a>push subscription</a> MUST never be reused
+        for a new <a>push subscription</a>.
       </p>
       <p>
         <a title="user agent">User agents</a> MUST implement the Push API to be HTTPS-only.
         SSL-only support provides better protection for the user against man-in-the-middle attacks
         intended to obtain push subscription data. Browsers may ignore this rule for development
         purposes only.
-      </p>
-      <p>
-        Permissions that are preserved beyond the current browsing session MUST be revocable.
       </p>
     </section>
     <section class='informative' id="pushframework">
@@ -450,9 +475,8 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <a>PushManager</a> interface
       </h2>
       <p>
-        The <a>PushManager</a> interface defines the operations that enable <a title=
-        "webapp">webapps</a> to establish access to <a title="push service">push services</a>. Note
-        that just a single <a>push subscription</a> is allowed per <a>webapp</a>.
+        The <a>PushManager</a> interface defines the operations to access <a title=
+        "push service">push services</a>.
       </p>
       <dl title="interface PushManager" class="idl">
         <dt>
@@ -582,60 +606,13 @@ navigator.serviceWorker.register('serviceworker.js').then(
         If there is a need to ask for permission, it needs to be done by invoking the
         <a><code>subscribe</code></a> method.
       </p>
-      <section>
-        <h3>
-          Push Subscription Persistence
-        </h3>
-        <p>
-          To facilitate persistence of push subscriptions when a <a>webapp</a> is closed, it can
-          use a <a>Service Worker</a> to subscribe for and receive push events. In that case, even
-          if the <a>webapp</a> parent window is closed, the <code>PushSubscription</code> object
-          will still enable delivery of <a title="push message">push messages</a>, through the
-          <a>Service Worker</a>. The <a title="push message">push messages</a>, can then be
-          processed by the <a>Service Worker</a>, e.g. including one or more of the following
-          actions:
-        </p>
-        <ul>
-          <li>store the <a title="push message">push messages</a> for later access by the
-          <a>webapp</a> when reinvoked by the user
-          </li>
-          <li>invoke/reconstruct the <a>webapp</a>, a process that is not described here (expected
-          to be clarified in [[!SERVICE-WORKERS]])
-          </li>
-          <li>delivery of the <a title="push message">push messages</a> data to the to the
-          <a>webapp</a> as necessary through other means, e.g. [[webmessaging]].
-          </li>
-        </ul>
-        <p>
-          If a <a>webapp</a> creates a <a>push subscription</a> without using a <a>Service
-          Worker</a>, the <code>PushSubscription</code> object will persist only as long as the
-          <a>webapp</a> window is open.
-        </p>
-      </section>
-      <section>
-        <h3>
-          Push Subscription Uniqueness
-        </h3>
-        <p>
-          Each <a>push subscription</a> is unique, i.e. a single instance specific to each
-          <a>webapp</a> and call to the <code>subscribe</code> interface.
-        </p>
-        <p>
-          <a title="webapp">webapps</a> that create multiple <a title="push subscription">push
-          subscriptions</a> are responsible for mapping the individual subscriptions to specific
-          app functions as necessary. For example, the <a>webapp</a> or <a>webapp server</a> can
-          associate a specific <code>PushSubscription</code> to a particular function of the app
-          through JavaScript.
-        </p>
-      </section>
     </section>
     <section>
       <h2>
         <a>PushSubscription</a> interface
       </h2>
       <p>
-        The <a>PushSubscription</a> interface contains information about a specific channel used by
-        a <a>webapp</a> to receive <a title="push message">push messages</a>.
+        A <a>PushSubscription</a> object represents a <a>push subscription</a>.
       </p>
       <dl title="interface PushSubscription" class="idl">
         <dt>
@@ -649,21 +626,16 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </dt>
       </dl>
       <p>
-        When getting the <code><dfn id="widl-PushSubscription-endpoint">endpoint</dfn></code>
-        attribute, the <a>user agent</a> MUST return the absolute URL exposed by the <a>push
-        server</a> where the <a>webapp server</a> can send <a title="push message">push
-        messages</a> to this <a>webapp</a>. The value of <code>endpoint</code> may be the same for
-        multiple <a title="webapp">webapps</a> / <a>webapp</a> instances running on multiple
-        devices.
+        When getting the <code id=
+        "widl-PushSubscription-endpoint"><strong><em>endpoint</em></strong></code> attribute, the
+        <a>user agent</a> MUST return the <a>endpoint</a> associated with the <a>push
+        subscription</a>.
       </p>
       <p>
         When getting the <code><dfn id=
         "widl-PushSubscription-subscriptionId">subscriptionId</dfn></code> attribute, the <a>user
-        agent</a> MUST return a univocal identifier of this <a>push subscription</a> in the <a>push
-        server</a>. It is used by the <a>webapp server</a> to indicate the target of the <a title=
-        "push message">push messages</a> that it submits to the <a>push server</a>. Each pair of
-        <code>subscriptionId</code> and <code>endpoint</code> is expected to be unique and specific
-        to a particular <a>webapp</a> instance running on a specific device.
+        agent</a> MUST return the <a>subscription id</a> associated with the <a>push
+        subscription</a>.
       </p>
       <p>
         The <code><dfn id=
@@ -675,11 +647,10 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </li>
         <li>Return <var>promise</var> and continue the following steps asynchronously.
         </li>
-        <li>If the <a>webapp</a> is not subscribed, resolve <var>promise</var> with
-        <code>false</code> and terminate these steps.
+        <li>If the <a>push subscription</a> has already been terminated, resolve <var>promise</var>
+        with <code>false</code> and terminate these steps.
         </li>
-        <li>Make a request to the system to deactivate the <a>push subscription</a> associated with
-        the <a>webapp</a>.
+        <li>Make a request to the <a>push server</a> to terminate the <a>push subscription</a>.
         </li>
         <li>If it was not possible to access the <a>push server</a>, reject <var>promise</var> with
         a "<code><a>NetworkError</a></code>" exception and terminate these steps.
@@ -806,8 +777,8 @@ navigator.serviceWorker.register('serviceworker.js').then(
           </dt>
         </dl>
         <p>
-          Upon receiving a <a>push message</a> for a <a>webapp</a> from the <a>push service</a> the
-          <a>user agent</a> MUST run the following steps:
+          Upon receiving a <a>push message</a> for a <a>push subscription</a> from the <a>push
+          service</a> the <a>user agent</a> MUST run the following steps:
         </p>
         <ol>
           <li>If the <a>Service Worker</a> associated with the <a>webapp</a> is not running, start
