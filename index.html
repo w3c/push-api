@@ -217,56 +217,91 @@
     </section>
     <section>
       <h2>
-        Terminology
+        Concepts
       </h2>
-      <p>
-        The term <dfn>webapp</dfn> refers to a Web application, i.e. an application implemented
-        using Web technologies, and executing within the context of a Web <a>user agent</a>, e.g. a
-        Web browser or other Web runtime environment.
-      </p>
-      <p>
-        The term <dfn>webapp server</dfn> refers to server-side components of a <a>webapp</a>.
-      </p>
-      <p>
-        A <dfn>push message</dfn> is an indication to a <a>webapp</a> that there is new information
-        for it from the <a>webapp server</a>, all or part of which MAY be contained in the <a>push
-        message</a> itself.
-      </p>
-      <p>
-        A <dfn>push subscription</dfn> is a message delivery context that is established between
-        the <a>user agent</a> and the <a>push service</a> on behalf of a <a>service worker
-        registration</a>, and it is associated with that <a>service worker registration</a>. A
-        <a>push subscription</a> MUST NOT persist longer than its associated <a>service worker
-        registration</a>, but it MAY be terminated earlier.
-      </p>
-      <p>
-        A <a>push subscription</a> has an associated <dfn>endpoint</dfn>. It MUST be the absolute
-        URL exposed by the <a>push server</a> where the <a>webapp server</a> can send <a title=
-        "push message">push messages</a>. It MAY be the same for all <a title=
-        "push subscription">push subscriptions</a> associated with a <a>push service</a>.
-      </p>
-      <p>
-        A <a>push subscription</a> has an associated <dfn>subscription id</dfn>. It is used by the
-        <a>webapp server</a> to indicate the target of the <a title="push message">push
-        messages</a> that it submits to the <a>push server</a>. Each pair of <a>subscription id</a>
-        and <a>endpoint</a> is expected to be globally unique.
-      </p>
-      <p>
-        The term <dfn>push service</dfn> refers to an overall end-to-end system that allows
-        <a title="webapp server">webapp servers</a> to send <a title="push message">push
-        messages</a> to a <a>webapp</a>.
-      </p>
-      <p>
-        The term <dfn>push server</dfn> refers to the <a>push service</a> access point via which
-        <a title="webapp server">webapp-servers</a> can initiate <a>push message</a> delivery. Push
-        servers typically expose APIs specific to the <a>push service</a>, e.g. for <a>push
-        message</a> delivery initiation.
-      </p>
-      <p>
-        The term <dfn>express permission</dfn> refers to an act by the user, e.g. via user
-        interface or host device platform features, via which the user approves the permission of a
-        <a>webapp</a> to access the Push API.
-      </p>
+      <section>
+        <h2>
+          Application
+        </h2>
+        <p>
+          The term <dfn>webapp</dfn> refers to a Web application, i.e. an application implemented
+          using Web technologies, and executing within the context of a Web <a>user agent</a>, e.g.
+          a Web browser or other Web runtime environment.
+        </p>
+        <p>
+          The term <dfn>webapp server</dfn> refers to server-side components of a <a>webapp</a>.
+        </p>
+      </section>
+      <section>
+        <h2>
+          Push message
+        </h2>
+        <p>
+          A <dfn>push message</dfn> is an indication to a <a>webapp</a> that there is new
+          information for it from the <a>webapp server</a>. All or part of this information MAY be
+          contained in the <a>push message</a> itself.
+        </p>
+        <p>
+          A <a>push message</a> MUST be delivered to the <a>active worker</a> associated with the
+          <a>push subscription</a> to which the message was submitted. If the worker or its
+          <a>webapp</a> is not currently running, the worker must be started to enable delivery.
+        </p>
+      </section>
+      <section>
+        <h2>
+          Push subscription
+        </h2>
+        <p>
+          A <dfn>push subscription</dfn> is a message delivery context established between the
+          <a>user agent</a> and the <a>push service</a> on behalf of a <a>webapp</a>, and
+          associated with the <a>webapp</a>'s <a>service worker registration</a>. A <a>push
+          subscription</a> MUST NOT persist longer than its associated <a>service worker
+          registration</a>, but it MAY be <a>deactivated</a> earlier.
+        </p>
+        <p>
+          When a <a>push subscription</a> is <dfn>deactivated</dfn> both the <a>user agent</a> and
+          the <a>push service</a> MUST delete any stored copies of its details. Further <a title=
+          "push message">push messages</a> for this <a>push subscription</a> MUST NOT be delivered.
+        </p>
+        <p>
+          A <a>push subscription</a> has an associated <dfn>endpoint</dfn>. It MUST be the absolute
+          URL exposed by the <a>push service</a> where the <a>webapp server</a> can send <a title=
+          "push message">push messages</a> to. It MAY be the same for all <a title=
+          "push subscription">push subscriptions</a> associated with a <a>push service</a>.
+        </p>
+        <p>
+          A <a>push subscription</a> has an associated <dfn>subscription id</dfn>. It is used by
+          the <a>webapp server</a> to indicate the target of the <a title="push message">push
+          messages</a> that it submits to the <a>push service</a>. Each pair of <a>subscription
+          id</a> and <a>endpoint</a> MUST be globally unique.
+        </p>
+      </section>
+      <section>
+        <h2>
+          Push service
+        </h2>
+        <p>
+          The term <dfn>push service</dfn> refers to an overall end-to-end system that allows
+          <a title="webapp server">webapp servers</a> to send <a title="push message">push
+          messages</a> to a <a>webapp</a>.
+        </p>
+        <p>
+          The term <dfn>push server</dfn> refers to the <a>push service</a> access point via which
+          <a title="webapp server">webapp-servers</a> can initiate <a>push message</a> delivery.
+          Push servers typically expose APIs specific to the <a>push service</a>, e.g. for <a>push
+          message</a> delivery initiation.
+        </p>
+      </section>
+      <section>
+        <h2>
+          Permission
+        </h2>
+        <p>
+          The term <dfn>express permission</dfn> refers to an act by the user, e.g. via user
+          interface or host device platform features, via which the user approves the permission of
+          a <a>webapp</a> to access the Push API.
+        </p>
+      </section>
     </section>
     <section>
       <h2>
@@ -282,15 +317,18 @@
       </p>
       <p>
         When a permission is revoked, all <a title="push subscription">push subscriptions</a>
-        created with that permission MUST be terminated.
+        created with that permission MUST be <a>deactivated</a>.
       </p>
       <p>
         When a <a>service worker registration</a> is unregistered, any associated <a>push
-        subscription</a> MUST be terminated.
+        subscription</a> MUST be <a>deactivated</a>.
       </p>
       <p>
-        The <a>subscription id</a> of a terminated <a>push subscription</a> MUST never be reused
-        for a new <a>push subscription</a>.
+        The <a>subscription id</a> of a <a>deactivated</a> <a>push subscription</a> MUST NOT be
+        reused for a new <a>push subscription</a>. This prevents the creation of a persistent
+        identifier that the user cannot remove. This also prevents reuse of the details of one
+        <a>push subscription</a> to send <a title="push message">push messages</a> to another
+        <a>push subscription</a>.
       </p>
       <p>
         <a title="user agent">User agents</a> MUST implement the Push API to be HTTPS-only.
@@ -647,10 +685,11 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </li>
         <li>Return <var>promise</var> and continue the following steps asynchronously.
         </li>
-        <li>If the <a>push subscription</a> has already been terminated, resolve <var>promise</var>
-        with <code>false</code> and terminate these steps.
+        <li>If the <a>push subscription</a> has already been <a>deactivated</a>, resolve
+        <var>promise</var> with <code>false</code> and terminate these steps.
         </li>
-        <li>Make a request to the <a>push server</a> to terminate the <a>push subscription</a>.
+        <li>Make a request to the <a>push server</a> to <a title="deactivated">deactivate</a> the
+        <a>push subscription</a>.
         </li>
         <li>If it was not possible to access the <a>push server</a>, reject <var>promise</var> with
         a "<code><a>NetworkError</a></code>" exception and terminate these steps.
