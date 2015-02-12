@@ -283,13 +283,9 @@
         <p>
           The term <dfn>push service</dfn> refers to an overall end-to-end system that allows
           <a title="webapp server">webapp servers</a> to send <a title="push message">push
-          messages</a> to a <a>webapp</a>.
-        </p>
-        <p>
-          The term <dfn>push server</dfn> refers to the <a>push service</a> access point via which
-          <a title="webapp server">webapp-servers</a> can initiate <a>push message</a> delivery.
-          Push servers typically expose APIs specific to the <a>push service</a>, e.g. for <a>push
-          message</a> delivery initiation.
+          messages</a> to a <a>webapp</a>. A push service has a server reachable at an associated
+          endpoint. Such servers typically expose APIs specific to the <a>push service</a>, e.g.
+          for <a>push message</a> delivery initiation.
         </p>
       </section>
       <section>
@@ -349,9 +345,9 @@
       <ul>
         <li>
           <a title="webapp server">Webapp servers</a> request delivery of a <a>push message</a> to
-          a <a>webapp</a> via a RESTful API exposed by a <a>push server</a>
+          a <a>webapp</a> via a RESTful API exposed by a <a>push service</a>
         </li>
-        <li>The <a>push server</a> delivers the message to a specific <a>user agent</a>
+        <li>The <a>push service</a> delivers the message to a specific <a>user agent</a>
         </li>
         <li>The <a>user agent</a> delivers the <a>push message</a> to the specific <a>webapp</a>
         intended to receive it.
@@ -422,69 +418,68 @@ navigator.serviceWorker.register('serviceworker.js').then(
       </section>
       <section>
         <h3>
-          Push Server Discovery and API Use
+          Push Service Discovery and API Use
         </h3>
         <p>
           This specification does not define either specific normative methods via which webapps
-          can determine the applicable push system, or initiate push requests through that system
-          via a push server API. While these limitations add complexity for webapp developers, they
-          reflect the current reality of a diversity of push systems, for which convergence at
-          least in push server APIs, is not expected to be a short-term possibility. While a
-          converged push server API is a worthwhile goal and may be addressed in a different
+          can determine the applicable push service, or initiate push requests through that service
+          via a push service API. While these limitations add complexity for webapp developers,
+          they reflect the current reality of a diversity of push services, for which convergence
+          at least on an API level, is not expected to be a short-term possibility. While a
+          converged push service API is a worthwhile goal and may be addressed in a different
           specification, the Push API defined here has been designed to enable the current variety
-          of push systems to be used as appropriate for the webapp host device or software
+          of push services to be used as appropriate for the webapp host device or software
           platform. This section provides examples of how a webapp can be designed to work with a
-          variety of hypothetical push systems as needed.
+          variety of hypothetical push services as needed.
         </p>
         <p>
           The Push API provides several interface parameters and attributes that can enable a
-          webapp to deliver and obtain the necessary push system specific data enabling use of that
-          particular push system. These parameters and attributes include:
+          webapp to deliver and obtain the necessary push service specific data enabling use of
+          that particular push service. These parameters and attributes include:
         </p>
         <ul>
           <li>The <code>subscriptionId</code> of a <code>PushSubscription</code>, as an opaque
-          string to the Push API, may be used by push systems to provide meaningful data to the <a>
-            webapp server</a> through the webapp. For example, the <code>subscriptionId</code> may
-            be used as a push server API request parameter or request body element for specific
-            push systems.
+          string to the Push API, may be used by push services to provide meaningful data to the
+          <a>webapp server</a> through the webapp. For example, the <code>subscriptionId</code> may
+          be used as a push service API request parameter or request body element.
           </li>
           <li>As a URI, the <code>endpoint</code> of a <code>PushSubscription</code> provides a
-          flexible means for push systems to deliver webapp-specific subscription and/or push
-          server API parameters to the <a>webapp server</a>, through the webapp.
+          flexible means for push services to deliver webapp-specific subscription and/or push
+          service API parameters to the <a>webapp server</a>, through the webapp.
           </li>
         </ul>
         <p>
-          Push systems that are compatible with the Push API will be expected to clarify how these
-          data are used in the push server APIs of the specific system, e.g. through their
-          developer programs. Examples of considerations include:
+          Push services that are compatible with the Push API will be expected to clarify how these
+          data are used in their APIs, e.g. through their developer programs. Examples of
+          considerations include:
         </p>
         <ul>
-          <li>The URI used by the <a>webapp server</a> to issue push server API requests, which may
-          be based upon the <code>endpoint</code>, and for a particular push server API request
-          require additional parameters e.g. the <code>subscriptionId</code>.
+          <li>The URI used by the <a>webapp server</a> to issue push service API requests, which
+          may be based upon the <code>endpoint</code>, and for a particular API request require
+          additional parameters e.g. the <code>subscriptionId</code>.
           </li>
-          <li>The push server API request body, which may require that the <code>endpoint</code> or
-          <code>subscriptionId</code> be present in some body element.
+          <li>The push service API request body, which may require that the <code>endpoint</code>
+          or <code>subscriptionId</code> be present in some body element.
           </li>
           <li>The <code>PushSubscription</code> attributes may only be used by the <a>webapp
           server</a> to associate the webapp to a specific push service subscription, with the
-          details of the push server API relying upon other pre-configured data.
+          details of the push service API relying upon other pre-configured data.
           </li>
         </ul>
         <p>
           The Push API does not provide any <code>PushSubscription</code> attributes that
-          normatively identify the particular push system that applies to the subscription. Webapps
-          that are designed to work with a single push system are assumed to know inherently how to
-          use the push server API of that system. For such webapps, a key consideration is ensuring
-          that if the webapp is used on a device or browser that does not support the necessary
-          push system, that either the user is informed that the push-dependent webapp functions
-          will not work, or the webapp must use alternate methods e.g. [[websockets]] or [[SSE]] to
-          deliver the server-initiated data.
+          normatively identify the particular push service that applies to the subscription.
+          Webapps that are designed to work with a single push service are assumed to know
+          inherently how to use the API of that service. For such webapps, a key consideration is
+          ensuring that if the webapp is used on a device or browser that does not support the
+          necessary push service, that either the user is informed that the push-dependent webapp
+          functions will not work, or the webapp must use alternate methods e.g. [[websockets]] or
+          [[SSE]] to deliver the server-initiated data.
         </p>
         <p>
-          Prior to use of a push server API, <a title="webapp server">webapp servers</a> that are
-          designed to work with multiple push systems may need to determine the applicable system
-          by parsing the <code>endpoint</code> to detect the push system from the URI domain.
+          Prior to use of a push service API, <a title="webapp server">webapp servers</a> that are
+          designed to work with multiple push services may need to determine the applicable service
+          by parsing the <code>endpoint</code> to detect the push service from the URI domain.
         </p>
       </section>
     </section>
@@ -583,8 +578,8 @@ navigator.serviceWorker.register('serviceworker.js').then(
             </li>
           </ol>
         </li>
-        <li>Make a request to the system to create a new <a>push subscription</a> for the
-        <a>webapp</a>.
+        <li>Make a request to the push service to create a new <a>push subscription</a> for the <a>
+          webapp</a>.
         </li>
         <li>If there is an error, reject <var>promise</var> with a <code><a>DOMException</a></code>
         whose name is "<code><a>AbortError</a></code>" and terminate these steps.
@@ -688,11 +683,11 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <li>If the <a>push subscription</a> has already been <a>deactivated</a>, resolve
         <var>promise</var> with <code>false</code> and terminate these steps.
         </li>
-        <li>Make a request to the <a>push server</a> to <a title="deactivated">deactivate</a> the
+        <li>Make a request to the <a>push service</a> to <a title="deactivated">deactivate</a> the
         <a>push subscription</a>.
         </li>
-        <li>If it was not possible to access the <a>push server</a>, reject <var>promise</var> with
-        a "<code><a>NetworkError</a></code>" exception and terminate these steps.
+        <li>If it was not possible to access the <a>push service</a>, reject <var>promise</var>
+        with a "<code><a>NetworkError</a></code>" exception and terminate these steps.
         </li>
         <li>When the request has been completed, resolve <var>promise</var> with <code>true</code>.
         </li>
