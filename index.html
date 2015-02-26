@@ -77,10 +77,10 @@
         The <cite>Push API</cite> provides <a title="webapp">webapps</a> with scripted access to
         server-sent messages, for simplicity referred to here as <a title="push message">push
         messages</a>, as delivered by <a title="push service">push services</a>. A <a>push
-        service</a> allows a <a>webapp server</a> to send messages to a <a>webapp</a>, regardless
-        of whether the <a>webapp</a> is currently active on the <a>user agent</a>. The <a>push
-        message</a> will be delivered to a <a>Service Worker</a>, which could then store the
-        message's data or display a notification to the user.
+        service</a> allows an <a>application server</a> to send messages to a <a>webapp</a>,
+        regardless of whether the <a>webapp</a> is currently active on the <a>user agent</a>. The
+        <a>push message</a> will be delivered to a <a>Service Worker</a>, which could then store
+        the message's data or display a notification to the user.
       </p>
       <p>
         This specification is designed to promote compatibility with any delivery method for
@@ -94,8 +94,8 @@
         Introduction
       </h2>
       <p>
-        As defined here, <a title="push service">push services</a> support delivery of <a>webapp
-        server</a> messages in the following contexts and related use cases:
+        As defined here, <a title="push service">push services</a> support delivery of
+        <a>application server</a> messages in the following contexts and related use cases:
       </p>
       <ul>
         <li>the user is actively involved in the use of a <a>webapp</a>: this relates to any normal
@@ -229,7 +229,8 @@
           a Web browser or other Web runtime environment.
         </p>
         <p>
-          The term <dfn>webapp server</dfn> refers to server-side components of a <a>webapp</a>.
+          The term <dfn>application server</dfn> refers to server-side components of a
+          <a>webapp</a>.
         </p>
       </section>
       <section>
@@ -238,8 +239,8 @@
         </h2>
         <p>
           A <dfn>push message</dfn> is an indication to a <a>webapp</a> that there is new
-          information for it from the <a>webapp server</a>. All or part of this information MAY be
-          contained in the <a>push message</a> itself.
+          information for it from the <a>application server</a>. All or part of this information
+          MAY be contained in the <a>push message</a> itself.
         </p>
         <p>
           A <a>push message</a> MUST be delivered to the <a>active worker</a> associated with the
@@ -265,13 +266,13 @@
         </p>
         <p>
           A <a>push subscription</a> has an associated <dfn>endpoint</dfn>. It MUST be the absolute
-          URL exposed by the <a>push service</a> where the <a>webapp server</a> can send <a title=
-          "push message">push messages</a> to. It MAY be the same for all <a title=
+          URL exposed by the <a>push service</a> where the <a>application server</a> can send
+          <a title="push message">push messages</a> to. It MAY be the same for all <a title=
           "push subscription">push subscriptions</a> associated with a <a>push service</a>.
         </p>
         <p>
           A <a>push subscription</a> has an associated <dfn>subscription id</dfn>. It is used by
-          the <a>webapp server</a> to indicate the target of the <a title="push message">push
+          the <a>application server</a> to indicate the target of the <a title="push message">push
           messages</a> that it submits to the <a>push service</a>. Each pair of <a>subscription
           id</a> and <a>endpoint</a> MUST be globally unique.
         </p>
@@ -282,10 +283,10 @@
         </h2>
         <p>
           The term <dfn>push service</dfn> refers to an overall end-to-end system that allows
-          <a title="webapp server">webapp servers</a> to send <a title="push message">push
-          messages</a> to a <a>webapp</a>. A push service has a server reachable at an associated
-          endpoint. Such servers typically expose APIs specific to the <a>push service</a>, e.g.
-          for <a>push message</a> delivery initiation.
+          <a title="application server">application servers</a> to send <a title=
+          "push message">push messages</a> to a <a>webapp</a>. A push service has a server
+          reachable at an associated endpoint. Such servers typically expose APIs specific to the
+          <a>push service</a>, e.g. for <a>push message</a> delivery initiation.
         </p>
       </section>
       <section>
@@ -344,8 +345,8 @@
       </p>
       <ul>
         <li>
-          <a title="webapp server">Webapp servers</a> request delivery of a <a>push message</a> to
-          a <a>webapp</a> via a RESTful API exposed by a <a>push service</a>
+          <a title="application server">Application servers</a> request delivery of a <a>push
+          message</a> to a <a>webapp</a> via a RESTful API exposed by a <a>push service</a>
         </li>
         <li>The <a>push service</a> delivers the message to a specific <a>user agent</a>
         </li>
@@ -354,10 +355,9 @@
         </li>
       </ul>
       <p>
-        This overall framework allows <a title="webapp server">webapp servers</a> to inform
-        <a title="webapp">webapps</a> that new data is available at the <a title=
-        "webapp server">webapp server</a>, or pass the new data directly to the <a>webapp</a> in
-        the <a>push message</a>.
+        This overall framework allows <a title="application server">application servers</a> to
+        inform <a title="webapp">webapps</a> that new data is available at the <a>application
+        server</a>, or pass the new data directly to the <a>webapp</a> in the <a>push message</a>.
       </p>
       <p>
         The push API enables delivery of arbitrary application data to <a title=
@@ -440,12 +440,13 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <ul>
           <li>The <code>subscriptionId</code> of a <code>PushSubscription</code>, as an opaque
           string to the Push API, may be used by push services to provide meaningful data to the
-          <a>webapp server</a> through the webapp. For example, the <code>subscriptionId</code> may
-          be used as a push service API request parameter or request body element.
+          <a>application server</a> through the webapp. For example, the
+          <code>subscriptionId</code> may be used as a push service API request parameter or
+          request body element.
           </li>
           <li>As a URI, the <code>endpoint</code> of a <code>PushSubscription</code> provides a
           flexible means for push services to deliver webapp-specific subscription and/or push
-          service API parameters to the <a>webapp server</a>, through the webapp.
+          service API parameters to the <a>application server</a>, through the webapp.
           </li>
         </ul>
         <p>
@@ -454,14 +455,14 @@ navigator.serviceWorker.register('serviceworker.js').then(
           considerations include:
         </p>
         <ul>
-          <li>The URI used by the <a>webapp server</a> to issue push service API requests, which
-          may be based upon the <code>endpoint</code>, and for a particular API request require
-          additional parameters e.g. the <code>subscriptionId</code>.
+          <li>The URI used by the <a>application server</a> to issue push service API requests,
+          which may be based upon the <code>endpoint</code>, and for a particular API request
+          require additional parameters e.g. the <code>subscriptionId</code>.
           </li>
           <li>The push service API request body, which may require that the <code>endpoint</code>
           or <code>subscriptionId</code> be present in some body element.
           </li>
-          <li>The <code>PushSubscription</code> attributes may only be used by the <a>webapp
+          <li>The <code>PushSubscription</code> attributes may only be used by the <a>application
           server</a> to associate the webapp to a specific push service subscription, with the
           details of the push service API relying upon other pre-configured data.
           </li>
@@ -477,9 +478,10 @@ navigator.serviceWorker.register('serviceworker.js').then(
           [[SSE]] to deliver the server-initiated data.
         </p>
         <p>
-          Prior to use of a push service API, <a title="webapp server">webapp servers</a> that are
-          designed to work with multiple push services may need to determine the applicable service
-          by parsing the <code>endpoint</code> to detect the push service from the URI domain.
+          Prior to use of a push service API, <a title="application server">application servers</a>
+          that are designed to work with multiple push services may need to determine the
+          applicable service by parsing the <code>endpoint</code> to detect the push service from
+          the URI domain.
         </p>
       </section>
     </section>
