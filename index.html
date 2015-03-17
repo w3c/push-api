@@ -401,7 +401,6 @@ navigator.serviceWorker.register('serviceworker.js').then(
   function(serviceWorkerRegistration) {
     serviceWorkerRegistration.pushManager.subscribe().then(
       function(pushSubscription) {
-        console.log(pushSubscription.subscriptionId);
         console.log(pushSubscription.endpoint);
         // The push subscription details needed by the application
         // server are now available, and can be sent to it using,
@@ -421,6 +420,9 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <h2>
           Sequence diagram
         </h2>
+        <p class="issue">
+          This needs updating and there is no source in the repo (naughty).
+        </p>
         <figure>
           <a href="sequence_diagram.png"><img src="sequence_diagram.png" width="800" alt=
           "Example flow of events for subscription, message delivery, and unsubscription"></a>
@@ -431,71 +433,21 @@ navigator.serviceWorker.register('serviceworker.js').then(
       </section>
       <section>
         <h3>
-          Push Service Discovery and API Use
+          Push API Use
         </h3>
         <p>
-          This specification does not define either specific normative methods via which webapps
-          can determine the applicable push service, or initiate push requests through that service
-          via a push service API. While these limitations add complexity for webapp developers,
-          they reflect the current reality of a diversity of push services, for which convergence
-          at least on an API level, is not expected to be a short-term possibility. While a
-          converged push service API is a worthwhile goal and may be addressed in a different
-          specification, the Push API defined here has been designed to enable the current variety
-          of push services to be used as appropriate for the webapp host device or software
-          platform. This section provides examples of how a webapp can be designed to work with a
-          variety of hypothetical push services as needed.
-        </p>
-        <p>
-          The Push API provides several interface parameters and attributes that can enable a
-          webapp to deliver and obtain the necessary push service specific data enabling use of
-          that particular push service. These parameters and attributes include:
+          The fields included in the <code>PushSubscription</code> is all the information needed for
+          an <a>application server</a> to send a <a>push message</a>. Push services that are
+          compatible with the Push API will be expected to provide an <a>endpoint</a> that conforms
+          to <em>TODO: refer to IETF spec</em>.  These parameters and attributes include:
         </p>
         <ul>
-          <li>The <code>subscriptionId</code> of a <code>PushSubscription</code>, as an opaque
-          string to the Push API, may be used by push services to provide meaningful data to the
-          <a>application server</a> through the webapp. For example, the
-          <code>subscriptionId</code> may be used as a push service API request parameter or
-          request body element.
+          <li>The <code><a>endpoint</a></code> of a <code>PushSubscription</code> is a URI that
+          allows an <a>application server</a> to request delivery of a <a>push message</a> to
+          a <a>webapp</a> subscription.
           </li>
-          <li>As a URI, the <code>endpoint</code> of a <code>PushSubscription</code> provides a
-          flexible means for push services to deliver webapp-specific subscription and/or push
-          service API parameters to the <a>application server</a>, through the webapp.
-          </li>
+          <li><em>TODO: More fields to add.</em></li>
         </ul>
-        <p>
-          Push services that are compatible with the Push API will be expected to clarify how these
-          data are used in their APIs, e.g. through their developer programs. Examples of
-          considerations include:
-        </p>
-        <ul>
-          <li>The URI used by the <a>application server</a> to issue push service API requests,
-          which may be based upon the <code>endpoint</code>, and for a particular API request
-          require additional parameters e.g. the <code>subscriptionId</code>.
-          </li>
-          <li>The push service API request body, which may require that the <code>endpoint</code>
-          or <code>subscriptionId</code> be present in some body element.
-          </li>
-          <li>The <code>PushSubscription</code> attributes may only be used by the <a>application
-          server</a> to associate the webapp to a specific push service subscription, with the
-          details of the push service API relying upon other pre-configured data.
-          </li>
-        </ul>
-        <p>
-          The Push API does not provide any <code>PushSubscription</code> attributes that
-          normatively identify the particular push service that applies to the subscription.
-          Webapps that are designed to work with a single push service are assumed to know
-          inherently how to use the API of that service. For such webapps, a key consideration is
-          ensuring that if the webapp is used on a device or browser that does not support the
-          necessary push service, that either the user is informed that the push-dependent webapp
-          functions will not work, or the webapp must use alternate methods e.g. [[websockets]] or
-          [[SSE]] to deliver the server-initiated data.
-        </p>
-        <p>
-          Prior to use of a push service API, <a title="application server">application servers</a>
-          that are designed to work with multiple push services may need to determine the
-          applicable service by parsing the <code>endpoint</code> to detect the push service from
-          the URI domain.
-        </p>
       </section>
     </section>
     <section>
