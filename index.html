@@ -641,9 +641,6 @@ navigator.serviceWorker.register('serviceworker.js').then(
           readonly attribute USVString endpoint
         </dt>
         <dt>
-          readonly attribute DOMString subscriptionId
-        </dt>
-        <dt>
           Promise&lt;boolean&gt; unsubscribe ()
         </dt>
       </dl>
@@ -651,12 +648,6 @@ navigator.serviceWorker.register('serviceworker.js').then(
         When getting the <code id=
         "widl-PushSubscription-endpoint"><strong><em>endpoint</em></strong></code> attribute, the
         <a>user agent</a> MUST return the <a>endpoint</a> associated with the <a>push
-        subscription</a>.
-      </p>
-      <p>
-        When getting the <code><dfn id=
-        "widl-PushSubscription-subscriptionId">subscriptionId</dfn></code> attribute, the <a>user
-        agent</a> MUST return the <a>subscription id</a> associated with the <a>push
         subscription</a>.
       </p>
       <p>
