@@ -433,6 +433,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
     serviceWorkerRegistration.pushManager.subscribe().then(
       function(pushSubscription) {
         console.log(pushSubscription.endpoint);
+        console.log(pushSubscription.p256dh);
         // The push subscription details needed by the application
         // server are now available, and can be sent to it using,
         // for example, an XMLHttpRequest.
@@ -465,14 +466,26 @@ navigator.serviceWorker.register('serviceworker.js').then(
           Push service use
         </h3>
         <p>
-          A <code>PushSubscription</code> contains all the information needed to send a <a>push
-          message</a>. A <a>push message</a> can be delivered using the <a>web push protocol</a>.
+          The fields included in the <code>PushSubscription</code> is all the information needed for
+          an <a>application server</a> to send a <a>push message</a>. Push services that are
+          compatible with the Push API will be expected to provide an <a>endpoint</a> that conforms
+          to the <a>web push protocol</a>.  These parameters and attributes include:
         </p>
-        <p>
-          The <code><a>endpoint</a></code> of a <code>PushSubscription</code> is a URI that allows
-          an <a>application server</a> to request delivery of a <a>push message</a> to a <a>push
-          subscription</a>.
-        </p>
+        <ul>
+          <li>
+            The <code><a>endpoint</a></code> of a <code>PushSubscription</code> is a URI that allows
+            an <a>application server</a> to request delivery of a <a>push message</a> to
+            a <a>webapp</a>.
+          </li>
+          <li>
+            The <code>p256dh</code> of a <code>PushSubscription</code> contains the P-256 public
+            <dfn id="ECDH">elliptic curve Diffie-Hellman (ECDH)</dfn> key associated with
+            the <a>push subscription</a>.  This key is used by the <a>application server</a> to
+            encipher messages for the <a>push subscription</a>, as described
+            in <a href="https://tools.ietf.org/html/draft-thomson-webpush-encryption">TODO cite the
+            spec</a>.
+          </li>
+        </ul>
       </section>
     </section>
     <section>
@@ -576,6 +589,10 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <li>If there is an error, reject <var>promise</var> with a <code><a>DOMException</a></code>
         whose name is "<code><a>AbortError</a></code>" and terminate these steps.
         </li>
+        <li>Generate a new P-256 <a>ECDH</a> key pair.  Store the private key in an internal slot
+        associated with the subscription; this value MUST NOT be made available to applications.
+        Store the public key in the <code>p256dh</code> field of the subscription.
+        </li>
         <li>When the request has been completed, resolve <var>promise</var> with a
         <a><code>PushSubscription</code></a> providing the details of the new <a>push
         subscription</a>.
@@ -667,6 +684,9 @@ navigator.serviceWorker.register('serviceworker.js').then(
           readonly attribute USVString endpoint
         </dt>
         <dt>
+          readonly attribute ArrayBuffer p256dh
+        </dt>
+        <dt>
           Promise&lt;boolean&gt; unsubscribe ()
         </dt>
         <dt>
@@ -678,6 +698,12 @@ navigator.serviceWorker.register('serviceworker.js').then(
         "widl-PushSubscription-endpoint"><strong><em>endpoint</em></strong></code> attribute, the
         <a>user agent</a> MUST return the <a>endpoint</a> associated with the <a>push
         subscription</a>.
+      </p>
+      <p>
+        When getting the <code id=
+        "widl-PushSubscription-p256dh"><strong><em>p256dh</em></strong></code> attribute, the
+        <a>user agent</a> MUST return the P-256 ECDH public key associated with the <a>push
+        subscription</a> that is used for decrypting messages.
       </p>
       <p>
         The <code><dfn id=
@@ -832,10 +858,29 @@ navigator.serviceWorker.register('serviceworker.js').then(
           <li>Let <var>scope</var> be the <code>ServiceWorkerGlobalScope</code> of the <a>Service
           Worker</a> associated with the <a>webapp</a>.
           </li>
-          <li>Let <var>event</var> be a new <a>PushEvent</a>, whose <code id="widl-PushEvent-data">
-            data</code> attribute is a new <a>PushMessageData</a> with <a>bytes</a> set to the
-            binary message data received by the <a>user agent</a> in the <a>push message</a>, or an
-            empty byte sequence if no data was received.
+          <li>
+            Let <var>subscription</var> be the active <a>push subscription</a> for the <a>Service
+            Worker</a>.
+          </li>
+          <li>
+            Decrypt the <a>push message</a> using the private key from the key pair associated
+            with <var>subscription</var> and the process described
+            in <a href="https://tools.ietf.org/html/draft-thomson-webpush-encryption">TODO:
+            cite</a>.  This produces the plain text of the message.
+          </li>
+          <li>
+            If the <a>push message</a> could not be decrypted for any reason, or if it is not
+            encrypted, discard the message and terminate this process.  A <code>push</code> event
+            MUST NOT be fired for a <a>push message</a> that was not successfully decrypted using
+            the key pair associated with the <a>push subscription</a>.
+          </li>
+          <li>
+            Let <var>pushdata</var> be the decrypted plain text of the <a>push message</a>.
+          </li>
+          <li>
+            Let <var>event</var> be a new <a>PushEvent</a>, whose <code id="widl-PushEvent-data">
+            data</code> attribute is a new <a>PushMessageData</a> with <a>bytes</a> set to
+            the value of <var>pushdata</var>.
           </li>
           <li>
             <a>Queue a task</a> to <a data-lt="fire a simple event">fire <var>event</var> as a
