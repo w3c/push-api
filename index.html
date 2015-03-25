@@ -703,7 +703,8 @@ navigator.serviceWorker.register('serviceworker.js').then(
         When getting the <code id=
         "widl-PushSubscription-p256dh"><strong><em>p256dh</em></strong></code> attribute, the
         <a>user agent</a> MUST return the P-256 ECDH public key associated with the <a>push
-        subscription</a> that is used for decrypting messages.
+        subscription</a> that is used by the application server to encrypt <a title="push
+        message">push messages</a>.
       </p>
       <p>
         The <code><dfn id=
@@ -870,9 +871,10 @@ navigator.serviceWorker.register('serviceworker.js').then(
           </li>
           <li>
             If the <a>push message</a> could not be decrypted for any reason, or if it is not
-            encrypted, discard the message and terminate this process.  A <code>push</code> event
-            MUST NOT be fired for a <a>push message</a> that was not successfully decrypted using
-            the key pair associated with the <a>push subscription</a>.
+            encrypted and contains any payload, discard the message and terminate this process.  A
+            push message MAY be empty if it contains no content, but otherwise <code>push</code>
+            event MUST NOT be fired for a <a>push message</a> that was not successfully decrypted
+            using the key pair associated with the <a>push subscription</a>.
           </li>
           <li>
             Let <var>pushdata</var> be the decrypted plain text of the <a>push message</a>.
