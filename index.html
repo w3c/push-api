@@ -68,6 +68,18 @@
               ]
             },
           ],
+
+          localBiblio: {
+            "NOTIFICATIONS": {
+              title: "Notifications API",
+              href: "https://notifications.spec.whatwg.org/",
+              authors: [
+                "Anne van Kesteren",
+              ],
+              status: "Living Standard",
+              publisher: "WHATWG"
+            }
+          },
       };
     </script>
   </head>
@@ -313,6 +325,10 @@
         preserved beyond the current browsing session MUST be revocable.
       </p>
       <p>
+        The <a>user agent</a> MAY consider the <code><a>PushSubscriptionOptions</a></code>
+        when acquiring permission or determining the permission status.
+      </p>
+      <p>
         When a permission is revoked, all <a title="push subscription">push subscriptions</a>
         created with that permission MUST be <a>deactivated</a>.
       </p>
@@ -515,13 +531,13 @@ navigator.serviceWorker.register('serviceworker.js').then(
       </p>
       <dl title="interface PushManager" class="idl">
         <dt>
-          Promise&lt;PushSubscription&gt; subscribe ()
+          Promise&lt;PushSubscription&gt; subscribe (optional PushSubscriptionOptions options)
         </dt>
         <dt>
           Promise&lt;PushSubscription?&gt; getSubscription ()
         </dt>
         <dt>
-          Promise&lt;PushPermissionStatus&gt; hasPermission ()
+          Promise&lt;PushPermissionStatus&gt; hasPermission (optional PushSubscriptionOptions options)
         </dt>
       </dl>
       <p>
@@ -624,7 +640,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <li>Return <var>promise</var> and continue the following steps asynchronously.
         </li>
         <li>Retrieve the push permission status (<a><code>PushPermissionStatus</code></a>) of the
-        requesting <a>webapp</a>
+        requesting <a>webapp</a>.
         </li>
         <li>If there is an error, reject <var>promise</var> with no arguments and terminate these
         steps.
@@ -641,6 +657,28 @@ navigator.serviceWorker.register('serviceworker.js').then(
         If there is a need to ask for permission, it needs to be done by invoking the
         <a><code>subscribe</code></a> method.
       </p>
+      <section>
+        <h2>
+          <a>PushSubscriptionOptions</a> dictionary
+        </h2>
+        <p>
+          A <a>PushSubscriptionOptions</a> object represents additional options associated with a
+          <a>push subscription</a>. The <a>user agent</a> MAY consider these options when requesting
+          <a>express permission</a> from the user. When an option is considered, the <a>user
+          agent</a> SHOULD enforce it on incoming <a title="push message">push messages</a>.
+        </p>
+        <dl title="dictionary PushSubscriptionOptions" class="idl">
+          <dt>
+            boolean userVisible = false
+          </dt>
+        </dl>
+        <p>
+          The <code><dfn id="widl-PushSubscriptionOptions-userVisible">userVisible</dfn></code>
+          option, when set to <code>true</code>, indicates that the <a>push subscription</a> will
+          only be used for <a title="push message">push messages</a> whose effect is made visible
+          to the user, for example by displaying a Web Notification. [[NOTIFICATIONS]]
+        </p>
+      </section>
     </section>
     <section>
       <h2>
