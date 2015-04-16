@@ -226,6 +226,14 @@
         "http://heycam.github.io/webidl/#idl-USVString"><dfn>USVString</dfn></a></code> are defined
         in [[!WEBIDL]].
       </p>
+      <p>
+        The <dfn><a href="http://datatracker.ietf.org/doc/draft-thomson-webpush-protocol/">web push
+        protocol</a></dfn> describes a protocol that enables communication between a <a>user
+        agent</a> or <a>application server</a> and a <a>push service</a>.  Alternative protocols
+        could be used in place of this protocol, but this specification assumes the use of this
+        protocol; alternative protocols are expected to provide compatible semantics.  Note: this is
+        currently only a proposed protocol.
+      </p>
     </section>
     <section>
       <h2>
@@ -420,34 +428,30 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <h2>
           Sequence diagram
         </h2>
-        <p class="issue">
-          This needs updating and there is no source in the repo (naughty).
-        </p>
         <figure>
-          <a href="sequence_diagram.png"><img src="sequence_diagram.png" width="800" alt=
-          "Example flow of events for subscription, message delivery, and unsubscription"></a>
+          <a href="sequence_diagram.png">
+            <img src="sequence_diagram.png"
+                 width="795" height="870"
+                 alt="Example flow of events for subscription, push message delivery, and unsubscription">
+          </a>
           <figcaption>
-            Example flow of events for subscription, message delivery, and unsubscription
+            Example flow of events for subscription, push message delivery, and unsubscription
           </figcaption>
         </figure>
       </section>
       <section>
         <h3>
-          Push API Use
+          Push service use
         </h3>
         <p>
-          The fields included in the <code>PushSubscription</code> is all the information needed for
-          an <a>application server</a> to send a <a>push message</a>. Push services that are
-          compatible with the Push API will be expected to provide an <a>endpoint</a> that conforms
-          to <em>TODO: refer to IETF spec</em>.  These parameters and attributes include:
+          A <code>PushSubscription</code> contains all the information needed to send a <a>push
+          message</a>.  A <a>push message</a> can be delivered using the <a>web push protocol</a>.
         </p>
-        <ul>
-          <li>The <code><a>endpoint</a></code> of a <code>PushSubscription</code> is a URI that
-          allows an <a>application server</a> to request delivery of a <a>push message</a> to
-          a <a>webapp</a> subscription.
-          </li>
-          <li><em>TODO: More fields to add.</em></li>
-        </ul>
+        <p>
+          The <code><a>endpoint</a></code> of a <code>PushSubscription</code> is a URI that allows
+          an <a>application server</a> to request delivery of a <a>push message</a> to a <a>push
+          subscription</a>.
+        </p>
       </section>
     </section>
     <section>
