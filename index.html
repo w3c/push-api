@@ -226,6 +226,14 @@
         "http://heycam.github.io/webidl/#idl-USVString"><dfn>USVString</dfn></a></code> are defined
         in [[!WEBIDL]].
       </p>
+      <p>
+        The <dfn><a href="http://datatracker.ietf.org/doc/draft-thomson-webpush-protocol/">web push
+        protocol</a></dfn> describes a protocol that enables communication between a <a>user
+        agent</a> or <a>application server</a> and a <a>push service</a>.  Alternative protocols
+        could be used in place of this protocol, but this specification assumes the use of this
+        protocol; alternative protocols are expected to provide compatible semantics.  Note: this is
+        currently only a proposed protocol.
+      </p>
     </section>
     <section>
       <h2>
@@ -267,26 +275,23 @@
         <p>
           A <dfn>push subscription</dfn> is a message delivery context established between the
           <a>user agent</a> and the <a>push service</a> on behalf of a <a>webapp</a>, and
-          associated with the <a>webapp</a>'s <a>service worker registration</a>. A <a>push
-          subscription</a> MUST NOT persist longer than its associated <a>service worker
-          registration</a>, but it MAY be <a>deactivated</a> earlier.
+          associated with the <a>webapp</a>'s <a>service worker registration</a>.
         </p>
         <p>
-          When a <a>push subscription</a> is <dfn>deactivated</dfn> both the <a>user agent</a> and
-          the <a>push service</a> MUST delete any stored copies of its details. Further <a title=
+          When a <a>push subscription</a> is <dfn>deactivated</dfn>, both the <a>user agent</a> and
+          the <a>push service</a> MUST delete any stored copies of its details. Subsequent <a title=
           "push message">push messages</a> for this <a>push subscription</a> MUST NOT be delivered.
+        </p>
+        <p>
+          A <a>push subscription</a> is <a>deactivated</a> when its associated <a>service worker
+          registration</a> is unregistered, though a <a>push subscription</a> MAY
+          be <a>deactivated</a> earlier.
         </p>
         <p>
           A <a>push subscription</a> has an associated <dfn>endpoint</dfn>. It MUST be the absolute
           URL exposed by the <a>push service</a> where the <a>application server</a> can send
-          <a title="push message">push messages</a> to. It MAY be the same for all <a title=
-          "push subscription">push subscriptions</a> associated with a <a>push service</a>.
-        </p>
-        <p>
-          A <a>push subscription</a> has an associated <dfn>subscription id</dfn>. It is used by
-          the <a>application server</a> to indicate the target of the <a title="push message">push
-          messages</a> that it submits to the <a>push service</a>. Each pair of <a>subscription
-          id</a> and <a>endpoint</a> MUST be globally unique.
+          <a title="push message">push messages</a> to.  An <a>endpoint</a> MUST uniquely identify
+          the <a>push subscription</a>.
         </p>
       </section>
       <section>
@@ -337,9 +342,9 @@
         subscription</a> MUST be <a>deactivated</a>.
       </p>
       <p>
-        The <a>subscription id</a> of a <a>deactivated</a> <a>push subscription</a> MUST NOT be
-        reused for a new <a>push subscription</a>. This prevents the creation of a persistent
-        identifier that the user cannot remove. This also prevents reuse of the details of one
+        The <a>endpoint</a> of a <a>deactivated</a> <a>push subscription</a> MUST NOT be reused for
+        a new <a>push subscription</a>. This prevents the creation of a persistent identifier that
+        the user cannot remove. This also prevents reuse of the details of one
         <a>push subscription</a> to send <a title="push message">push messages</a> to another
         <a>push subscription</a>.
       </p>
@@ -404,7 +409,6 @@ navigator.serviceWorker.register('serviceworker.js').then(
   function(serviceWorkerRegistration) {
     serviceWorkerRegistration.pushManager.subscribe().then(
       function(pushSubscription) {
-        console.log(pushSubscription.subscriptionId);
         console.log(pushSubscription.endpoint);
         // The push subscription details needed by the application
         // server are now available, and can be sent to it using,
@@ -425,79 +429,28 @@ navigator.serviceWorker.register('serviceworker.js').then(
           Sequence diagram
         </h2>
         <figure>
-          <a href="sequence_diagram.png"><img src="sequence_diagram.png" width="800" alt=
-          "Example flow of events for subscription, message delivery, and unsubscription"></a>
+          <a href="sequence_diagram.png">
+            <img src="sequence_diagram.png"
+                 width="795" height="870"
+                 alt="Example flow of events for subscription, push message delivery, and unsubscription">
+          </a>
           <figcaption>
-            Example flow of events for subscription, message delivery, and unsubscription
+            Example flow of events for subscription, push message delivery, and unsubscription
           </figcaption>
         </figure>
       </section>
       <section>
         <h3>
-          Push Service Discovery and API Use
+          Push service use
         </h3>
         <p>
-          This specification does not define either specific normative methods via which webapps
-          can determine the applicable push service, or initiate push requests through that service
-          via a push service API. While these limitations add complexity for webapp developers,
-          they reflect the current reality of a diversity of push services, for which convergence
-          at least on an API level, is not expected to be a short-term possibility. While a
-          converged push service API is a worthwhile goal and may be addressed in a different
-          specification, the Push API defined here has been designed to enable the current variety
-          of push services to be used as appropriate for the webapp host device or software
-          platform. This section provides examples of how a webapp can be designed to work with a
-          variety of hypothetical push services as needed.
+          A <code>PushSubscription</code> contains all the information needed to send a <a>push
+          message</a>.  A <a>push message</a> can be delivered using the <a>web push protocol</a>.
         </p>
         <p>
-          The Push API provides several interface parameters and attributes that can enable a
-          webapp to deliver and obtain the necessary push service specific data enabling use of
-          that particular push service. These parameters and attributes include:
-        </p>
-        <ul>
-          <li>The <code>subscriptionId</code> of a <code>PushSubscription</code>, as an opaque
-          string to the Push API, may be used by push services to provide meaningful data to the
-          <a>application server</a> through the webapp. For example, the
-          <code>subscriptionId</code> may be used as a push service API request parameter or
-          request body element.
-          </li>
-          <li>As a URI, the <code>endpoint</code> of a <code>PushSubscription</code> provides a
-          flexible means for push services to deliver webapp-specific subscription and/or push
-          service API parameters to the <a>application server</a>, through the webapp.
-          </li>
-        </ul>
-        <p>
-          Push services that are compatible with the Push API will be expected to clarify how these
-          data are used in their APIs, e.g. through their developer programs. Examples of
-          considerations include:
-        </p>
-        <ul>
-          <li>The URI used by the <a>application server</a> to issue push service API requests,
-          which may be based upon the <code>endpoint</code>, and for a particular API request
-          require additional parameters e.g. the <code>subscriptionId</code>.
-          </li>
-          <li>The push service API request body, which may require that the <code>endpoint</code>
-          or <code>subscriptionId</code> be present in some body element.
-          </li>
-          <li>The <code>PushSubscription</code> attributes may only be used by the <a>application
-          server</a> to associate the webapp to a specific push service subscription, with the
-          details of the push service API relying upon other pre-configured data.
-          </li>
-        </ul>
-        <p>
-          The Push API does not provide any <code>PushSubscription</code> attributes that
-          normatively identify the particular push service that applies to the subscription.
-          Webapps that are designed to work with a single push service are assumed to know
-          inherently how to use the API of that service. For such webapps, a key consideration is
-          ensuring that if the webapp is used on a device or browser that does not support the
-          necessary push service, that either the user is informed that the push-dependent webapp
-          functions will not work, or the webapp must use alternate methods e.g. [[websockets]] or
-          [[SSE]] to deliver the server-initiated data.
-        </p>
-        <p>
-          Prior to use of a push service API, <a title="application server">application servers</a>
-          that are designed to work with multiple push services may need to determine the
-          applicable service by parsing the <code>endpoint</code> to detect the push service from
-          the URI domain.
+          The <code><a>endpoint</a></code> of a <code>PushSubscription</code> is a URI that allows
+          an <a>application server</a> to request delivery of a <a>push message</a> to a <a>push
+          subscription</a>.
         </p>
       </section>
     </section>
@@ -692,9 +645,6 @@ navigator.serviceWorker.register('serviceworker.js').then(
           readonly attribute USVString endpoint
         </dt>
         <dt>
-          readonly attribute DOMString subscriptionId
-        </dt>
-        <dt>
           Promise&lt;boolean&gt; unsubscribe ()
         </dt>
       </dl>
@@ -702,12 +652,6 @@ navigator.serviceWorker.register('serviceworker.js').then(
         When getting the <code id=
         "widl-PushSubscription-endpoint"><strong><em>endpoint</em></strong></code> attribute, the
         <a>user agent</a> MUST return the <a>endpoint</a> associated with the <a>push
-        subscription</a>.
-      </p>
-      <p>
-        When getting the <code><dfn id=
-        "widl-PushSubscription-subscriptionId">subscriptionId</dfn></code> attribute, the <a>user
-        agent</a> MUST return the <a>subscription id</a> associated with the <a>push
         subscription</a>.
       </p>
       <p>
