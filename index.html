@@ -490,7 +490,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
           Promise&lt;PushSubscription?&gt; getSubscription ()
         </dt>
         <dt>
-          Promise&lt;PushPermissionStatus&gt; hasPermission (optional PushSubscriptionOptions options)
+          Promise&lt;PushPermissionStatus&gt; permissionState (optional PushSubscriptionOptions options)
         </dt>
       </dl>
       <p>
@@ -584,7 +584,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
       </ol>
       <p>
         The <code><dfn id=
-        "widl-PushManager-hasPermission-Promise-PushPermissionStatus">hasPermission</dfn></code>
+        "widl-PushManager-permissionState-Promise-PushPermissionStatus">permissionState</dfn></code>
         method when invoked MUST run the following steps:
       </p>
       <ol>
@@ -867,7 +867,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
           denied
         </dt>
         <dt>
-          default
+          prompt
         </dt>
       </dl>
       <table class="simple">
