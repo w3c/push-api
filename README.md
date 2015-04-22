@@ -11,3 +11,9 @@ Communication
 
 * Send comments to [public-webapps@w3.org](http://lists.w3.org/Archives/Public/public-webapps/).
 * [Github Issue Tracker](https://github.com/w3c/push-api/issues)
+
+Implementations
+---------------
+
+* Shipped in Chrome 42(https://groups.google.com/a/chromium.org/forum/#!msg/blink-dev/UdGlL9PtBLo/HOZZ4sjV-QkJ)
+* Mozilla issue tracker(https://bugzilla.mozilla.org/buglist.cgi?quicksearch=push+api+component%3A%22Push+Notifications%22)
