@@ -264,7 +264,8 @@
         <p>
           A <a>push message</a> is delivered to the <a>active worker</a> associated with the
           <a>push subscription</a> to which the message was submitted. If the worker or its
-          <a>webapp</a> is not currently running, the worker is started to enable delivery.
+          <a>webapp</a> is not currently running, the worker is started to
+          enable delivery.
         </p>
       </section>
       <section>
@@ -488,8 +489,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
           Promise&lt;PushSubscription?&gt; getSubscription ()
         </dt>
         <dt>
-          Promise&lt;PushPermissionState&gt; hasPermission (optional PushSubscriptionOptions
-          options)
+          Promise&lt;PushPermissionState&gt; permissionState (optional PushSubscriptionOptions options)
         </dt>
       </dl>
       <p>
@@ -583,7 +583,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
       </ol>
       <p>
         The <code><dfn id=
-        "widl-PushManager-hasPermission-Promise-PushPermissionState">hasPermission</dfn></code>
+        "widl-PushManager-permissionState-Promise-PushPermissionState">permissionState</dfn></code>
         method when invoked MUST run the following steps:
       </p>
       <ol>
