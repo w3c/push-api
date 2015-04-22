@@ -229,9 +229,9 @@
       <p>
         The <dfn><a href="http://datatracker.ietf.org/doc/draft-thomson-webpush-protocol/">web push
         protocol</a></dfn> describes a protocol that enables communication between a <a>user
-        agent</a> or <a>application server</a> and a <a>push service</a>.  Alternative protocols
+        agent</a> or <a>application server</a> and a <a>push service</a>. Alternative protocols
         could be used in place of this protocol, but this specification assumes the use of this
-        protocol; alternative protocols are expected to provide compatible semantics.  Note: this is
+        protocol; alternative protocols are expected to provide compatible semantics. Note: this is
         currently only a proposed protocol.
       </p>
     </section>
@@ -264,8 +264,7 @@
         <p>
           A <a>push message</a> is delivered to the <a>active worker</a> associated with the
           <a>push subscription</a> to which the message was submitted. If the worker or its
-          <a>webapp</a> is not currently running, the worker is started to
-          enable delivery.
+          <a>webapp</a> is not currently running, the worker is started to enable delivery.
         </p>
       </section>
       <section>
@@ -279,18 +278,19 @@
         </p>
         <p>
           When a <a>push subscription</a> is <dfn>deactivated</dfn>, both the <a>user agent</a> and
-          the <a>push service</a> MUST delete any stored copies of its details. Subsequent <a title=
-          "push message">push messages</a> for this <a>push subscription</a> MUST NOT be delivered.
+          the <a>push service</a> MUST delete any stored copies of its details. Subsequent
+          <a title="push message">push messages</a> for this <a>push subscription</a> MUST NOT be
+          delivered.
         </p>
         <p>
           A <a>push subscription</a> is <a>deactivated</a> when its associated <a>service worker
-          registration</a> is unregistered, though a <a>push subscription</a> MAY
-          be <a>deactivated</a> earlier.
+          registration</a> is unregistered, though a <a>push subscription</a> MAY be
+          <a>deactivated</a> earlier.
         </p>
         <p>
           A <a>push subscription</a> has an associated <dfn>endpoint</dfn>. It MUST be the absolute
           URL exposed by the <a>push service</a> where the <a>application server</a> can send
-          <a title="push message">push messages</a> to.  An <a>endpoint</a> MUST uniquely identify
+          <a title="push message">push messages</a> to. An <a>endpoint</a> MUST uniquely identify
           the <a>push subscription</a>.
         </p>
       </section>
@@ -299,11 +299,11 @@
           Push service
         </h2>
         <p>
-          The term <dfn>push service</dfn> refers to a system that allows
-          <a title="application server">application servers</a> to send <a title= "push
-          message">push messages</a> to a <a>webapp</a>. A push service serves the <a>endpoint</a>
-          or <a title="endpoint">endpoints</a> for the <a title="push subscription">push
-          subscriptions</a> it serves.
+          The term <dfn>push service</dfn> refers to a system that allows <a title=
+          "application server">application servers</a> to send <a title="push message">push
+          messages</a> to a <a>webapp</a>. A push service serves the <a>endpoint</a> or <a title=
+          "endpoint">endpoints</a> for the <a title="push subscription">push subscriptions</a> it
+          serves.
         </p>
       </section>
       <section>
@@ -330,8 +330,8 @@
         preserved beyond the current browsing session MUST be revocable.
       </p>
       <p>
-        The <a>user agent</a> MAY consider the <code><a>PushSubscriptionOptions</a></code>
-        when acquiring permission or determining the permission status.
+        The <a>user agent</a> MAY consider the <code><a>PushSubscriptionOptions</a></code> when
+        acquiring permission or determining the permission status.
       </p>
       <p>
         When a permission is revoked, all <a title="push subscription">push subscriptions</a>
@@ -344,9 +344,9 @@
       <p>
         The <a>endpoint</a> of a <a>deactivated</a> <a>push subscription</a> MUST NOT be reused for
         a new <a>push subscription</a>. This prevents the creation of a persistent identifier that
-        the user cannot remove. This also prevents reuse of the details of one
-        <a>push subscription</a> to send <a title="push message">push messages</a> to another
-        <a>push subscription</a>.
+        the user cannot remove. This also prevents reuse of the details of one <a>push
+        subscription</a> to send <a title="push message">push messages</a> to another <a>push
+        subscription</a>.
       </p>
       <p>
         <a title="user agent">User agents</a> MUST implement the Push API to be HTTPS-only.
@@ -429,11 +429,9 @@ navigator.serviceWorker.register('serviceworker.js').then(
           Sequence diagram
         </h2>
         <figure>
-          <a href="sequence_diagram.png">
-            <img src="sequence_diagram.png"
-                 width="795" height="870"
-                 alt="Example flow of events for subscription, push message delivery, and unsubscription">
-          </a>
+          <a href="sequence_diagram.png"><img src="sequence_diagram.png" width="795" height="870"
+          alt=
+          "Example flow of events for subscription, push message delivery, and unsubscription"></a>
           <figcaption>
             Example flow of events for subscription, push message delivery, and unsubscription
           </figcaption>
@@ -445,7 +443,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </h3>
         <p>
           A <code>PushSubscription</code> contains all the information needed to send a <a>push
-          message</a>.  A <a>push message</a> can be delivered using the <a>web push protocol</a>.
+          message</a>. A <a>push message</a> can be delivered using the <a>web push protocol</a>.
         </p>
         <p>
           The <code><a>endpoint</a></code> of a <code>PushSubscription</code> is a URI that allows
@@ -490,7 +488,8 @@ navigator.serviceWorker.register('serviceworker.js').then(
           Promise&lt;PushSubscription?&gt; getSubscription ()
         </dt>
         <dt>
-          Promise&lt;PushPermissionState&gt; hasPermission (optional PushSubscriptionOptions options)
+          Promise&lt;PushPermissionState&gt; hasPermission (optional PushSubscriptionOptions
+          options)
         </dt>
       </dl>
       <p>
@@ -616,9 +615,10 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </h2>
         <p>
           A <a>PushSubscriptionOptions</a> object represents additional options associated with a
-          <a>push subscription</a>. The <a>user agent</a> MAY consider these options when requesting
-          <a>express permission</a> from the user. When an option is considered, the <a>user
-          agent</a> SHOULD enforce it on incoming <a title="push message">push messages</a>.
+          <a>push subscription</a>. The <a>user agent</a> MAY consider these options when
+          requesting <a>express permission</a> from the user. When an option is considered, the
+          <a>user agent</a> SHOULD enforce it on incoming <a title="push message">push
+          messages</a>.
         </p>
         <dl title="dictionary PushSubscriptionOptions" class="idl">
           <dt>
@@ -626,10 +626,11 @@ navigator.serviceWorker.register('serviceworker.js').then(
           </dt>
         </dl>
         <p>
-          The <code><dfn id="widl-PushSubscriptionOptions-userVisibleOnly">userVisibleOnly</dfn>
-          </code> option, when set to <code>true</code>, indicates that the <a>push subscription</a>
-          will only be used for <a title="push message">push messages</a> whose effect is made
-          visible to the user, for example by displaying a Web Notification. [[NOTIFICATIONS]]
+          The <code><dfn id=
+          "widl-PushSubscriptionOptions-userVisibleOnly">userVisibleOnly</dfn></code> option, when
+          set to <code>true</code>, indicates that the <a>push subscription</a> will only be used
+          for <a title="push message">push messages</a> whose effect is made visible to the user,
+          for example by displaying a Web Notification. [[NOTIFICATIONS]]
         </p>
       </section>
     </section>
@@ -646,6 +647,9 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </dt>
         <dt>
           Promise&lt;boolean&gt; unsubscribe ()
+        </dt>
+        <dt>
+          serializer = {attribute}
         </dt>
       </dl>
       <p>
