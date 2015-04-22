@@ -15,5 +15,5 @@ Communication
 Implementations
 ---------------
 
-* Shipped in Chrome 42(https://groups.google.com/a/chromium.org/forum/#!msg/blink-dev/UdGlL9PtBLo/HOZZ4sjV-QkJ)
-* Mozilla issue tracker(https://bugzilla.mozilla.org/buglist.cgi?quicksearch=push+api+component%3A%22Push+Notifications%22)
+* [Shipped in Chrome 42](https://groups.google.com/a/chromium.org/forum/#!msg/blink-dev/UdGlL9PtBLo/HOZZ4sjV-QkJ)
+* [Mozilla issue tracker](https://bugzilla.mozilla.org/buglist.cgi?quicksearch=push+api+component%3A%22Push+Notifications%22)
