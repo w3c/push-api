@@ -488,13 +488,14 @@ navigator.serviceWorker.register('serviceworker.js').then(
           Promise&lt;PushSubscription?&gt; getSubscription ()
         </dt>
         <dt>
-          Promise&lt;PushPermissionState&gt; permissionState (optional PushSubscriptionOptions options)
+          Promise&lt;PushPermissionState&gt; permissionState (optional PushSubscriptionOptions
+          options)
         </dt>
       </dl>
       <p>
         The <code><dfn id=
-        "widl-PushManager-subscribe-Promise-PushSubscription">subscribe</dfn></code> method when
-        invoked MUST run the following steps:
+        "widl-PushManager-subscribe-Promise-PushSubscription--PushSubscriptionOptions-options">subscribe</dfn></code>
+        method when invoked MUST run the following steps:
       </p>
       <ol>
         <li>Let <var>promise</var> be a new <a><code>Promise</code></a>.
@@ -582,8 +583,8 @@ navigator.serviceWorker.register('serviceworker.js').then(
       </ol>
       <p>
         The <code><dfn id=
-        "widl-PushManager-permissionState-Promise-PushPermissionState">permissionState</dfn></code>
-        method when invoked MUST run the following steps:
+        "widl-PushManager-permissionState-Promise-PushPermissionState--PushSubscriptionOptions-options">
+        permissionState</dfn></code> method when invoked MUST run the following steps:
       </p>
       <ol>
         <li>Let <var>promise</var> be a new <a><code>Promise</code></a>.
