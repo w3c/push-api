@@ -89,13 +89,23 @@
               ],
               status: "Living Standard",
               publisher: "WHATWG"
+            },
+            "WEBPUSH-PROTOCOL": {
+              title: "The Web Push Protocol",
+              href: "https://tools.ietf.org/html/draft-ietf-webpush-protocol",
+              authors: [
+                "Martin Thomson",
+                "Brian Raymor",
+              ],
+              status: "Internet-Draft",
+              publisher: "IETF"
             }
           }
       };
     </script>
   </head>
   <body>
-    <section id='abstract'>
+    <section id="abstract">
       <p>
         The <cite>Push API</cite> provides <a title="webapp">webapps</a> with scripted access to
         server-sent messages, for simplicity referred to here as <a title="push message">push
@@ -106,9 +116,8 @@
         the message's data or display a notification to the user.
       </p>
       <p>
-        This specification is designed to promote compatibility with any delivery method for
-        <a title="push message">push messages</a> from <a title="push service">push services</a> to
-        <a title="user agent">user agents</a>.
+        This specification is designed for use with the <a>web push protocol</a>, which describes
+        how an <a>application server</a> or <a>user agent</a> interacts with a <a>push service</a>.
       </p>
     </section>
     <section id='sotd'></section>
@@ -238,12 +247,11 @@
         in [[!WEBIDL]].
       </p>
       <p>
-        The <dfn><a href="http://datatracker.ietf.org/doc/draft-thomson-webpush-protocol/">web push
-        protocol</a></dfn> describes a protocol that enables communication between a <a>user
-        agent</a> or <a>application server</a> and a <a>push service</a>. Alternative protocols
-        could be used in place of this protocol, but this specification assumes the use of this
-        protocol; alternative protocols are expected to provide compatible semantics. Note: this is
-        currently only a proposed protocol.
+        The <dfn>web push protocol</dfn> [[!WEBPUSH-PROTOCOL]] describes a protocol that enables
+        communication between a <a>user agent</a> or <a>application server</a> and a <a>push
+        service</a>. Alternative protocols could be used in place of this protocol, but this
+        specification assumes the use of this protocol; alternative protocols are expected to
+        provide compatible semantics.
       </p>
     </section>
     <section>
