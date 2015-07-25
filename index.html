@@ -107,13 +107,13 @@
   <body>
     <section id="abstract">
       <p>
-        The <cite>Push API</cite> provides <a title="webapp">webapps</a> with scripted access to
-        server-sent messages, for simplicity referred to here as <a title="push message">push
-        messages</a>, as delivered by <a title="push service">push services</a>. A <a>push
-        service</a> allows an <a>application server</a> to send messages to a <a>webapp</a>,
-        regardless of whether the <a>webapp</a> is currently active on the <a>user agent</a>. The
-        <a>push message</a> will be delivered to a <a>Service Worker</a>, which could then store
-        the message's data or display a notification to the user.
+        The <cite>Push API</cite> enables sending of a <a>push message</a> to a <a>webapp</a> via
+        a <a>push service</a>.  An <a>application server</a> can send a <a>push message</a> at any
+        time, even when the <a>webapp</a> is active or the <a>user agent</a> is offline.
+        The <a>push service</a> ensures reliable and efficient delivery to the <a>user
+        agent</a>.  <a title="push message">Push messages</a> are delivered to a <a>Service
+        Worker</a> that runs in the origin of the <a>webapp</a>, which can use the information in
+        the message to update local state or display a notification to the user.
       </p>
       <p>
         This specification is designed for use with the <a>web push protocol</a>, which describes
