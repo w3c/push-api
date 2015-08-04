@@ -89,13 +89,23 @@
               ],
               status: "Living Standard",
               publisher: "WHATWG"
+            },
+            "WEBPUSH-PROTOCOL": {
+              title: "The Web Push Protocol",
+              href: "https://tools.ietf.org/html/draft-ietf-webpush-protocol",
+              authors: [
+                "Martin Thomson",
+                "Brian Raymor",
+              ],
+              status: "Internet-Draft",
+              publisher: "IETF"
             }
           }
       };
     </script>
   </head>
   <body>
-    <section id='abstract'>
+    <section id="abstract">
       <p>
         The <cite>Push API</cite> provides <a title="webapp">webapps</a> with scripted access to
         server-sent messages, for simplicity referred to here as <a title="push message">push
@@ -106,9 +116,8 @@
         the message's data or display a notification to the user.
       </p>
       <p>
-        This specification is designed to promote compatibility with any delivery method for
-        <a title="push message">push messages</a> from <a title="push service">push services</a> to
-        <a title="user agent">user agents</a>.
+        This specification is designed for use with the <a>web push protocol</a>, which describes
+        how an <a>application server</a> or <a>user agent</a> interacts with a <a>push service</a>.
       </p>
     </section>
     <section id='sotd'></section>
@@ -238,12 +247,11 @@
         in [[!WEBIDL]].
       </p>
       <p>
-        The <dfn><a href="http://datatracker.ietf.org/doc/draft-thomson-webpush-protocol/">web push
-        protocol</a></dfn> describes a protocol that enables communication between a <a>user
-        agent</a> or <a>application server</a> and a <a>push service</a>. Alternative protocols
-        could be used in place of this protocol, but this specification assumes the use of this
-        protocol; alternative protocols are expected to provide compatible semantics. Note: this is
-        currently only a proposed protocol.
+        The <dfn>web push protocol</dfn> [[!WEBPUSH-PROTOCOL]] describes a protocol that enables
+        communication between a <a>user agent</a> or <a>application server</a> and a <a>push
+        service</a>. Alternative protocols could be used in place of this protocol, but this
+        specification assumes the use of this protocol; alternative protocols are expected to
+        provide compatible semantics.
       </p>
     </section>
     <section>
@@ -371,34 +379,30 @@
         Push Framework
       </h2>
       <p>
-        Although <a title="push service">push services</a> are expected to differ in deployment, a
-        typical deployment is expected to have the following general entities and example operation
-        for delivery of <a title="push message">push messages</a>:
+        A <a>push message</a> is sent from an <a>application server</a> to
+        a <a>webapp</a> as follows:
       </p>
       <ul>
-        <li>
-          <a title="application server">Application servers</a> request delivery of a <a>push
-          message</a> to a <a>webapp</a> via a RESTful API exposed by a <a>push service</a>
+        <li>the <a>application server</a> requests that the <a>push service</a>
+        deliver a <a>push message</a> using the [[!WEBPUSH-PROTOCOL]].  This
+        request uses the <a>endpoint</a> included in the <a>push
+        subscription</a>;
         </li>
-        <li>The <a>push service</a> delivers the message to a specific <a>user agent</a>
+        <li>the <a>push service</a> delivers the message to a specific <a>user
+        agent</a>, identifying the <a>endpoint</a> in the message;
         </li>
-        <li>The <a>user agent</a> delivers the <a>push message</a> to the specific <a>webapp</a>
-        intended to receive it.
+        <li>the <a>user agent</a> identifies the intended <a>webapp</a>,
+        activates the <a>Service Worker</a> for the <a>webapp</a> as necessary,
+        and delivers the <a>push message</a> to the <a>Service Worker</a>.
         </li>
       </ul>
       <p>
-        This overall framework allows <a title="application server">application servers</a> to
-        inform <a title="webapp">webapps</a> that new data is available at the <a>application
-        server</a>, or pass the new data directly to the <a>webapp</a> in the <a>push message</a>.
-      </p>
-      <p>
-        The push API enables delivery of arbitrary application data to <a title=
-        "webapp">webapps</a>, and makes no assumptions about the over-the-air/wire protocol used by
-        <a title="push service">push services</a>. As such, the details of what types of data flow
-        through a <a title="push service">push services</a> for a particular <a>webapp</a> are
-        specific to the <a>push service</a> and <a>webapp</a>. As needed, clarification about what
-        data flows over-the-air/wire should be sought from <a>push service</a> operators or
-        <a>webapp</a> developers.
+        This overall framework allows <a title="application server">application
+        servers</a> to activate <a title="webapp">webapps</a> in response to
+        events at the <a>application server</a>.  Information about those events
+        can be included in the <a>push message</a>, which allows
+        the <a>webapp</a> to react appropriately to those events, potentially
+        without needing to initiate network requests.
       </p>
       <p>
         The following code and diagram illustrate a hypothetical use of the push API.
