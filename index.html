@@ -481,16 +481,17 @@ navigator.serviceWorker.register('serviceworker.js').then(
           to the <a>web push protocol</a>. These parameters and attributes include:
         </p>
         <ul>
-          <li>The <code><a>endpoint</a></code> of a <code>PushSubscription</code> is a URI that
-          allows an <a>application server</a> to request delivery of a <a>push message</a> to a <a>
-            webapp</a>.
+          <li>The <code><a data-lt="PushSubscription-endpoint">endpoint</a></code> of a
+          <code>PushSubscription</code> is a URI that allows an <a>application server</a> to
+          request delivery of a <a>push message</a> to a <a>webapp</a>.
           </li>
-          <li>The <code>getKey</code> method on a <code>PushSubscription</code> is used to retrieve
-          keying material used to encipher <a title="push message">push messages</a>. Passing a
-          value of <code>p256dh</code> retrieves a <dfn data-lt="ECDH">elliptic curve Diffie-Hellman
-          (ECDH)</dfn> public key associated with the <a>push subscription</a>. This key is used by
-          the <a>application server</a> to encipher messages for the <a>push subscription</a>, as
-          described in [[!WEBPUSH-ENCRYPTION]].
+          <li>The <code><a data-lt="PushSubscription-getKey">getKey</a></code> method on a
+          <code>PushSubscription</code> is used to retrieve keying material used to encipher
+          <a title="push message">push messages</a>. Passing a value of <code>p256dh</code>
+          retrieves a <dfn data-lt="ECDH">elliptic curve Diffie-Hellman (ECDH)</dfn> public key
+          associated with the <a>push subscription</a>. This key is used by the <a>application
+          server</a> to encipher messages for the <a>push subscription</a>, as described in
+          [[!WEBPUSH-ENCRYPTION]].
           </li>
         </ul>
       </section>
@@ -703,25 +704,29 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </dt>
       </dl>
       <p>
-        When getting the <code id=
-        "widl-PushSubscription-endpoint"><strong><em>endpoint</em></strong></code> attribute, the
-        <a>user agent</a> MUST return the <a>endpoint</a> associated with the <a>push
-        subscription</a>.
+        When getting the <code><dfn data-lt="PushSubscription-endpoint">endpoint</dfn></code>
+        attribute, the <a>user agent</a> MUST return the <a>endpoint</a> associated with the
+        <a>push subscription</a>.
       </p>
       <p>
-        The <code id="widl-PushSubscription-getKey"><strong><em>getKey()</em></strong></code>
-        method retrieves a public key using the following process:
+        The <code><dfn data-lt="PushSubscription-getKey">getKey</dfn></code> method retrieves an
+        encryption key using the following process:
       </p>
       <ol>
-        <li>Find the internal slot that contains the encryption key pair named by the
-        <code>name</code> argument.
+        <li>Find the internal slot that contains the encryption key named by the <code>name</code>
+        argument.
         </li>
-        <li>If an encryption key pair was not found, return <code>null</code>.
+        <li>If an encryption key was not found, return <code>null</code>.
         </li>
-        <li>Set <var>pubKey</var> to the serialized value of the public key from the key pair. This
-        uses the serialization format defined in the specification for the name.
+        <li>If the encryption key represents an asymmetric key pair, set <var>key</var> to the
+        serialized value of the public key from the key pair. This uses the serialization format
+        defined in the specification for the name.
         </li>
-        <li>Return <var>pubKey</var>.
+        <li>If the encryption key represents a symmetric key, set <var>key</var> to the serialized
+        value of the key. This uses the serialization format defined in the specification for the
+        name.
+        </li>
+        <li>Return <var>key</var>.
         </li>
       </ol>
       <p>
@@ -762,12 +767,12 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </li>
         <li>Let <var>keys</var> be an empty map.
         </li>
-        <li>For each identifier <var>i</var> corresponding to public keys in internal slots on the
-        <a><code>PushSubscription</code></a>, ordered by the name of the public key:
+        <li>For each identifier <var>i</var> corresponding to keys in internal slots on the
+        <a><code>PushSubscription</code></a>, ordered by the name of the key:
           <ol>
-            <li>Add an entry to <var>keys</var> whose key name is the name of the public key and
-            whose value is an <code>ArrayBuffer</code> containing the defined serialization of the
-            public.
+            <li>Add an entry to <var>keys</var> whose key name is the name of the key and whose
+            value is an <code>ArrayBuffer</code> containing the defined serialization of the public
+            key (for an asymmetric key pair) or the key (for a symmetric key).
             </li>
           </ol>
         </li>
