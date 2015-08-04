@@ -7,9 +7,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src='https://www.w3.org/Tools/respec/respec-w3c-common' class='remove'>
-</script>
+    </script>
     <script class="remove">
-// (this is to make tidy happy)
+    // (this is to make tidy happy)
       // See http://www.w3.org/respec/ for ReSpec documentation.
       var respecConfig = {
           specStatus: "ED",
@@ -97,18 +97,16 @@
   <body>
     <section id='abstract'>
       <p>
-        The <cite>Push API</cite> provides <a title="webapp">webapps</a> with scripted access to
-        server-sent messages, for simplicity referred to here as <a title="push message">push
-        messages</a>, as delivered by <a title="push service">push services</a>. A <a>push
-        service</a> allows an <a>application server</a> to send messages to a <a>webapp</a>,
-        regardless of whether the <a>webapp</a> is currently active on the <a>user agent</a>. The
-        <a>push message</a> will be delivered to a <a>Service Worker</a>, which could then store
-        the message's data or display a notification to the user.
+        The <cite>Push API</cite> provides <a>webapps</a> with scripted access to server-sent
+        messages, for simplicity referred to here as <a>push messages</a>, as delivered by <a>push
+        services</a>. A <a>push service</a> allows an <a>application server</a> to send messages to
+        a <a>webapp</a>, regardless of whether the <a>webapp</a> is currently active on the <a>user
+        agent</a>. The <a>push message</a> will be delivered to a <a>Service Worker</a>, which
+        could then store the message's data or display a notification to the user.
       </p>
       <p>
         This specification is designed to promote compatibility with any delivery method for
-        <a title="push message">push messages</a> from <a title="push service">push services</a> to
-        <a title="user agent">user agents</a>.
+        <a>push messages</a> from <a>push services</a> to <a>user agents</a>.
       </p>
     </section>
     <section id='sotd'></section>
@@ -117,34 +115,33 @@
         Introduction
       </h2>
       <p>
-        As defined here, <a title="push service">push services</a> support delivery of
-        <a>application server</a> messages in the following contexts and related use cases:
+        As defined here, <a>push services</a> support delivery of <a>application server</a>
+        messages in the following contexts and related use cases:
       </p>
       <ul>
         <li>the user is actively involved in the use of a <a>webapp</a>: this relates to any normal
-        use case in which a <a>webapp</a> user may benefit from <a title="push message">push
-        messages</a> while the user is actively using the <a>webapp</a>
+        use case in which a <a>webapp</a> user may benefit from <a>push messages</a> while the user
+        is actively using the <a>webapp</a>
         </li>
         <li>the user is not actively involved in the use of a <a>webapp</a>, but the <a>webapp</a>
         is active in a window of the browser or executing as a web worker: this relates to use
         cases such as social networking, messaging, web feed readers, etc in which the user may not
-        be actively using a <a>webapp</a> but still benefits from <a title="push message">push
-        messages</a> being sent to (or via) the <a>webapp</a>, to keep the user up-to-date
+        be actively using a <a>webapp</a> but still benefits from <a>push messages</a> being sent
+        to (or via) the <a>webapp</a>, to keep the user up-to-date
         </li>
         <li>the <a>webapp</a> is not currently active in a browser window: this relates to use
         cases in which the user may close the <a>webapp</a>, but still benefits from the
         <a>webapp</a> being able to be restarted when a <a>push message</a> is received, e.g. the
         WebRTC use case in which an incoming call can invoke the WebRTC <a>webapp</a>
         </li>
-        <li>multiple <a title="webapp">webapps</a> are running, but <a title="push message">push
-        messages</a> are delivered only to the <a>webapp</a> that requested them, e.g. any normal
-        use case in which multiple <a title="webapp">webapps</a> are active in the browser and
-        utilizing <a title="push service">push services</a>
+        <li>multiple <a>webapps</a> are running, but <a>push messages</a> are delivered only to the
+        <a>webapp</a> that requested them, e.g. any normal use case in which multiple
+        <a>webapps</a> are active in the browser and utilizing <a>push services</a>
         </li>
-        <li>multiple instances of the same <a>webapp</a> are active in the browser, and <a title=
-        "push message">push messages</a> specific to each instance of the <a>webapp</a> are
-        delivered only to the specific instance, e.g. when a mail <a>webapp</a> is active in two
-        windows using different mail accounts
+        <li>multiple instances of the same <a>webapp</a> are active in the browser, and <a>push
+        messages</a> specific to each instance of the <a>webapp</a> are delivered only to the
+        specific instance, e.g. when a mail <a>webapp</a> is active in two windows using different
+        mail accounts
         </li>
         <li>multiple instances of the same <a>webapp</a> are active in different browsers, and push
         messages are delivered to a set of instances of the <a>webapp</a>, e.g. when a mail
@@ -159,7 +156,8 @@
     <section id="conformance">
       <p>
         This specification defines conformance criteria that apply to a single product: the
-        <dfn>user agent</dfn> that implements the interfaces that it contains.
+        <dfn data-lt="user agent|user agents">user agent</dfn> that implements the interfaces that
+        it contains.
       </p>
       <p>
         Implementations that use ECMAScript to implement the APIs defined in this specification
@@ -255,13 +253,13 @@
           Webapp
         </h2>
         <p>
-          The term <dfn>webapp</dfn> refers to a Web application, i.e. an application implemented
-          using Web technologies, and executing within the context of a Web <a>user agent</a>, e.g.
-          a Web browser or other Web runtime environment.
+          The term <dfn data-lt="webapp|webapps">webapp</dfn> refers to a Web application, i.e. an
+          application implemented using Web technologies, and executing within the context of a Web
+          <a>user agent</a>, e.g. a Web browser or other Web runtime environment.
         </p>
         <p>
-          The term <dfn>application server</dfn> refers to server-side components of a
-          <a>webapp</a>.
+          The term <dfn data-lt="application server|application servers">application server</dfn>
+          refers to server-side components of a <a>webapp</a>.
         </p>
       </section>
       <section>
@@ -269,8 +267,8 @@
           Push message
         </h2>
         <p>
-          A <dfn>push message</dfn> is data sent to a <a>webapp</a> from an <a>application
-          server</a>.
+          A <dfn data-lt="push message|push messages">push message</dfn> is data sent to a
+          <a>webapp</a> from an <a>application server</a>.
         </p>
         <p>
           A <a>push message</a> is delivered to the <a>active worker</a> associated with the
@@ -283,15 +281,16 @@
           Push subscription
         </h2>
         <p>
-          A <dfn>push subscription</dfn> is a message delivery context established between the
-          <a>user agent</a> and the <a>push service</a> on behalf of a <a>webapp</a>, and
-          associated with the <a>webapp</a>'s <a>service worker registration</a>.
+          A <dfn data-lt="push subscription|push subscriptions">push subscription</dfn> is a
+          message delivery context established between the <a>user agent</a> and the <a>push
+          service</a> on behalf of a <a>webapp</a>, and associated with the <a>webapp</a>'s
+          <a>service worker registration</a>.
         </p>
         <p>
-          When a <a>push subscription</a> is <dfn>deactivated</dfn>, both the <a>user agent</a> and
-          the <a>push service</a> MUST delete any stored copies of its details. Subsequent
-          <a title="push message">push messages</a> for this <a>push subscription</a> MUST NOT be
-          delivered.
+          When a <a>push subscription</a> is <dfn data-lt=
+          "deactivated|deactivate">deactivated</dfn>, both the <a>user agent</a> and the <a>push
+          service</a> MUST delete any stored copies of its details. Subsequent <a>push messages</a>
+          for this <a>push subscription</a> MUST NOT be delivered.
         </p>
         <p>
           A <a>push subscription</a> is <a>deactivated</a> when its associated <a>service worker
@@ -299,10 +298,10 @@
           <a>deactivated</a> earlier.
         </p>
         <p>
-          A <a>push subscription</a> has an associated <dfn>endpoint</dfn>. It MUST be the absolute
-          URL exposed by the <a>push service</a> where the <a>application server</a> can send
-          <a title="push message">push messages</a> to. An <a>endpoint</a> MUST uniquely identify
-          the <a>push subscription</a>.
+          A <a>push subscription</a> has an associated <dfn data-lt=
+          "endpoint|endpoints">endpoint</dfn>. It MUST be the absolute URL exposed by the <a>push
+          service</a> where the <a>application server</a> can send <a>push messages</a> to. An
+          <a>endpoint</a> MUST uniquely identify the <a>push subscription</a>.
         </p>
       </section>
       <section>
@@ -310,11 +309,10 @@
           Push service
         </h2>
         <p>
-          The term <dfn>push service</dfn> refers to a system that allows <a title=
-          "application server">application servers</a> to send <a title="push message">push
-          messages</a> to a <a>webapp</a>. A push service serves the <a>endpoint</a> or <a title=
-          "endpoint">endpoints</a> for the <a title="push subscription">push subscriptions</a> it
-          serves.
+          The term <dfn data-lt="push service|push services">push service</dfn> refers to a system
+          that allows <a>application servers</a> to send <a>push messages</a> to a <a>webapp</a>. A
+          push service serves the <a>endpoint</a> or <a>endpoints</a> for the <a>push
+          subscriptions</a> it serves.
         </p>
       </section>
       <section>
@@ -333,20 +331,20 @@
         Security and privacy considerations
       </h2>
       <p>
-        <a title="user agent">User agents</a> MUST NOT provide Push API access to <a title=
-        "webapp">webapps</a> without the <a>express permission</a> of the user. <a title=
-        "user agent">User agents</a> MUST acquire consent for permission through a user interface
-        for each call to the <code>subscribe()</code> method, unless a previous permission grant
-        has been persisted, or a prearranged trust relationship applies. Permissions that are
-        preserved beyond the current browsing session MUST be revocable.
+        <a>User agents</a> MUST NOT provide Push API access to <a>webapps</a> without the
+        <a>express permission</a> of the user. <a>User agents</a> MUST acquire consent for
+        permission through a user interface for each call to the <code>subscribe()</code> method,
+        unless a previous permission grant has been persisted, or a prearranged trust relationship
+        applies. Permissions that are preserved beyond the current browsing session MUST be
+        revocable.
       </p>
       <p>
         The <a>user agent</a> MAY consider the <code><a>PushSubscriptionOptions</a></code> when
         acquiring permission or determining the permission status.
       </p>
       <p>
-        When a permission is revoked, all <a title="push subscription">push subscriptions</a>
-        created with that permission MUST be <a>deactivated</a>.
+        When a permission is revoked, all <a>push subscriptions</a> created with that permission
+        MUST be <a>deactivated</a>.
       </p>
       <p>
         When a <a>service worker registration</a> is unregistered, any associated <a>push
@@ -356,14 +354,12 @@
         The <a>endpoint</a> of a <a>deactivated</a> <a>push subscription</a> MUST NOT be reused for
         a new <a>push subscription</a>. This prevents the creation of a persistent identifier that
         the user cannot remove. This also prevents reuse of the details of one <a>push
-        subscription</a> to send <a title="push message">push messages</a> to another <a>push
-        subscription</a>.
+        subscription</a> to send <a>push messages</a> to another <a>push subscription</a>.
       </p>
       <p>
-        <a title="user agent">User agents</a> MUST implement the Push API to be HTTPS-only.
-        SSL-only support provides better protection for the user against man-in-the-middle attacks
-        intended to obtain push subscription data. Browsers may ignore this rule for development
-        purposes only.
+        <a>User agents</a> MUST implement the Push API to be HTTPS-only. SSL-only support provides
+        better protection for the user against man-in-the-middle attacks intended to obtain push
+        subscription data. Browsers may ignore this rule for development purposes only.
       </p>
     </section>
     <section class='informative' id="pushframework">
@@ -371,14 +367,14 @@
         Push Framework
       </h2>
       <p>
-        Although <a title="push service">push services</a> are expected to differ in deployment, a
-        typical deployment is expected to have the following general entities and example operation
-        for delivery of <a title="push message">push messages</a>:
+        Although <a>push services</a> are expected to differ in deployment, a typical deployment is
+        expected to have the following general entities and example operation for delivery of
+        <a>push messages</a>:
       </p>
       <ul>
         <li>
-          <a title="application server">Application servers</a> request delivery of a <a>push
-          message</a> to a <a>webapp</a> via a RESTful API exposed by a <a>push service</a>
+          <a>Application servers</a> request delivery of a <a>push message</a> to a <a>webapp</a>
+          via a RESTful API exposed by a <a>push service</a>
         </li>
         <li>The <a>push service</a> delivers the message to a specific <a>user agent</a>
         </li>
@@ -387,18 +383,17 @@
         </li>
       </ul>
       <p>
-        This overall framework allows <a title="application server">application servers</a> to
-        inform <a title="webapp">webapps</a> that new data is available at the <a>application
-        server</a>, or pass the new data directly to the <a>webapp</a> in the <a>push message</a>.
+        This overall framework allows <a>application servers</a> to inform <a>webapps</a> that new
+        data is available at the <a>application server</a>, or pass the new data directly to the
+        <a>webapp</a> in the <a>push message</a>.
       </p>
       <p>
-        The push API enables delivery of arbitrary application data to <a title=
-        "webapp">webapps</a>, and makes no assumptions about the over-the-air/wire protocol used by
-        <a title="push service">push services</a>. As such, the details of what types of data flow
-        through a <a title="push service">push services</a> for a particular <a>webapp</a> are
-        specific to the <a>push service</a> and <a>webapp</a>. As needed, clarification about what
-        data flows over-the-air/wire should be sought from <a>push service</a> operators or
-        <a>webapp</a> developers.
+        The push API enables delivery of arbitrary application data to <a>webapps</a>, and makes no
+        assumptions about the over-the-air/wire protocol used by <a>push services</a>. As such, the
+        details of what types of data flow through a <a>push services</a> for a particular
+        <a>webapp</a> are specific to the <a>push service</a> and <a>webapp</a>. As needed,
+        clarification about what data flows over-the-air/wire should be sought from <a>push
+        service</a> operators or <a>webapp</a> developers.
       </p>
       <p>
         The following code and diagram illustrate a hypothetical use of the push API.
@@ -488,8 +483,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <a>PushManager</a> interface
       </h2>
       <p>
-        The <a>PushManager</a> interface defines the operations to access <a title=
-        "push service">push services</a>.
+        The <a>PushManager</a> interface defines the operations to access <a>push services</a>.
       </p>
       <dl title="interface PushManager" class="idl">
         <dt>
@@ -538,9 +532,9 @@ navigator.serviceWorker.register('serviceworker.js').then(
             </li>
           </ol>
         </li>
-        <li>Ask the user whether they allow the <a>webapp</a> to receive <a title=
-        "push message">push messages</a>, unless a prearranged trust relationship applies or the
-        user has already granted or denied permission explicitly for this <a>webapp</a>.
+        <li>Ask the user whether they allow the <a>webapp</a> to receive <a>push messages</a>,
+        unless a prearranged trust relationship applies or the user has already granted or denied
+        permission explicitly for this <a>webapp</a>.
         </li>
         <li>If not granted, reject <var>promise</var> with a <code><a>DOMException</a></code> whose
         name is "<code><a>PermissionDeniedError</a></code>" and terminate these steps.
@@ -628,8 +622,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
           A <a>PushSubscriptionOptions</a> object represents additional options associated with a
           <a>push subscription</a>. The <a>user agent</a> MAY consider these options when
           requesting <a>express permission</a> from the user. When an option is considered, the
-          <a>user agent</a> SHOULD enforce it on incoming <a title="push message">push
-          messages</a>.
+          <a>user agent</a> SHOULD enforce it on incoming <a>push messages</a>.
         </p>
         <dl title="dictionary PushSubscriptionOptions" class="idl">
           <dt>
@@ -640,8 +633,8 @@ navigator.serviceWorker.register('serviceworker.js').then(
           The <code><dfn id=
           "widl-PushSubscriptionOptions-userVisibleOnly">userVisibleOnly</dfn></code> option, when
           set to <code>true</code>, indicates that the <a>push subscription</a> will only be used
-          for <a title="push message">push messages</a> whose effect is made visible to the user,
-          for example by displaying a Web Notification. [[NOTIFICATIONS]]
+          for <a>push messages</a> whose effect is made visible to the user, for example by
+          displaying a Web Notification. [[NOTIFICATIONS]]
         </p>
       </section>
     </section>
@@ -682,8 +675,8 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <li>If the <a>push subscription</a> has already been <a>deactivated</a>, resolve
         <var>promise</var> with <code>false</code> and terminate these steps.
         </li>
-        <li>Make a request to the <a>push service</a> to <a title="deactivated">deactivate</a> the
-        <a>push subscription</a>.
+        <li>Make a request to the <a>push service</a> to <a>deactivate</a> the <a>push
+        subscription</a>.
         </li>
         <li>If it was not possible to access the <a>push service</a>, reject <var>promise</var>
         with a "<code><a>NetworkError</a></code>" exception and terminate these steps.
@@ -737,7 +730,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
       <div class="idl" title="typedef USVString PushMessageDataInit"></div>
       <p class="note">
         In future, <a>PushMessageDataInit</a> is likely to be a union type that includes types such
-        as <a><code>Blob</code></a> and <a><code>BufferSource</code></a>. The <a title=
+        as <a><code>Blob</code></a> and <a><code>BufferSource</code></a>. The <a data-lt=
         "extract a byte sequence">algorithm</a> below would be extended, rather like the Fetch
         standard's <a href="https://fetch.spec.whatwg.org/#concept-bodyinit-extract">extract a byte
         stream</a> algorithm.
@@ -826,8 +819,8 @@ navigator.serviceWorker.register('serviceworker.js').then(
             empty byte sequence if no data was received.
           </li>
           <li>
-            <a>Queue a task</a> to <a title="fire a simple event">fire <var>event</var> as a simple
-            event</a> named <code>push</code> at <var>scope</var>.
+            <a>Queue a task</a> to <a data-lt="fire a simple event">fire <var>event</var> as a
+            simple event</a> named <code>push</code> at <var>scope</var>.
           </li>
         </ol>
         <p>
@@ -836,7 +829,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
           events</a> MUST be modified as follows: instead of setting the <code>data</code>
           attribute of the event to the value of the <var>eventInitDict</var>'s "<code id=
           "widl-PushEventInit-data">data</code>" member, set the <code>data</code> attribute to a
-          new <a>PushMessageData</a> with <a>bytes</a> set to the result of <a title=
+          new <a>PushMessageData</a> with <a>bytes</a> set to the result of <a data-lt=
           "extract a byte sequence">extracting a byte sequence</a> from that dictionary member, or
           an empty byte sequence if <var>eventInitDict</var> is not provided or has no
           "<code>data</code>" member.
@@ -850,7 +843,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
           The <code>pushsubscriptionchange</code> event indicates that a <a>push subscription</a>
           has been invalidated, or will soon be invalidated. For example, the <a>push service</a>
           MAY set an expiration time. A <a>webapp</a> SHOULD attempt to resubscribe while handling
-          this event, in order to continue receiving <a title="push message">push messages</a>.
+          this event, in order to continue receiving <a>push messages</a>.
         </p>
         <p>
           To fire a <code>pushsubscriptionchange</code> event, the <a>user agent</a> MUST run the
