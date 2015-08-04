@@ -100,6 +100,15 @@
               ],
               status: "Internet-Draft",
               publisher: "IETF"
+            },
+            "WEBPUSH-ENCRYPTION": {
+              title: "Message Encryption for Web Push",
+              href: "https://tools.ietf.org/html/draft-thomson-webpush-encryption",
+              authors: [
+                "Martin Thomson",
+              ],
+              status: "Internet-Draft",
+              publisher: "Individual"
             }
           }
       };
@@ -466,24 +475,22 @@ navigator.serviceWorker.register('serviceworker.js').then(
           Push service use
         </h3>
         <p>
-          The fields included in the <code>PushSubscription</code> is all the information needed for
-          an <a>application server</a> to send a <a>push message</a>. Push services that are
+          The fields included in the <code>PushSubscription</code> is all the information needed
+          for an <a>application server</a> to send a <a>push message</a>. Push services that are
           compatible with the Push API will be expected to provide an <a>endpoint</a> that conforms
-          to the <a>web push protocol</a>.  These parameters and attributes include:
+          to the <a>web push protocol</a>. These parameters and attributes include:
         </p>
         <ul>
-          <li>
-            The <code><a>endpoint</a></code> of a <code>PushSubscription</code> is a URI that allows
-            an <a>application server</a> to request delivery of a <a>push message</a> to
-            a <a>webapp</a>.
+          <li>The <code><a>endpoint</a></code> of a <code>PushSubscription</code> is a URI that
+          allows an <a>application server</a> to request delivery of a <a>push message</a> to a <a>
+            webapp</a>.
           </li>
-          <li>
-            The <code>p256dh</code> of a <code>PushSubscription</code> contains
-            the <dfn id="ECDH">elliptic curve Diffie-Hellman (ECDH)</dfn> public key associated with
-            the <a>push subscription</a>.  This key is used by the <a>application server</a> to
-            encipher messages for the <a>push subscription</a>, as described
-            in <a href="https://tools.ietf.org/html/draft-thomson-webpush-encryption">TODO cite the
-            spec</a>.
+          <li>The <code>getKey</code> method on a <code>PushSubscription</code> is used to retrieve
+          keying material used to encipher <a title="push message">push messages</a>. Passing a
+          value of <code>p256dh</code> retrieves a <dfn data-lt="ECDH">elliptic curve Diffie-Hellman
+          (ECDH)</dfn> public key associated with the <a>push subscription</a>. This key is used by
+          the <a>application server</a> to encipher messages for the <a>push subscription</a>, as
+          described in [[!WEBPUSH-ENCRYPTION]].
           </li>
         </ul>
       </section>
@@ -589,9 +596,11 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <li>If there is an error, reject <var>promise</var> with a <code><a>DOMException</a></code>
         whose name is "<code><a>AbortError</a></code>" and terminate these steps.
         </li>
-        <li>Generate a new P-256 <a>ECDH</a> key pair.  Store the private key in an internal slot
+        <li>Generate a new P-256 <a>ECDH</a> key pair. Store the private key in an internal slot
         associated with the subscription; this value MUST NOT be made available to applications.
-        Store the public key in the <code>p256dh</code> field of the subscription.
+        The public key is also stored in an internal slot and can be retrieved by calling the
+        <code>getKey</code> of the <a><code>PushSubscription</code></a> with an argument of <code>
+          p256dh</code>.
         </li>
         <li>When the request has been completed, resolve <var>promise</var> with a
         <a><code>PushSubscription</code></a> providing the details of the new <a>push
@@ -684,13 +693,13 @@ navigator.serviceWorker.register('serviceworker.js').then(
           readonly attribute USVString endpoint
         </dt>
         <dt>
-          readonly attribute ArrayBuffer p256dh
+          readonly attribute ArrayBuffer? getKey (PushEncryptionKeyName name)
         </dt>
         <dt>
           Promise&lt;boolean&gt; unsubscribe ()
         </dt>
         <dt>
-          serializer = {attribute}
+          serializer
         </dt>
       </dl>
       <p>
@@ -700,11 +709,24 @@ navigator.serviceWorker.register('serviceworker.js').then(
         subscription</a>.
       </p>
       <p>
-        When getting the <code id=
-        "widl-PushSubscription-p256dh"><strong><em>p256dh</em></strong></code> attribute, the
-        <a>user agent</a> MUST return the P-256 ECDH public key associated with the <a>push
-        subscription</a> that is used by the application server to encrypt <a title="push
-        message">push messages</a>.
+        The <code id="widl-PushSubscription-getKey"><strong><em>getKey()</em></strong></code>
+        method retrieves a public key using the following process:
+      </p>
+      <ol>
+        <li>Find the internal slot that contains the encryption key pair named by the
+        <code>name</code> argument.
+        </li>
+        <li>If an encryption key pair was not found, return <code>null</code>.
+        </li>
+        <li>Set <var>pubKey</var> to the serialized value of the public key from the key pair. This
+        uses the serialization format defined in the specification for the name.
+        </li>
+        <li>Return <var>pubKey</var>.
+        </li>
+      </ol>
+      <p>
+        An encryption key named <code>p256dh</code> MUST be supported, which is used to retrieve a
+        P-256 ECDH public key as described by [[!WEBPUSH-ENCRYPTION]].
       </p>
       <p>
         The <code><dfn id=
@@ -728,6 +750,57 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <li>When the request has been completed, resolve <var>promise</var> with <code>true</code>.
         </li>
       </ol>
+      <p>
+        The serializer for a <a><code>PushSubscription</code></a> invokes the following steps:
+      </p>
+      <ol>
+        <li>Let <var>map</var> be an empty map.
+        </li>
+        <li>Add an entry to <var>map</var> whose key name is <code>endpoint</code> and whose value
+        is the result of converting the <code>endpoint</code> attribute of the
+        <a><code>PushSubscription</code></a> to a serialized value.
+        </li>
+        <li>Let <var>keys</var> be an empty map.
+        </li>
+        <li>For each identifier <var>i</var> corresponding to public keys in internal slots on the
+        <a><code>PushSubscription</code></a>, ordered by the name of the public key:
+          <ol>
+            <li>Add an entry to <var>keys</var> whose key name is the name of the public key and
+            whose value is an <code>ArrayBuffer</code> containing the defined serialization of the
+            public.
+            </li>
+          </ol>
+        </li>
+        <li>Add an entry to <var>map</var> whose key name is <code>keys</code> and whose value is
+        <var>keys</var>.
+        </li>
+        <li>Return <var>map</var>.
+        </li>
+      </ol>
+      <section>
+        <h2>
+          <a>PushEncryptionKeyName</a> enumeration
+        </h2>
+        <p>
+          Encryption keys used for <a>push message</a> encryption are provided to a <a>webapp</a>
+          through the <code>getKey</code> method or the serializer of
+          <code><a>PushSubscription</a></code>. Each key is named using a value from the
+          <code><dfn>PushEncryptionKeyName</dfn></code> enumeration.
+        </p>
+        <dl title="enum PushEncryptionKeyName" class="idl">
+          <dt>
+            p256dh
+          </dt>
+        </dl>
+        <p>
+          The <code><dfn id="widl-PushEncryptionKeyName-p256dh">p256dh</dfn></code> value is used
+          to retrieve the P-256 ECDH Diffie-Hellman public key described in
+          [[!WEBPUSH-ENCRYPTION]].
+        </p>
+        <p>
+          Other encryption keys could be provided to applications.
+        </p>
+      </section>
     </section>
     <section>
       <h2>
@@ -859,30 +932,25 @@ navigator.serviceWorker.register('serviceworker.js').then(
           <li>Let <var>scope</var> be the <code>ServiceWorkerGlobalScope</code> of the <a>Service
           Worker</a> associated with the <a>webapp</a>.
           </li>
-          <li>
-            Let <var>subscription</var> be the active <a>push subscription</a> for the <a>Service
-            Worker</a>.
+          <li>Let <var>subscription</var> be the active <a>push subscription</a> for the <a>Service
+          Worker</a>.
           </li>
-          <li>
-            Decrypt the <a>push message</a> using the private key from the key pair associated
-            with <var>subscription</var> and the process described
-            in <a href="https://tools.ietf.org/html/draft-thomson-webpush-encryption">TODO:
-            cite</a>.  This produces the plain text of the message.
+          <li>Decrypt the <a>push message</a> using the private key from the key pair associated
+          with <var>subscription</var> and the process described in <a href=
+          "https://tools.ietf.org/html/draft-thomson-webpush-encryption">TODO: cite</a>. This
+          produces the plain text of the message.
           </li>
-          <li>
-            If the <a>push message</a> could not be decrypted for any reason, or if it is not
-            encrypted and contains any payload, discard the message and terminate this process.  A
-            push message MAY be empty if it contains no content, but otherwise <code>push</code>
-            event MUST NOT be fired for a <a>push message</a> that was not successfully decrypted
-            using the key pair associated with the <a>push subscription</a>.
+          <li>If the <a>push message</a> could not be decrypted for any reason, or if it is not
+          encrypted and contains any payload, discard the message and terminate this process. A
+          push message MAY be empty if it contains no content, but otherwise <code>push</code>
+          event MUST NOT be fired for a <a>push message</a> that was not successfully decrypted
+          using the key pair associated with the <a>push subscription</a>.
           </li>
-          <li>
-            Let <var>pushdata</var> be the decrypted plain text of the <a>push message</a>.
+          <li>Let <var>pushdata</var> be the decrypted plain text of the <a>push message</a>.
           </li>
-          <li>
-            Let <var>event</var> be a new <a>PushEvent</a>, whose <code id="widl-PushEvent-data">
-            data</code> attribute is a new <a>PushMessageData</a> with <a>bytes</a> set to
-            the value of <var>pushdata</var>.
+          <li>Let <var>event</var> be a new <a>PushEvent</a>, whose <code id="widl-PushEvent-data">
+            data</code> attribute is a new <a>PushMessageData</a> with <a>bytes</a> set to the
+            value of <var>pushdata</var>.
           </li>
           <li>
             <a>Queue a task</a> to <a data-lt="fire a simple event">fire <var>event</var> as a
