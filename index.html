@@ -380,30 +380,28 @@
         Push Framework
       </h2>
       <p>
-        A <a>push message</a> is sent from an <a>application server</a> to
-        a <a>webapp</a> as follows:
+        A <a>push message</a> is sent from an <a>application server</a> to a <a>webapp</a> as
+        follows:
       </p>
       <ul>
-        <li>the <a>application server</a> requests that the <a>push service</a>
-        deliver a <a>push message</a> using the [[!WEBPUSH-PROTOCOL]].  This
-        request uses the <a>endpoint</a> included in the <a>push
-        subscription</a>;
+        <li>the <a>application server</a> requests that the <a>push service</a> deliver a <a>push
+        message</a> using the [[!WEBPUSH-PROTOCOL]]. This request uses the <a>endpoint</a> included
+        in the <a>push subscription</a>;
         </li>
-        <li>the <a>push service</a> delivers the message to a specific <a>user
-        agent</a>, identifying the <a>endpoint</a> in the message;
+        <li>the <a>push service</a> delivers the message to a specific <a>user agent</a>,
+        identifying the <a>endpoint</a> in the message;
         </li>
-        <li>the <a>user agent</a> identifies the intended <a>webapp</a>,
-        activates the <a>Service Worker</a> for the <a>webapp</a> as necessary,
-        and delivers the <a>push message</a> to the <a>Service Worker</a>.
+        <li>the <a>user agent</a> identifies the intended <a>webapp</a>, activates the <a>Service
+        Worker</a> for the <a>webapp</a> as necessary, and delivers the <a>push message</a> to the
+        <a>Service Worker</a>.
         </li>
       </ul>
       <p>
-        This overall framework allows <a title="application server">application
-        servers</a> to activate <a title="webapp">webapps</a> in response to
-        events at the <a>application server</a>.  Information about those events
-        can be included in the <a>push message</a>, which allows
-        the <a>webapp</a> to react appropriately to those events, potentially
-        without needing to initiate network requests.
+        This overall framework allows <a title="application server">application servers</a> to
+        activate <a title="webapp">webapps</a> in response to events at the <a>application
+        server</a>. Information about those events can be included in the <a>push message</a>,
+        which allows the <a>webapp</a> to react appropriately to those events, potentially without
+        needing to initiate network requests.
       </p>
       <p>
         The following code and diagram illustrate a hypothetical use of the push API.
@@ -843,8 +841,8 @@ navigator.serviceWorker.register('serviceworker.js').then(
           "widl-PushEventInit-data">data</code>" member, set the <code>data</code> attribute to a
           new <a>PushMessageData</a> with <a>bytes</a> set to the result of <a title=
           "extract a byte sequence">extracting a byte sequence</a> from that dictionary member, or
-          an empty byte sequence if <var>eventInitDict</var> is not provided or has no
-          "<code>data</code>" member.
+          an empty byte sequence if the "<code id="widl-PushEventInit-data">data</code>" member is
+          not provided.
         </p>
       </section>
       <section>
