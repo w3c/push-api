@@ -704,13 +704,14 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </dt>
       </dl>
       <p>
-        When getting the <code><dfn id="widl-PushSubscription-endpoint" data-lt="PushSubscription-endpoint">endpoint</dfn></code>
-        attribute, the <a>user agent</a> MUST return the <a>endpoint</a> associated with the
-        <a>push subscription</a>.
+        When getting the <code><dfn id="widl-PushSubscription-endpoint" data-lt=
+        "PushSubscription-endpoint">endpoint</dfn></code> attribute, the <a>user agent</a> MUST
+        return the <a>endpoint</a> associated with the <a>push subscription</a>.
       </p>
       <p>
-        The <code><dfn id="widl-PushSubscription-getKey-ArrayBuffer-PushEncryptionKeyName-name" data-lt="PushSubscription-getKey">getKey</dfn></code> method retrieves an
-        encryption key using the following process:
+        The <code><dfn id="widl-PushSubscription-getKey-ArrayBuffer-PushEncryptionKeyName-name"
+        data-lt="PushSubscription-getKey">getKey</dfn></code> method retrieves an encryption key
+        using the following process:
       </p>
       <ol>
         <li>Find the internal slot that contains the encryption key named by the <code>name</code>
@@ -941,8 +942,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
           Worker</a>.
           </li>
           <li>Decrypt the <a>push message</a> using the private key from the key pair associated
-          with <var>subscription</var> and the process described in <a href=
-          "https://tools.ietf.org/html/draft-thomson-webpush-encryption">TODO: cite</a>. This
+          with <var>subscription</var> and the process described in [[!WEBPUSH-ENCRYPTION]]. This
           produces the plain text of the message.
           </li>
           <li>If the <a>push message</a> could not be decrypted for any reason, or if it is not
