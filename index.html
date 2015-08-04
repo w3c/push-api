@@ -7,9 +7,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src='https://www.w3.org/Tools/respec/respec-w3c-common' class='remove'>
-</script>
+    </script>
     <script class="remove">
-// (this is to make tidy happy)
+    // (this is to make tidy happy)
       // See http://www.w3.org/respec/ for ReSpec documentation.
       var respecConfig = {
           specStatus: "ED",
@@ -292,8 +292,9 @@
         </h2>
         <p>
           A <dfn>push subscription</dfn> is a message delivery context established between the
-          <a>user agent</a> and the <a>push service</a> on behalf of a <a>webapp</a>, and
-          associated with the <a>webapp</a>'s <a>service worker registration</a>.
+          <a>user agent</a> and the <a>push service</a> on behalf of a <a>webapp</a>. Each <a>push
+          subscription</a> is associated with a <a>service worker registration</a> and a <a>service
+          worker registration</a> has at most one <a>push subscription</a>.
         </p>
         <p>
           When a <a>push subscription</a> is <dfn>deactivated</dfn>, both the <a>user agent</a> and
