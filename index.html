@@ -694,7 +694,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
       <h2>
         <a>PushMessageData</a> interface
       </h2>
-      <dl title="interface PushMessageData" class="idl">
+      <dl title="interface PushMessageData" class="idl" data-merge="JSON">
         <dt>
           ArrayBuffer arrayBuffer ()
         </dt>
@@ -702,12 +702,13 @@ navigator.serviceWorker.register('serviceworker.js').then(
           Blob blob ()
         </dt>
         <dt>
-          Any json ()
+          JSON json ()
         </dt>
         <dt>
           USVString text ()
         </dt>
       </dl>
+      <dl title="typedef object JSON" class="idl"></dl>
       <p>
         <a>PushMessageData</a> objects have an associated <dfn>bytes</dfn> (a byte sequence) set on
         creation.
@@ -723,10 +724,11 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <var>type</var> is not provided.
       </p>
       <p>
-        The <code><dfn id="widl-PushMessageData-json-Any">json()</dfn></code> method, when invoked,
-        MUST return the result of invoking the initial value of <a><code>JSON.parse</code></a> with
-        the result of running <a>utf-8 decode</a> on <var>bytes</var> as argument. Re-throw any
-        exceptions thrown by <a><code>JSON.parse</code></a>.
+        The <code><dfn id="widl-PushMessageData-json-JSON">json()</dfn></code> method, when
+        invoked, MUST return the result of invoking the initial value of
+        <a><code>JSON.parse</code></a> with the result of running <a>utf-8 decode</a> on
+        <var>bytes</var> as argument. Re-throw any exceptions thrown by
+        <a><code>JSON.parse</code></a>.
       </p>
       <p>
         The <code><dfn id="widl-PushMessageData-text-USVString">text()</dfn></code> method, when
