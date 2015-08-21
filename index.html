@@ -734,7 +734,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
         The <code><dfn id="widl-PushMessageData-text-USVString">text()</dfn></code> method, when
         invoked, MUST return the result of running <a>utf-8 decode</a> on <var>bytes</var>.
       </p>
-      <div class="idl" title="typedef (BufferSource or Blob or DOMString) PushMessageDataInit"></div>
+      <div class="idl" title="typedef (BufferSource or USVString) PushMessageDataInit"></div>
       <p>
         To <dfn>extract a byte sequence</dfn> from <var>object</var>, run these steps:
       </p>
@@ -750,13 +750,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
               Set <var>bytes</var> to a copy of <var>object</var>'s contents.
             </dd>
             <dt>
-              <a><code>Blob</code></a>
-            </dt>
-            <dd>
-              Set <var>bytes</var> to a copy of <var>object</var>'s contents.
-            </dd>
-            <dt>
-              <a><code>DOMString</code></a>
+              <a><code>USVString</code></a>
             </dt>
             <dd>
               Set <var>bytes</var> to the result of running <a>utf-8 encode</a> on
