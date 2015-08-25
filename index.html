@@ -109,6 +109,11 @@
               ],
               status: "Internet-Draft",
               publisher: "Individual"
+            },
+            "X9.62": {
+              title: "Public Key Cryptography for the Financial Services Industry, The Elliptic Curve Digital Signature Algorithm (ECDSA)",
+              status: "ANS X9.62–2005",
+              publisher: "ANSI"
             }
           }
       };
@@ -487,11 +492,10 @@ navigator.serviceWorker.register('serviceworker.js').then(
           </li>
           <li>The <code><a data-lt="PushSubscription-getKey">getKey</a></code> method on a
           <code>PushSubscription</code> is used to retrieve keying material used to encipher
-          <a title="push message">push messages</a>. Passing a value of <code>p256dh</code>
-          retrieves a <dfn data-lt="ECDH">elliptic curve Diffie-Hellman (ECDH)</dfn> public key
-          associated with the <a>push subscription</a>. This key is used by the <a>application
-          server</a> to encipher messages for the <a>push subscription</a>, as described in
-          [[!WEBPUSH-ENCRYPTION]].
+          <a>push messages</a>. Passing a value of <code>p256dh</code> retrieves a <dfn data-lt=
+          "ECDH">elliptic curve Diffie-Hellman (ECDH)</dfn> public key associated with the <a>push
+          subscription</a>. This key is used by the <a>application server</a> to encipher messages
+          for the <a>push subscription</a>, as described in [[!WEBPUSH-ENCRYPTION]].
           </li>
         </ul>
       </section>
@@ -705,27 +709,25 @@ navigator.serviceWorker.register('serviceworker.js').then(
       </dl>
       <p>
         When getting the <code><dfn id="widl-PushSubscription-endpoint" data-lt=
-        "PushSubscription-endpoint">endpoint</dfn></code> attribute, the <a>user agent</a> MUST
-        return the <a>endpoint</a> associated with the <a>push subscription</a>.
+        "PushSubscription-endpoint">PushSubscription.endpoint</dfn></code> attribute, the <a>user
+        agent</a> MUST return the <a>endpoint</a> associated with the <a>push subscription</a>.
       </p>
       <p>
         The <code><dfn id="widl-PushSubscription-getKey-ArrayBuffer-PushEncryptionKeyName-name"
-        data-lt="PushSubscription-getKey">getKey</dfn></code> method retrieves an encryption key
-        using the following process:
+        data-lt="PushSubscription-getKey|getKey">PushSubscription.getKey</dfn></code> method
+        retrieves a public key that can be used for enciphering messages. When <code><a data-lt=
+        "PushSubscription-getKey">getKey</a></code> is invoked the following process is followed:
       </p>
       <ol>
-        <li>Find the internal slot that contains the encryption key named by the <code>name</code>
-        argument.
+        <li>Find the internal slot that contains the encryption key pair named by the
+        <code>name</code> argument.
         </li>
         <li>If an encryption key was not found, return <code>null</code>.
         </li>
-        <li>If the encryption key represents an asymmetric key pair, set <var>key</var> to the
-        serialized value of the public key from the key pair. This uses the serialization format
-        defined in the specification for the name.
-        </li>
-        <li>If the encryption key represents a symmetric key, set <var>key</var> to the serialized
-        value of the key. This uses the serialization format defined in the specification for the
-        name.
+        <li>Set <var>key</var> to the serialized value of the public key from the key pair. This
+        uses the serialization format described in the specification that defines the name. For
+        example, [[!WEBPUSH-ENCRYPTION]] specifies that the <code>p256dh</code> public key is
+        encoded using the uncompressed format defined in [[X9.62]] Annex A.
         </li>
         <li>Return <var>key</var>.
         </li>
@@ -771,9 +773,15 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <li>For each identifier <var>i</var> corresponding to keys in internal slots on the
         <a><code>PushSubscription</code></a>, ordered by the name of the key:
           <ol>
-            <li>Add an entry to <var>keys</var> whose key name is the name of the key and whose
-            value is an <code>ArrayBuffer</code> containing the defined serialization of the public
-            key (for an asymmetric key pair) or the key (for a symmetric key).
+            <li>Let <var>b</var> by the encoded value of the public key corresponding to the key
+            name <var>i</var>, using the encoding defined for the key name (see <code><a data-lt=
+            "PushSubscription.getKey">getKey</a></code>).
+            </li>
+            <li>Let <var>s</var> be the URL-safe base64 encoding of <var>b</var> as a
+            <code><a>USVString</a></code>.
+            </li>
+            <li>Add an entry to <var>keys</var> whose key name is the name of <var>i</var> and
+            whose value is <var>s</var>.
             </li>
           </ol>
         </li>
