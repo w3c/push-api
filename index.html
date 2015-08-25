@@ -734,14 +734,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
         The <code><dfn id="widl-PushMessageData-text-USVString">text()</dfn></code> method, when
         invoked, MUST return the result of running <a>utf-8 decode</a> on <var>bytes</var>.
       </p>
-      <div class="idl" title="typedef USVString PushMessageDataInit"></div>
-      <p class="note">
-        In future, <a>PushMessageDataInit</a> is likely to be a union type that includes types such
-        as <a><code>Blob</code></a> and <a><code>BufferSource</code></a>. The <a data-lt=
-        "extract a byte sequence">algorithm</a> below would be extended, rather like the Fetch
-        standard's <a href="https://fetch.spec.whatwg.org/#concept-bodyinit-extract">extract a byte
-        stream</a> algorithm.
-      </p>
+      <div class="idl" title="typedef (BufferSource or USVString) PushMessageDataInit"></div>
       <p>
         To <dfn>extract a byte sequence</dfn> from <var>object</var>, run these steps:
       </p>
@@ -750,6 +743,12 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </li>
         <li>Switch on <var>object</var>'s type:
           <dl>
+            <dt>
+              <a><code>BufferSource</code></a>
+            </dt>
+            <dd>
+              Set <var>bytes</var> to a copy of <var>object</var>'s contents.
+            </dd>
             <dt>
               <a><code>USVString</code></a>
             </dt>
