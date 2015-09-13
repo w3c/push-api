@@ -492,10 +492,10 @@ navigator.serviceWorker.register('serviceworker.js').then(
           </li>
           <li>The <code><a data-lt="PushSubscription-getKey">getKey</a></code> method on a
           <code>PushSubscription</code> is used to retrieve keying material used to encipher
-          <a>push messages</a>. Each invocation of the function returns a
-          new <code>ArrayBuffer</code> that contains the value of the corresponding key,
-          or <code>null</code> if the identified key doesn't exist. Passing a value
-          of <code>p256dh</code> retrieves a <dfn data-lt= "ECDH">elliptic curve Diffie-Hellman
+          <a>push messages</a>. Each invocation of the function returns a new
+          <code>ArrayBuffer</code> that contains the value of the corresponding key, or
+          <code>null</code> if the identified key doesn't exist. Passing a value of
+          <code>p256dh</code> retrieves a <dfn data-lt="ECDH">elliptic curve Diffie-Hellman
           (ECDH)</dfn> public key associated with the <a>push subscription</a>. This key is used by
           the <a>application server</a> to encipher messages for the <a>push subscription</a>, as
           described in [[!WEBPUSH-ENCRYPTION]].
@@ -731,9 +731,9 @@ navigator.serviceWorker.register('serviceworker.js').then(
         instance.
         </li>
         <li>Set the contents of <var>key</var> to the serialized value of the public key from the
-        key pair. This uses the serialization format described in the specification that defines the
-        name. For example, [[!WEBPUSH-ENCRYPTION]] specifies that the <code>p256dh</code> public key
-        is encoded using the uncompressed format defined in [[X9.62]] Annex A.
+        key pair. This uses the serialization format described in the specification that defines
+        the name. For example, [[!WEBPUSH-ENCRYPTION]] specifies that the <code>p256dh</code>
+        public key is encoded using the uncompressed format defined in [[X9.62]] Annex A.
         </li>
         <li>Return <var>key</var>.
         </li>
