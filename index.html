@@ -185,8 +185,11 @@
         handler</a></dfn>, <dfn><a href=
         "http://www.w3.org/TR/html5/webappapis.html#event-handler-event-type">event handler event
         type</a></dfn>, <dfn><a href=
-        "http://www.w3.org/TR/html5/webappapis.html#queue-a-task">queue a task</a></dfn>, and
-        <dfn><a href="http://www.w3.org/TR/html5/webappapis.html#fire-a-simple-event">fire a simple
+        "http://www.w3.org/TR/html5/webappapis.html#queue-a-task">queue a task</a></dfn>,
+        <dfn><a href=
+        "http://www.w3.org/TR/html5/infrastructure.html#concept-events-trusted">trusted
+        event</a></dfn>, and <dfn><a href=
+        "http://www.w3.org/TR/html5/webappapis.html#fire-a-simple-event">fire a simple
         event</a></dfn> are defined in [[!HTML5]].
       </p>
       <p>
@@ -205,6 +208,7 @@
         <code><a href=
         "http://www.w3.org/TR/dom/#securityerror"><dfn>SecurityError</dfn></a></code>,
         <code><a href="http://www.w3.org/TR/dom/#networkerror"><dfn>NetworkError</dfn></a></code>,
+        <a href="http://www.w3.org/TR/dom/#concept-event-listener"><dfn>event listener</dfn></a>,
         and <a href="http://www.w3.org/TR/dom/#concept-event-constructor"><dfn>steps for
         constructing events</dfn></a> are defined in [[!DOM]].
       </p>
@@ -223,9 +227,12 @@
         "http://www.w3.org/TR/service-workers/#service-worker-global-scope-interface"><dfn>ServiceWorkerGlobalScope</dfn></a></code>,
         <code><a href=
         "http://www.w3.org/TR/service-workers/#extendable-event-interface"><dfn>ExtendableEvent</dfn></a></code>,
-        and <code><a href=
-        "http://www.w3.org/TR/service-workers/#extendable-event-init-dictionary"><dfn>ExtendableEventInit</dfn></a></code>
-        are defined in [[!SERVICE-WORKERS]].
+        <code><a href=
+        "http://www.w3.org/TR/service-workers/#extendable-event-init-dictionary"><dfn>ExtendableEventInit</dfn></a></code>,
+        <a href="http://www.w3.org/TR/service-workers/#dfn-extend-lifetime-promises"><dfn>extend
+        lifetime promises</dfn></a> and the <a href=
+        "http://www.w3.org/TR/service-workers/#handle-functional-event-algorithm"><dfn>Handle
+        Functional Event</dfn></a> algorithm are defined in [[!SERVICE-WORKERS]].
       </p>
       <p>
         The algorithms <a href="http://www.w3.org/TR/encoding/#utf-8-encode"><dfn>utf-8
@@ -407,7 +414,8 @@
         <h2>
           Example
         </h2>
-        <pre class="example highlight">// https://example.com/serviceworker.js
+        <pre class="example highlight">
+// https://example.com/serviceworker.js
 this.onpush = function(event) {
   console.log(event.data);
   // From here we can write the data to IndexedDB, send it to any open
@@ -851,21 +859,50 @@ navigator.serviceWorker.register('serviceworker.js').then(
           this event, in order to continue receiving <a>push messages</a>.
         </p>
         <p>
-          To fire a <code>pushsubscriptionchange</code> event, the <a>user agent</a> MUST run the
-          following steps:
+          When new <a>push subscription</a> information becomes available, the <a>user agent</a>
+          MUST run the following steps:
         </p>
         <ol>
-          <li>If the <a>Service Worker</a> associated with the <a>webapp</a> is not running, start
-          it.
+          <li>Let <var>registration</var> be the <a>service worker registration</a> corresponding
+          to the push message.
           </li>
-          <li>Let <var>scope</var> be the <code>ServiceWorkerGlobalScope</code> of the <a>Service
-          Worker</a> associated with the <a>webapp</a>.
+          <li>If <var>registration</var> is not found, abort these steps.
           </li>
-          <li>
-            <a>Queue a task</a> to <a>fire a simple event</a> named
-            <code>pushsubscriptionchange</code> at <var>scope</var>.
+          <li>Invoke the <a>Handle Functional Event</a> algorithm with a <a>service worker
+          registration</a> of <var>registration</var> and <var>callbackSteps</var> set to the
+          following steps:
+            <ol>
+              <li>Set <var>global</var> to the global object that was provided as an argument.
+              </li>
+              <li>Create a <a>trusted event</a>, <var>e</var>, that uses the
+              <code><a>ExtendableEvent</a></code> interface, with the event type
+              <code>pushsubscriptionchange</code>, which does not bubble, is not cancelable, and
+              has no default action.
+              </li>
+              <li>Dispatch <var>e</var> to <var>global</var>.
+              </li>
+              <li>If the previous <a>push subscription</a> is still active, perform the following
+              steps in parallel:
+                <ol>
+                  <li>Set <var>oldSubscription</var> to the previous <a>push subscription</a>.
+                  </li>
+                  <li>Wait for all of the promises in the <a>extend lifetime promises</a> of <var>
+                    e</var> to either resolve or reject.
+                  </li>
+                  <li>Unsubscribe <var>oldSubscription</var>.
+                  </li>
+                </ol>
+              </li>
+            </ol>
           </li>
         </ol>
+        <p>
+          This algorithm ensures that the <a>webapp</a> is able to react to any non-destructive
+          change in a <a>push subscription</a>, such as an automatic refresh, without causing any
+          active <a>push subscription</a> to be terminated prematurely. A <a>webapp</a> can request
+          a new <a>push subscription</a> during this process and ensure that no <a>push
+          messages</a> are lost.
+        </p>
       </section>
     </section>
     <section>
