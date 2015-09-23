@@ -5,6 +5,15 @@ tidy := $(support_dir)/bin/tidy
 endif
 cmake ?= cmake
 
+.PHONY: check
+check: install_tidy
+	$(tidy) -quiet -config tidyconf.txt index.html | sed -f fixup.sed | diff -q index.html -
+
+.PHONY: tidy
+tidy: install_tidy
+	$(tidy) -quiet -config tidyconf.txt -modify index.html || true
+	sed -i~t -f fixup.sed index.html && rm -f index.html~t
+
 .PHONY: install_tidy
 install_tidy: $(tidy)
 $(tidy):
@@ -16,10 +25,3 @@ $(tidy):
 	  $(cmake) ../.. -DCMAKE_INSTALL_PREFIX=$(support_dir) -DCMAKE_BUILD_TYPE=Release && \
 	  make && make install
 
-.PHONY: check
-check: install_tidy
-	$(tidy) -quiet -config tidyconf.txt -errors index.html
-
-.PHONY: tidy
-tidy: install_tidy
-	-$(tidy) -quiet -config tidyconf.txt -modify index.html
