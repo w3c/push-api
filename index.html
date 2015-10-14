@@ -723,7 +723,8 @@ navigator.serviceWorker.register('serviceworker.js').then(
       <p>
         The <code><dfn id="widl-PushMessageData-arrayBuffer-ArrayBuffer">arrayBuffer()</dfn></code>
         method, when invoked, MUST return an <a><code>ArrayBuffer</code></a> whose contents are
-        <var>bytes</var>.
+        <var>bytes</var>. Exceptions thrown during the creation of the <a><code>ArrayBuffer</code></a>
+        object are re-thrown.
       </p>
       <p>
         The <code><dfn id="widl-PushMessageData-blob-Blob">blob()</dfn></code> method, when
