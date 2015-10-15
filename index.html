@@ -965,7 +965,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
           </dt>
         </dl>
         <p>
-          Upon receiving a <a>push message</a> from the <a>push service</a> the <a>user agent</a>
+          Upon receiving a <a>push message</a> from the <a>push service</a>, the <a>user agent</a>
           MUST run the following steps:
         </p>
         <ol>
@@ -1005,8 +1005,9 @@ navigator.serviceWorker.register('serviceworker.js').then(
               <code>push</code>, which does not bubble, is not cancelable, and has no default
               action.
               </li>
-              <li>If the <a>push message</a> contains valid data, set the <code>data</code>
-              attribute of <var>e</var> to a new <code><a>PushMessageData</a></code> instance with
+              <li>If the <a>push message</a> contains valid data - that is, if the message can be
+              successfully decoded and decrypted - set the <code>data</code> attribute
+              of <var>e</var> to a new <code><a>PushMessageData</a></code> instance with
               <a>bytes</a> set to the binary <a>push message</a> data.
               </li>
               <li>Dispatch <var>e</var> to <var>global</var>.
@@ -1029,12 +1030,18 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <p>
           When a constructor of the <a>PushEvent</a> interface, or of an interface that inherits
           from the <a>PushEvent</a> interface, is invoked, the usual <a>steps for constructing
-          events</a> are modified so that instead of setting the <code>data</code> attribute of the
-          event to the value of the <var>eventInitDict</var>'s "<code>data</code>" member, set the
-          <code>data</code> attribute to a new <a>PushMessageData</a> instances with <a>bytes</a>
-          set to the result of <a data-lt="extract a byte sequence">extracting a byte sequence</a>
-          from the <code>data</code> dictionary member, if the <code>data</code> member is
-          provided; otherwise, set <a>bytes</a> to null.
+          events</a> are extended to include the following steps:
+        </p>
+        <ol>
+          <li>If <var>eventInitDict</var>'s <code>data</code> member is not present, set
+            the <code>data</code> attribute of the event to <code>null</code> and terminate these
+            steps.
+          </li>
+          <li>Set <var>b</var> to the result of <a data-lt="extract a byte sequence">extracting a
+            byte sequence</a> from the "<code>data</code>" member of <var>eventInitDict</var>.
+          </li>
+          <li>Set the <code>data</code> attribute of the event to a new <a>PushMessageData</a>
+            instance with <code>bytes</code> set to <var>b</var>.
         </p>
       </section>
       <section>
