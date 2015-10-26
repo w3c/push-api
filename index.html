@@ -178,8 +178,8 @@
         broadcasted to all users of the <a>webapp</a>
         </li>
         <li>the <a>user agent</a> is temporarily offline: this case depends on the <a>push
-        service</a> providing reliable message delivery and supports use cases where a <a>webapp</a>
-        learns of changes that occur while offline in a timely fashion.
+        service</a> providing reliable message delivery and supports use cases where a
+        <a>webapp</a> learns of changes that occur while offline in a timely fashion.
         </li>
       </ul>
     </section>
@@ -433,8 +433,7 @@
         <h2>
           Example
         </h2>
-        <pre class="example highlight">
-// https://example.com/serviceworker.js
+        <pre class="example highlight">// https://example.com/serviceworker.js
 this.onpush = function(event) {
   console.log(event.data);
   // From here we can write the data to IndexedDB, send it to any open
@@ -845,8 +844,8 @@ navigator.serviceWorker.register('serviceworker.js').then(
       <p>
         The <code><dfn id="widl-PushMessageData-arrayBuffer-ArrayBuffer">arrayBuffer()</dfn></code>
         method, when invoked, MUST return an <a><code>ArrayBuffer</code></a> whose contents are
-        <var>bytes</var>. Exceptions thrown during the creation of the <a><code>ArrayBuffer</code></a>
-        object are re-thrown.
+        <var>bytes</var>. Exceptions thrown during the creation of the
+        <a><code>ArrayBuffer</code></a> object are re-thrown.
       </p>
       <p>
         The <code><dfn id="widl-PushMessageData-blob-Blob">blob()</dfn></code> method, when
