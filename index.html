@@ -771,7 +771,10 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </li>
         <li>Add an entry to <var>map</var> whose key name is <code>endpoint</code> and whose value
         is the result of converting the <code>endpoint</code> attribute of the
-        <a><code>PushSubscription</code></a> to a serialized value.
+        <a><code>PushSubscription</code></a> to a serialized value. The <a>user agent</a> MUST use
+        a serialization method that does not contain input-dependent branchs (that is, one that is
+        constant time). Note that a URL - as ASCII text - will not ordinarily require special
+        treatment.
         </li>
         <li>Let <var>keys</var> be an empty map.
         </li>
@@ -783,7 +786,8 @@ navigator.serviceWorker.register('serviceworker.js').then(
             "PushSubscription.getKey">getKey</a></code>).
             </li>
             <li>Let <var>s</var> be the URL-safe base64 encoding of <var>b</var> as a
-            <code><a>USVString</a></code>.
+            <code><a>USVString</a></code>. The <a>user agent</a> MUST use a serialization method
+            that does not branch based on the value of <var>b</var>.
             </li>
             <li>Add an entry to <var>keys</var> whose key name is the name of <var>i</var> and
             whose value is <var>s</var>.
