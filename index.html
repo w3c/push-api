@@ -732,7 +732,8 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <li>Set the contents of <var>key</var> to the serialized value of the public key from the
         key pair. This uses the serialization format described in the specification that defines
         the name. For example, [[!WEBPUSH-ENCRYPTION]] specifies that the <code>p256dh</code>
-        public key is encoded using the uncompressed format defined in [[X9.62]] Annex A.
+        public key is encoded using the uncompressed format defined in [[X9.62]] Annex A (that is,
+        a 65 octet sequence that starts with a 0x04 octet).
         </li>
         <li>Return <var>key</var>.
         </li>
