@@ -336,9 +336,10 @@
         </p>
         <p>
           A <a>push subscription</a> has an associated <dfn data-lt=
-          "endpoint|endpoints">endpoint</dfn>. It MUST be the absolute URL exposed by the <a>push
-          service</a> where the <a>application server</a> can send <a>push messages</a> to. An
-          <a>endpoint</a> MUST uniquely identify the <a>push subscription</a>.
+          "push endpoint|push endpoints">push endpoint</dfn>. It MUST be the absolute URL exposed
+          by the <a>push service</a> where the <a>application server</a> can send <a>push
+          messages</a> to. A <a>push endpoint</a> MUST uniquely identify the <a>push
+          subscription</a>.
         </p>
       </section>
       <section>
@@ -348,8 +349,8 @@
         <p>
           The term <dfn data-lt="push service|push services">push service</dfn> refers to a system
           that allows <a>application servers</a> to send <a>push messages</a> to a <a>webapp</a>. A
-          push service serves the <a>endpoint</a> or <a>endpoints</a> for the <a>push
-          subscriptions</a> it serves.
+          push service serves the <a>push endpoint</a> or <a data-lt="push endpoints">endpoints</a>
+          for the <a>push subscriptions</a> it serves.
         </p>
       </section>
       <section>
@@ -388,10 +389,10 @@
         subscription</a> MUST be <a>deactivated</a>.
       </p>
       <p>
-        The <a>endpoint</a> of a <a>deactivated</a> <a>push subscription</a> MUST NOT be reused for
-        a new <a>push subscription</a>. This prevents the creation of a persistent identifier that
-        the user cannot remove. This also prevents reuse of the details of one <a>push
-        subscription</a> to send <a>push messages</a> to another <a>push subscription</a>.
+        The <a>push endpoint</a> of a <a>deactivated</a> <a>push subscription</a> MUST NOT be
+        reused for a new <a>push subscription</a>. This prevents the creation of a persistent
+        identifier that the user cannot remove. This also prevents reuse of the details of one
+        <a>push subscription</a> to send <a>push messages</a> to another <a>push subscription</a>.
       </p>
       <p>
         <a>User agents</a> MUST implement the Push API to be HTTPS-only. SSL-only support provides
@@ -409,11 +410,11 @@
       </p>
       <ul>
         <li>the <a>application server</a> requests that the <a>push service</a> deliver a <a>push
-        message</a> using the [[!WEBPUSH-PROTOCOL]]. This request uses the <a>endpoint</a> included
-        in the <a>push subscription</a>;
+        message</a> using the [[!WEBPUSH-PROTOCOL]]. This request uses the <a>push endpoint</a>
+        included in the <a>push subscription</a>;
         </li>
         <li>the <a>push service</a> delivers the message to a specific <a>user agent</a>,
-        identifying the <a>endpoint</a> in the message;
+        identifying the <a>push endpoint</a> in the message;
         </li>
         <li>the <a>user agent</a> identifies the intended <a>webapp</a>, activates the <a>Service
         Worker</a> for the <a>webapp</a> as necessary, and delivers the <a>push message</a> to the
@@ -482,13 +483,13 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <p>
           The fields included in the <code>PushSubscription</code> is all the information needed
           for an <a>application server</a> to send a <a>push message</a>. Push services that are
-          compatible with the Push API provide an <a>endpoint</a> that conforms to the <a>web push
-          protocol</a>. These parameters and attributes include:
+          compatible with the Push API provide a <a>push endpoint</a> that conforms to the <a>web
+          push protocol</a>. These parameters and attributes include:
         </p>
         <ul>
-          <li>The <code><a data-lt="PushSubscription-endpoint">endpoint</a></code> of a
-          <code>PushSubscription</code> is a URL that allows an <a>application server</a> to
-          request delivery of a <a>push message</a> to a <a>webapp</a>.
+          <li>The <code><a data-lt="PushSubscription-endpoint">push endpoint</a></code> of a <code>
+            PushSubscription</code> is a URL that allows an <a>application server</a> to request
+            delivery of a <a>push message</a> to a <a>webapp</a>.
           </li>
           <li>The <code><a data-lt="PushSubscription-getKey">getKey</a></code> method on a
           <code>PushSubscription</code> is used to retrieve keying material used to encrypt and
@@ -718,15 +719,15 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </dt>
       </dl>
       <p>
-        When getting the <code><dfn id="widl-PushSubscription-endpoint" data-lt=
-        "PushSubscription-endpoint">endpoint</dfn></code> attribute, the <a>user agent</a> MUST
-        return the <a>endpoint</a> associated with the <a>push subscription</a>.
+        When getting the <code><dfn id="widl-PushSubscription-endpoint">endpoint</dfn></code>
+        attribute, the <a>user agent</a> MUST return the <a>push endpoint</a> associated with the
+        <a>push subscription</a>.
       </p>
       <p>
         The <code><dfn id="widl-PushSubscription-getKey-ArrayBuffer-PushEncryptionKeyName-name"
-        data-lt="PushSubscription-getKey|getKey">getKey</dfn></code> method retrieves keying
-        material that can be used for encrypting and authenticating messages. When
-        <code><a>getKey</a></code> is invoked the following process is followed:
+        data-lt="PushSubscription-getKey">getKey</dfn></code> method retrieves keying material that
+        can be used for encrypting and authenticating messages. When <code><a>getKey</a></code> is
+        invoked the following process is followed:
       </p>
       <ol>
         <li>Find the internal slot corresponding to the key named by the <code>name</code>
@@ -740,9 +741,9 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <li>If the internal slot contains an asymmetric key pair, set the contents of
         <var>key</var> to the serialized value of the public key from the key pair. This uses the
         serialization format described in the specification that defines the name. For example,
-        [[!WEBPUSH-ENCRYPTION]] specifies that the <code>p256dh</code> public key is encoded using
-        the uncompressed format defined in [[X9.62]] Annex A (that is, a 65 octet sequence that
-        starts with a 0x04 octet).
+        [[!WEBPUSH-ENCRYPTION]] specifies that the <code><a>p256dh</a></code> public key is encoded
+        using the uncompressed format defined in [[X9.62]] Annex A (that is, a 65 octet sequence
+        that starts with a 0x04 octet).
         </li>
         <li>Otherwise, if the internal slot contains a symmetric key, set the contents of
         <var>key</var> to a copy of the value from the internal slot. For example, the
@@ -835,13 +836,13 @@ navigator.serviceWorker.register('serviceworker.js').then(
           </dt>
         </dl>
         <p>
-          The <code><dfn data-lt="idl-def-PushEncryptionKeyName.p256dh|p256dh">p256dh</dfn></code>
-          value is used to retrieve the P-256 ECDH Diffie-Hellman public key described in
+          The <code><dfn id="idl-def-PushEncryptionKeyName.p256dh">p256dh</dfn></code> value is
+          used to retrieve the P-256 ECDH Diffie-Hellman public key described in
           [[!WEBPUSH-ENCRYPTION]].
         </p>
         <p>
-          The <code><dfn data-lt="idl-def-PushEncryptionKeyName.auth|auth">auth</dfn></code> value
-          is used to retrieve the authentication secret described in [[!WEBPUSH-ENCRYPTION]].
+          The <code><dfn id="idl-def-PushEncryptionKeyName.auth">auth</dfn></code> value is used to
+          retrieve the authentication secret described in [[!WEBPUSH-ENCRYPTION]].
         </p>
       </section>
     </section>
