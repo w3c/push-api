@@ -497,10 +497,10 @@ navigator.serviceWorker.register('serviceworker.js').then(
           <code>null</code> if the identified key doesn't exist. Passing a value of
           <code><a>p256dh</a></code> retrieves a <dfn data-lt="ECDH">elliptic curve Diffie-Hellman
           (ECDH)</dfn> public key associated with the <a>push subscription</a>. Passing a value of
-          <code>auth</code> returns a symmetric authentication secret that an application server
-          uses in authentication of its messages. These keys are used by the <a>application
-          server</a> to encrypt and authenticate messages for the <a>push subscription</a>, as
-          described in [[!WEBPUSH-ENCRYPTION]].
+          <code>auth</code> returns an authentication secret that an application server uses in
+          authentication of its messages. These keys are used by the <a>application server</a> to
+          encrypt and authenticate messages for the <a>push subscription</a>, as described in
+          [[!WEBPUSH-ENCRYPTION]].
           </li>
         </ul>
       </section>
