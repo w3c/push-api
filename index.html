@@ -447,6 +447,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
       function(pushSubscription) {
         console.log(pushSubscription.endpoint);
         console.log(pushSubscription.getKey('p256dh'));
+        console.log(pushSubscription.getKey('auth'));
         // The push subscription details needed by the application
         // server are now available, and can be sent to it using,
         // for example, an XMLHttpRequest.
@@ -490,13 +491,15 @@ navigator.serviceWorker.register('serviceworker.js').then(
           request delivery of a <a>push message</a> to a <a>webapp</a>.
           </li>
           <li>The <code><a data-lt="PushSubscription-getKey">getKey</a></code> method on a
-          <code>PushSubscription</code> is used to retrieve keying material used to encipher
-          <a>push messages</a>. Each invocation of the function returns a new
+          <code>PushSubscription</code> is used to retrieve keying material used to encrypt and
+          authenticate <a>push messages</a>. Each invocation of the function returns a new
           <code>ArrayBuffer</code> that contains the value of the corresponding key, or
           <code>null</code> if the identified key doesn't exist. Passing a value of
-          <code>p256dh</code> retrieves a <dfn data-lt="ECDH">elliptic curve Diffie-Hellman
-          (ECDH)</dfn> public key associated with the <a>push subscription</a>. This key is used by
-          the <a>application server</a> to encipher messages for the <a>push subscription</a>, as
+          <code><a>p256dh</a></code> retrieves a <dfn data-lt="ECDH">elliptic curve Diffie-Hellman
+          (ECDH)</dfn> public key associated with the <a>push subscription</a>. Passing a value of
+          <code>auth</code> returns a symmetric authentication secret that an application server
+          uses in authentication of its messages. These keys are used by the <a>application
+          server</a> to encrypt and authenticate messages for the <a>push subscription</a>, as
           described in [[!WEBPUSH-ENCRYPTION]].
           </li>
         </ul>
@@ -606,8 +609,13 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <li>Generate a new P-256 <a>ECDH</a> key pair. Store the private key in an internal slot
         associated with the subscription; this value MUST NOT be made available to applications.
         The public key is also stored in an internal slot and can be retrieved by calling the
-        <code>getKey</code> of the <a><code>PushSubscription</code></a> with an argument of <code>
-          p256dh</code>.
+        <code>getKey</code> method of the <a><code>PushSubscription</code></a> with an argument of
+        <code><a>p256dh</a></code>.
+        </li>
+        <li>Generate a new authentication secret, which is a sequence of octets as defined in
+        [[!WEBPUSH-ENCRYPTION]]. Store the authentication secret in an internal slot associated
+        with the subscription. This key can be retrieved by calling the <code>getKey</code> method
+        of the <a><code>PushSubscription</code></a> with an argument of <code><a>auth</a></code>.
         </li>
         <li>When the request has been completed, resolve <var>promise</var> with a
         <a><code>PushSubscription</code></a> providing the details of the new <a>push
@@ -711,36 +719,41 @@ navigator.serviceWorker.register('serviceworker.js').then(
       </dl>
       <p>
         When getting the <code><dfn id="widl-PushSubscription-endpoint" data-lt=
-        "PushSubscription-endpoint">PushSubscription.endpoint</dfn></code> attribute, the <a>user
-        agent</a> MUST return the <a>endpoint</a> associated with the <a>push subscription</a>.
+        "PushSubscription-endpoint">endpoint</dfn></code> attribute, the <a>user agent</a> MUST
+        return the <a>endpoint</a> associated with the <a>push subscription</a>.
       </p>
       <p>
         The <code><dfn id="widl-PushSubscription-getKey-ArrayBuffer-PushEncryptionKeyName-name"
-        data-lt="PushSubscription-getKey|getKey">PushSubscription.getKey</dfn></code> method
-        retrieves a public key that can be used for enciphering messages. When <code><a data-lt=
-        "PushSubscription-getKey">getKey</a></code> is invoked the following process is followed:
+        data-lt="PushSubscription-getKey|getKey">getKey</dfn></code> method retrieves keying
+        material that can be used for encrypting and authenticating messages. When
+        <code><a>getKey</a></code> is invoked the following process is followed:
       </p>
       <ol>
-        <li>Find the internal slot that contains the encryption key pair named by the
-        <code>name</code> argument.
+        <li>Find the internal slot corresponding to the key named by the <code>name</code>
+        argument.
         </li>
-        <li>If an encryption key was not found, return <code>null</code>.
+        <li>If a slot was not found, return <code>null</code>.
         </li>
         <li>Initialize a variable <var>key</var> with a newly instantiated <code>ArrayBuffer</code>
         instance.
         </li>
-        <li>Set the contents of <var>key</var> to the serialized value of the public key from the
-        key pair. This uses the serialization format described in the specification that defines
-        the name. For example, [[!WEBPUSH-ENCRYPTION]] specifies that the <code>p256dh</code>
-        public key is encoded using the uncompressed format defined in [[X9.62]] Annex A (that is,
-        a 65 octet sequence that starts with a 0x04 octet).
+        <li>If the internal slot contains an asymmetric key pair, set the contents of
+        <var>key</var> to the serialized value of the public key from the key pair. This uses the
+        serialization format described in the specification that defines the name. For example,
+        [[!WEBPUSH-ENCRYPTION]] specifies that the <code>p256dh</code> public key is encoded using
+        the uncompressed format defined in [[X9.62]] Annex A (that is, a 65 octet sequence that
+        starts with a 0x04 octet).
+        </li>
+        <li>Otherwise, if the internal slot contains a symmetric key, set the contents of
+        <var>key</var> to a copy of the value from the internal slot. For example, the
+        <code>auth</code> parameter contains an octet sequence used by the <a>user agent</a> to
+        authenticate messages sent by an <a>application server</a>.
         </li>
         <li>Return <var>key</var>.
         </li>
       </ol>
       <p>
-        An encryption key named <code>p256dh</code> MUST be supported, which is used to retrieve a
-        P-256 ECDH public key as described by [[!WEBPUSH-ENCRYPTION]].
+        Keys named <code><a>p256dh</a></code> and <code><a>auth</a></code> MUST be supported.
       </p>
       <p>
         The <code><dfn id=
@@ -782,9 +795,11 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <li>For each identifier <var>i</var> corresponding to keys in internal slots on the
         <a><code>PushSubscription</code></a>, ordered by the name of the key:
           <ol>
-            <li>Let <var>b</var> by the encoded value of the public key corresponding to the key
-            name <var>i</var>, using the encoding defined for the key name (see <code><a data-lt=
-            "PushSubscription.getKey">getKey</a></code>).
+            <li>If the internal slot corresponds to an asymmetric key pair, let <var>b</var> be the
+            encoded value of the public key corresponding to the key name <var>i</var>, using the
+            encoding defined for the key name (see <code><a>getKey</a></code>).
+            </li>
+            <li>Otherwise, let <var>b</var> be the value as returned by <code><a>getKey</a></code>.
             </li>
             <li>Let <var>s</var> be the URL-safe base64 encoding of <var>b</var> as a
             <code><a>USVString</a></code>. The <a>user agent</a> MUST use a serialization method
@@ -807,7 +822,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </h2>
         <p>
           Encryption keys used for <a>push message</a> encryption are provided to a <a>webapp</a>
-          through the <code>getKey</code> method or the serializer of
+          through the <code><a>getKey</a></code> method or the serializer of
           <code><a>PushSubscription</a></code>. Each key is named using a value from the
           <code><dfn>PushEncryptionKeyName</dfn></code> enumeration.
         </p>
@@ -815,11 +830,18 @@ navigator.serviceWorker.register('serviceworker.js').then(
           <dt>
             p256dh
           </dt>
+          <dt>
+            auth
+          </dt>
         </dl>
         <p>
-          The <code><dfn id="widl-PushEncryptionKeyName-p256dh">p256dh</dfn></code> value is used
-          to retrieve the P-256 ECDH Diffie-Hellman public key described in
+          The <code><dfn data-lt="idl-def-PushEncryptionKeyName.p256dh|p256dh">p256dh</dfn></code>
+          value is used to retrieve the P-256 ECDH Diffie-Hellman public key described in
           [[!WEBPUSH-ENCRYPTION]].
+        </p>
+        <p>
+          The <code><dfn data-lt="idl-def-PushEncryptionKeyName.auth|auth">auth</dfn></code> value
+          is used to retrieve the authentication secret described in [[!WEBPUSH-ENCRYPTION]].
         </p>
       </section>
     </section>
