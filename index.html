@@ -308,8 +308,8 @@
         </p>
         <p>
           A <a>push message</a> is delivered to the <a>active worker</a> associated with the
-          <a>push subscription</a> to which the message was submitted. If the worker or its
-          <a>webapp</a> is not currently running, the worker is started to enable delivery.
+          <a>push subscription</a> to which the message was submitted. If the service worker is not
+          currently running, the worker is started to enable delivery.
         </p>
       </section>
       <section>
@@ -358,8 +358,8 @@
         </h2>
         <p>
           The term <dfn>express permission</dfn> refers to an act by the user, e.g. via user
-          interface or host device platform features, via which the user approves the permission of
-          a <a>webapp</a> to access the Push API.
+          interface or host device platform features, via which the user approves the use of the
+          Push API by the <a>webapp</a>.
         </p>
       </section>
     </section>
@@ -415,16 +415,15 @@
         <li>the <a>push service</a> delivers the message to a specific <a>user agent</a>,
         identifying the <a>endpoint</a> in the message;
         </li>
-        <li>the <a>user agent</a> identifies the intended <a>webapp</a>, activates the <a>Service
-        Worker</a> for the <a>webapp</a> as necessary, and delivers the <a>push message</a> to the
-        <a>Service Worker</a>.
+        <li>the <a>user agent</a> identifies the intended <a>Service Worker</a> and activates it as
+        necessary, and delivers the <a>push message</a> to the <a>Service Worker</a>.
         </li>
       </ul>
       <p>
-        This overall framework allows <a>application servers</a> to activate <a>webapps</a> in
-        response to events at the <a>application server</a>. Information about those events can be
-        included in the <a>push message</a>, which allows the <a>webapp</a> to react appropriately
-        to those events, potentially without needing to initiate network requests.
+        This overall framework allows <a>application servers</a> to activate a <a>Service
+        Worker</a> in response to events at the <a>application server</a>. Information about those
+        events can be included in the <a>push message</a>, which allows the <a>webapp</a> to react
+        appropriately to those events, potentially without needing to initiate network requests.
       </p>
       <p>
         The following code and diagram illustrate a hypothetical use of the push API.
@@ -583,9 +582,9 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <li>If not granted, reject <var>promise</var> with a <code><a>DOMException</a></code> whose
         name is "<code><a>PermissionDeniedError</a></code>" and terminate these steps.
         </li>
-        <li>If the <a>webapp</a> is already subscribed, run the following substeps:
+        <li>If the <a>Service Worker</a> is already subscribed, run the following substeps:
           <ol>
-            <li>Retrieve the <a>push subscription</a> associated with the <a>webapp</a>.
+            <li>Retrieve the <a>push subscription</a> associated with the <a>Service Worker</a>.
             </li>
             <li>If there is an error, reject <var>promise</var> with a
             <code><a>DOMException</a></code> whose name is "<code><a>AbortError</a></code>" and
@@ -598,7 +597,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
           </ol>
         </li>
         <li>Make a request to the push service to create a new <a>push subscription</a> for the <a>
-          webapp</a>.
+          Service Worker</a>.
         </li>
         <li>If there is an error, reject <var>promise</var> with a <code><a>DOMException</a></code>
         whose name is "<code><a>AbortError</a></code>" and terminate these steps.
@@ -624,9 +623,9 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </li>
         <li>Return <var>promise</var> and continue the following steps asynchronously.
         </li>
-        <li>If the <a>webapp</a> is not subscribed, resolve <var>promise</var> with null.
+        <li>If the <a>Service Worker</a> is not subscribed, resolve <var>promise</var> with null.
         </li>
-        <li>Retrieve the <a>push subscription</a> associated with the <a>webapp</a>.
+        <li>Retrieve the <a>push subscription</a> associated with the <a>Service Worker</a>.
         </li>
         <li>If there is an error, reject <var>promise</var> with a <code><a>DOMException</a></code>
         whose name is "<code><a>AbortError</a></code>" and terminate these steps.
@@ -947,11 +946,12 @@ navigator.serviceWorker.register('serviceworker.js').then(
           service</a> the <a>user agent</a> MUST run the following steps:
         </p>
         <ol>
-          <li>If the <a>Service Worker</a> associated with the <a>webapp</a> is not running, start
-          it.
+          <li>Identify the <a>Service Worker</a> for the <a>push subscription</a>.
+          </li>
+          <li>If the <a>Service Worker</a> is not running, start it.
           </li>
           <li>Let <var>scope</var> be the <code>ServiceWorkerGlobalScope</code> of the <a>Service
-          Worker</a> associated with the <a>webapp</a>.
+          Worker</a>.
           </li>
           <li>Let <var>subscription</var> be the active <a>push subscription</a> for the <a>Service
           Worker</a>.
@@ -996,8 +996,8 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <p>
           The <code>pushsubscriptionchange</code> event indicates that a <a>push subscription</a>
           has been invalidated, or will soon be invalidated. For example, the <a>push service</a>
-          MAY set an expiration time. A <a>webapp</a> SHOULD attempt to resubscribe while handling
-          this event, in order to continue receiving <a>push messages</a>.
+          MAY set an expiration time. A <a>Service Worker</a> SHOULD attempt to resubscribe while
+          handling this event, in order to continue receiving <a>push messages</a>.
         </p>
         <p>
           When new <a>push subscription</a> information becomes available, the <a>user agent</a>
@@ -1038,11 +1038,11 @@ navigator.serviceWorker.register('serviceworker.js').then(
           </li>
         </ol>
         <p>
-          This algorithm ensures that the <a>webapp</a> is able to react to any non-destructive
-          change in a <a>push subscription</a>, such as an automatic refresh, without causing any
-          active <a>push subscription</a> to be terminated prematurely. A <a>webapp</a> can request
-          a new <a>push subscription</a> during this process and ensure that no <a>push
-          messages</a> are lost.
+          This algorithm ensures that the <a>Service Worker</a> is able to react to any
+          non-destructive change in a <a>push subscription</a>, such as an automatic refresh,
+          without causing any active <a>push subscription</a> to be terminated prematurely. A
+          <a>Service Worker</a> can request a new <a>push subscription</a> during this process and
+          ensure that no <a>push messages</a> are lost.
         </p>
       </section>
     </section>
