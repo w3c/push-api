@@ -1,10 +1,13 @@
+machine:
+  environment:
+    CMAKE_VERSION: 3.4.1
 dependencies:
   cache_directories:
-    - cmake-3.3.1-Linux-x86_64
+    - cmake-$CMAKE_VERSION-Linux-x86_64
     - .support
   pre:
-    - if [[ ! -d cmake-3.3.1-Linux-x86_64 ]]; then wget http://www.cmake.org/files/v3.3/cmake-3.3.1-Linux-x86_64.tar.gz && tar xzf cmake-3.3.1-Linux-x86_64.tar.gz && rm -f cmake-3.3.1-Linux-x86_64.tar.gz; fi
-    - if [[ ! -d .support ]]; then make cmake="$PWD/cmake-3.3.1-Linux-x86_64/bin/cmake" install_tidy; fi
+    - if [[ ! -d cmake-$CMAKE_VERSION-Linux-x86_64 ]]; then curl -LsS https://cmake.org/files/v${CMAKE_VERSION%.*}/cmake-$CMAKE_VERSION-Linux-x86_64.tar.gz -o cmake-$CMAKE_VERSION-Linux-x86_64.tar.gz && tar xzf cmake-$CMAKE_VERSION-Linux-x86_64.tar.gz && rm -f cmake-$CMAKE_VERSION-Linux-x86_64.tar.gz; fi
+    - if [[ ! -d .support ]]; then make cmake="$PWD/cmake-$CMAKE_VERSION-Linux-x86_64/bin/cmake" install_tidy; fi
 test:
   override:
     - make check
