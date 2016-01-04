@@ -801,9 +801,9 @@ navigator.serviceWorker.register('serviceworker.js').then(
             </li>
             <li>Otherwise, let <var>b</var> be the value as returned by <code><a>getKey</a></code>.
             </li>
-            <li>Let <var>s</var> be the URL-safe base64 encoding of <var>b</var> as a
-            <code><a>USVString</a></code>. The <a>user agent</a> MUST use a serialization method
-            that does not branch based on the value of <var>b</var>.
+            <li>Let <var>s</var> be the URL-safe base64 encoding without padding [[!RFC4648]] of
+            <var>b</var> as a <code><a>USVString</a></code>. The <a>user agent</a> MUST use a
+            serialization method that does not branch based on the value of <var>b</var>.
             </li>
             <li>Add an entry to <var>keys</var> whose key name is the name of <var>i</var> and
             whose value is <var>s</var>.
