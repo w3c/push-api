@@ -866,7 +866,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
       <dl title="typedef object JSON" class="idl"></dl>
       <p>
         <a>PushMessageData</a> objects have an associated <dfn>bytes</dfn> (a byte sequence) set on
-        creation.
+        creation, which is <code>null</code> if there was no data in the <a>push message</a>.
       </p>
       <p>
         The <code><dfn id="widl-PushMessageData-arrayBuffer-ArrayBuffer">arrayBuffer()</dfn></code>
@@ -956,7 +956,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
         "[Constructor(DOMString type, optional PushEventInit eventInitDict), Exposed=ServiceWorker] interface PushEvent : ExtendableEvent"
         class="idl" data-merge="PushEventInit">
           <dt>
-            readonly attribute PushMessageData data
+            readonly attribute PushMessageData? data
           </dt>
         </dl>
         <dl title="dictionary PushEventInit : ExtendableEventInit" class="idl">
@@ -965,52 +965,84 @@ navigator.serviceWorker.register('serviceworker.js').then(
           </dt>
         </dl>
         <p>
-          Upon receiving a <a>push message</a> for a <a>push subscription</a> from the <a>push
-          service</a> the <a>user agent</a> MUST run the following steps:
+          Upon receiving a <a>push message</a> from the <a>push service</a>, the <a>user agent</a>
+          MUST run the following steps:
         </p>
         <ol>
-          <li>Identify the <a>Service Worker</a> for the <a>push subscription</a>.
+          <li>Let <var>registration</var> be the <a>service worker registration</a> corresponding
+          to the <a>push message</a>.
           </li>
-          <li>If the <a>Service Worker</a> is not running, start it.
+          <li>If <var>registration</var> is not found, abort these steps.
           </li>
-          <li>Let <var>scope</var> be the <code>ServiceWorkerGlobalScope</code> of the <a>Service
-          Worker</a>.
+          <li>Let <var>subscription</var> be the active <a>push subscription</a> for
+          <var>registration</var>.
           </li>
-          <li>Let <var>subscription</var> be the active <a>push subscription</a> for the <a>Service
-          Worker</a>.
+          <li>Initialize <var>pushdata</var> to a value of <code>null</code>.
           </li>
-          <li>Decrypt the <a>push message</a> using the private key from the key pair associated
-          with <var>subscription</var> and the process described in [[!WEBPUSH-ENCRYPTION]]. This
-          produces the plain text of the message.
+          <li>If the <a>push message</a> contains a payload, perform the following steps:
+            <ol>
+              <li>Decrypt the <a>push message</a> using the private key from the key pair
+              associated with <var>subscription</var> and the process described in
+              [[!WEBPUSH-ENCRYPTION]]. This produces the plain text of the message.
+              </li>
+              <li>If the <a>push message</a> could not be decrypted for any reason, discard the
+              message and terminate this process. A <code>push</code> event MUST NOT be fired for a
+              <a>push message</a> that was not successfully decrypted using the key pair associated
+              with the <a>push subscription</a>.
+              </li>
+              <li>Let <var>pushdata</var> be the decrypted plain text of the <a>push message</a>.
+              </li>
+            </ol>
           </li>
-          <li>If the <a>push message</a> could not be decrypted for any reason, or if it is not
-          encrypted and contains any payload, discard the message and terminate this process. A
-          push message MAY be empty if it contains no content, but otherwise <code>push</code>
-          event MUST NOT be fired for a <a>push message</a> that was not successfully decrypted
-          using the key pair associated with the <a>push subscription</a>.
-          </li>
-          <li>Let <var>pushdata</var> be the decrypted plain text of the <a>push message</a>.
-          </li>
-          <li>Let <var>event</var> be a new <a>PushEvent</a>, whose <code id="widl-PushEvent-data">
-            data</code> attribute is a new <a>PushMessageData</a> with <a>bytes</a> set to the
-            value of <var>pushdata</var>.
-          </li>
-          <li>
-            <a>Queue a task</a> to <a data-lt="fire a simple event">fire <var>event</var> as a
-            simple event</a> named <code>push</code> at <var>scope</var>.
+          <li>Invoke the <a>Handle Functional Event</a> algorithm with a <a>service worker
+          registration</a> of <var>registration</var> and <var>callbackSteps</var> set to the
+          following steps:
+            <ol>
+              <li>Set <var>global</var> to the global object that was provided as an argument.
+              </li>
+              <li>Create a <a>trusted event</a>, <var>e</var>, that uses the
+              <code><a>PushMessageEvent</a></code> interface, with the event type
+              <code>push</code>, which does not bubble, is not cancelable, and has no default
+              action.
+              </li>
+              <li>If the <a>push message</a> contains valid data - that is, if the message can be
+              successfully decoded and decrypted - set the <code>data</code> attribute of
+              <var>e</var> to a new <code><a>PushMessageData</a></code> instance with <a>bytes</a>
+              set to the binary <a>push message</a> data.
+              </li>
+              <li>Dispatch <var>e</var> to <var>global</var>.
+              </li>
+              <li>Run the following steps in parallel:
+                <ol>
+                  <li>Wait for all of the promises in the <a>extend lifetime promises</a> of <var>
+                    e</var> to resolve.
+                  </li>
+                  <li>If any promise rejects, abort these steps.
+                  </li>
+                  <li>Acknowledge the receipt of the <a>push message</a> according to
+                  [[!WEBPUSH-PROTOCOL]].
+                  </li>
+                </ol>
+              </li>
+            </ol>
           </li>
         </ol>
         <p>
           When a constructor of the <a>PushEvent</a> interface, or of an interface that inherits
           from the <a>PushEvent</a> interface, is invoked, the usual <a>steps for constructing
-          events</a> MUST be modified as follows: instead of setting the <code>data</code>
-          attribute of the event to the value of the <var>eventInitDict</var>'s "<code id=
-          "widl-PushEventInit-data">data</code>" member, set the <code>data</code> attribute to a
-          new <a>PushMessageData</a> with <a>bytes</a> set to the result of <a data-lt=
-          "extract a byte sequence">extracting a byte sequence</a> from that dictionary member, or
-          an empty byte sequence if the "<code id="widl-PushEventInit-data">data</code>" member is
-          not provided.
+          events</a> are extended to include the following steps:
         </p>
+        <ol>
+          <li>If <var>eventInitDict</var>'s <code>data</code> member is not present, set the <code>
+            data</code> attribute of the event to <code>null</code> and terminate these steps.
+          </li>
+          <li>Set <var>b</var> to the result of <a data-lt="extract a byte sequence">extracting a
+          byte sequence</a> from the "<code>data</code>" member of <var>eventInitDict</var>.
+          </li>
+          <li>Set the <code>data</code> attribute of the event to a new <a>PushMessageData</a>
+          instance with <code>bytes</code> set to <var>b</var>.
+          </li>
+        </ol>
       </section>
       <section>
         <h2>
