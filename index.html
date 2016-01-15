@@ -1006,9 +1006,9 @@ navigator.serviceWorker.register('serviceworker.js').then(
               action.
               </li>
               <li>If the <a>push message</a> contains valid data - that is, if the message can be
-              successfully decoded and decrypted - set the <code>data</code> attribute
-              of <var>e</var> to a new <code><a>PushMessageData</a></code> instance with
-              <a>bytes</a> set to the binary <a>push message</a> data.
+              successfully decoded and decrypted - set the <code>data</code> attribute of
+              <var>e</var> to a new <code><a>PushMessageData</a></code> instance with <a>bytes</a>
+              set to the binary <a>push message</a> data.
               </li>
               <li>Dispatch <var>e</var> to <var>global</var>.
               </li>
@@ -1033,16 +1033,16 @@ navigator.serviceWorker.register('serviceworker.js').then(
           events</a> are extended to include the following steps:
         </p>
         <ol>
-          <li>If <var>eventInitDict</var>'s <code>data</code> member is not present, set
-            the <code>data</code> attribute of the event to <code>null</code> and terminate these
-            steps.
+          <li>If <var>eventInitDict</var>'s <code>data</code> member is not present, set the <code>
+            data</code> attribute of the event to <code>null</code> and terminate these steps.
           </li>
           <li>Set <var>b</var> to the result of <a data-lt="extract a byte sequence">extracting a
-            byte sequence</a> from the "<code>data</code>" member of <var>eventInitDict</var>.
+          byte sequence</a> from the "<code>data</code>" member of <var>eventInitDict</var>.
           </li>
           <li>Set the <code>data</code> attribute of the event to a new <a>PushMessageData</a>
-            instance with <code>bytes</code> set to <var>b</var>.
-        </p>
+          instance with <code>bytes</code> set to <var>b</var>.
+          </li>
+        </ol>
       </section>
       <section>
         <h2>
