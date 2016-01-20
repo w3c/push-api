@@ -110,6 +110,16 @@
               status: "Internet-Draft",
               publisher: "IETF"
             },
+            "WEBPUSH-VAPID": {
+              title: "Voluntary Application Server Identification for Web Push",
+              href: "https://tools.ietf.org/html/draft-thomson-webpush-vapid",
+              authors: [
+                "Martin Thomson",
+                "Peter Beverloo",
+              ],
+              status: "Internet-Draft",
+              publisher: "IETF"
+            },
             "X9.62": {
               title: "Public Key Cryptography for the Financial Services Industry, The Elliptic Curve Digital Signature Algorithm (ECDSA)",
               status: "ANS X9.62–2005",
@@ -271,6 +281,11 @@
         and <code><a href=
         "http://heycam.github.io/webidl/#idl-USVString"><dfn>USVString</dfn></a></code> are defined
         in [[!WEBIDL]].
+      </p>
+      <p>
+        <code><a href=
+        "https://dvcs.w3.org/hg/webcrypto-api/raw-file/tip/spec/Overview.html#dfn-CryptoKey"><dfn>CryptoKey</dfn></a></code>
+        is defined in [[!WebCryptoAPI]].
       </p>
       <p>
         The <dfn>web push protocol</dfn> [[!WEBPUSH-PROTOCOL]] describes a protocol that enables
@@ -558,6 +573,13 @@ navigator.serviceWorker.register('serviceworker.js').then(
         with a <code><a>DOMException</a></code> whose name is "<code><a>SecurityError</a></code>"
         and terminate these steps.
         </li>
+        <li>If an <var>options</var> argument is included, and <var>options</var> includes an
+        <code><a>applicationServerKey</a></code> attribute, check that the value contains valid
+        values. If the <code><a>applicationServerKey</a></code> value is invalid or unsupported,
+        reject <var>promise</var> with an <code><a href=
+        "http://heycam.github.io/webidl/#invalidaccesserror">InvalidAccessError</a></code> and
+        terminate these steps.
+        </li>
         <li>Let <var>registration</var> be the <code><a>PushManager</a></code>'s associated
         <a>service worker registration</a>.
         </li>
@@ -686,6 +708,9 @@ navigator.serviceWorker.register('serviceworker.js').then(
           <dt>
             boolean userVisibleOnly = false
           </dt>
+          <dt>
+            CryptoKey applicationServerKey
+          </dt>
         </dl>
         <p>
           The <code><dfn id=
@@ -693,6 +718,31 @@ navigator.serviceWorker.register('serviceworker.js').then(
           set to <code>true</code>, indicates that the <a>push subscription</a> will only be used
           for <a>push messages</a> whose effect is made visible to the user, for example by
           displaying a Web Notification. [[NOTIFICATIONS]]
+        </p>
+        <p>
+          The <code><dfn id=
+          "widl-PushSubscriptionOptions-applicationServerKey">applicationServerKey</dfn></code>
+          option includes a <code><a>CryptoKey</a></code> for an application server. This is the
+          key that the application server will use to authenticate itself when sending push
+          messages to this subscription as defined in [[!WEBPUSH-VAPID]]; the push service will
+          reject any push message unless the corresponding private key is used to generate an
+          authentication token.
+        </p>
+        <p>
+          The value of <code><a>applicationServerKey</a></code> MUST include a <code><a href=
+          "https://dvcs.w3.org/hg/webcrypto-api/raw-file/tip/spec/Overview.html#dfn-KeyType">type</a></code>
+          of <code>public</code>, a <code><a href=
+          "https://dvcs.w3.org/hg/webcrypto-api/raw-file/tip/spec/Overview.html#dfn-KeyUsage">usages</a></code>
+          that includes the <code>verify</code> usage. A <a>user agent</a> MAY support different
+          values for the <a href=
+          "https://dvcs.w3.org/hg/webcrypto-api/raw-file/tip/spec/Overview.html#dfn-CryptoKey-algorithm">
+          algorithm</a> attribute, but they MUST support a a <code><a href=
+          "https://dvcs.w3.org/hg/webcrypto-api/raw-file/tip/spec/Overview.html#dfn-KeyAlgorithm-name">
+          name</a></code> of <code><a href=
+          "https://dvcs.w3.org/hg/webcrypto-api/raw-file/tip/spec/Overview.html#ecdsa">ECDSA</a></code>
+          and <code><a href=
+          "https://dvcs.w3.org/hg/webcrypto-api/raw-file/tip/spec/Overview.html#dfn-NamedCurve">namedCurve</a></code>
+          of <code>P-256</code>.
         </p>
       </section>
     </section>
