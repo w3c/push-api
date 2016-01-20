@@ -283,11 +283,6 @@
         in [[!WEBIDL]].
       </p>
       <p>
-        <code><a href=
-        "https://dvcs.w3.org/hg/webcrypto-api/raw-file/tip/spec/Overview.html#dfn-CryptoKey"><dfn>CryptoKey</dfn></a></code>
-        is defined in [[!WebCryptoAPI]].
-      </p>
-      <p>
         The <dfn>web push protocol</dfn> [[!WEBPUSH-PROTOCOL]] describes a protocol that enables
         communication between a <a>user agent</a> or <a>application server</a> and a <a>push
         service</a>. Alternative protocols could be used in place of this protocol, but this
@@ -574,9 +569,10 @@ navigator.serviceWorker.register('serviceworker.js').then(
         and terminate these steps.
         </li>
         <li>If an <var>options</var> argument is included, and <var>options</var> includes an
-        <code><a>applicationServerKey</a></code> attribute, check that the value contains valid
-        values. If the <code><a>applicationServerKey</a></code> value is invalid or unsupported,
-        reject <var>promise</var> with an <code><a href=
+        <code><a>applicationServerKey</a></code> attribute, check that the value is valid (i.e.,
+        ensure that it describes a valid point on the P-256 curve). If the
+        <code><a>applicationServerKey</a></code> value is invalid, reject <var>promise</var> with
+        an <code><a href=
         "http://heycam.github.io/webidl/#invalidaccesserror">InvalidAccessError</a></code> and
         terminate these steps.
         </li>
@@ -709,7 +705,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
             boolean userVisibleOnly = false
           </dt>
           <dt>
-            CryptoKey applicationServerKey
+            BufferSource applicationServerKey
           </dt>
         </dl>
         <p>
@@ -722,27 +718,16 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <p>
           The <code><dfn id=
           "widl-PushSubscriptionOptions-applicationServerKey">applicationServerKey</dfn></code>
-          option includes a <code><a>CryptoKey</a></code> for an application server. This is the
-          key that the application server will use to authenticate itself when sending push
-          messages to this subscription as defined in [[!WEBPUSH-VAPID]]; the push service will
-          reject any push message unless the corresponding private key is used to generate an
-          authentication token.
+          option includes an elliptic curve public key for an application server. This is the key
+          that the application server will use to authenticate itself when sending push messages to
+          this subscription as defined in [[!WEBPUSH-VAPID]]; the push service will reject any push
+          message unless the corresponding private key is used to generate an authentication token.
         </p>
         <p>
-          The value of <code><a>applicationServerKey</a></code> MUST include a <code><a href=
-          "https://dvcs.w3.org/hg/webcrypto-api/raw-file/tip/spec/Overview.html#dfn-KeyType">type</a></code>
-          of <code>public</code>, a <code><a href=
-          "https://dvcs.w3.org/hg/webcrypto-api/raw-file/tip/spec/Overview.html#dfn-KeyUsage">usages</a></code>
-          that includes the <code>verify</code> usage. A <a>user agent</a> MAY support different
-          values for the <a href=
-          "https://dvcs.w3.org/hg/webcrypto-api/raw-file/tip/spec/Overview.html#dfn-CryptoKey-algorithm">
-          algorithm</a> attribute, but they MUST support a a <code><a href=
-          "https://dvcs.w3.org/hg/webcrypto-api/raw-file/tip/spec/Overview.html#dfn-KeyAlgorithm-name">
-          name</a></code> of <code><a href=
-          "https://dvcs.w3.org/hg/webcrypto-api/raw-file/tip/spec/Overview.html#ecdsa">ECDSA</a></code>
-          and <code><a href=
-          "https://dvcs.w3.org/hg/webcrypto-api/raw-file/tip/spec/Overview.html#dfn-NamedCurve">namedCurve</a></code>
-          of <code>P-256</code>.
+          If present, the value of <code><a>applicationServerKey</a></code> MUST include a point on
+          the P-256 elliptic curve [[!FIPS-186-3]], encoded in the uncompressed form described in
+          [[!X9.62]] Annex A (that is, 65 octets, starting with an 0x04 octet). A different key to
+          the one used for message encryption [[WEBPUSH-ENCRYPTION]] is strongly recommended.
         </p>
       </section>
     </section>
