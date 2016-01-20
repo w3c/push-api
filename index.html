@@ -1001,9 +1001,8 @@ navigator.serviceWorker.register('serviceworker.js').then(
               <li>Set <var>global</var> to the global object that was provided as an argument.
               </li>
               <li>Create a <a>trusted event</a>, <var>e</var>, that uses the
-              <code><a>PushMessageEvent</a></code> interface, with the event type
-              <code>push</code>, which does not bubble, is not cancelable, and has no default
-              action.
+              <code><a>PushEvent</a></code> interface, with the event type <code>push</code>, which
+              does not bubble, is not cancelable, and has no default action.
               </li>
               <li>If the <a>push message</a> contains valid data - that is, if the message can be
               successfully decoded and decrypted - set the <code>data</code> attribute of
