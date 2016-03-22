@@ -759,8 +759,9 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <p>
           If present, the value of <code><a>applicationServerKey</a></code> MUST include a point on
           the P-256 elliptic curve [[!FIPS-186-3]], encoded in the uncompressed form described in
-          [[!X9.62]] Annex A (that is, 65 octets, starting with an 0x04 octet). A different key to
-          the one used for message encryption [[WEBPUSH-ENCRYPTION]] is strongly recommended.
+          [[!X9.62]] Annex A (that is, 65 octets, starting with an 0x04 octet). The
+          <code><a>applicationServerKey</a></code> MUST be a different value to the one used for
+          message encryption [[WEBPUSH-ENCRYPTION]].
         </p>
       </section>
     </section>
