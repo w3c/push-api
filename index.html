@@ -546,19 +546,19 @@ navigator.serviceWorker.register('serviceworker.js').then(
       </p>
       <dl title="interface PushManager" class="idl">
         <dt>
-          Promise&lt;PushSubscription&gt; subscribe (optional PushSubscriptionOptionsDict options)
+          Promise&lt;PushSubscription&gt; subscribe (optional PushSubscriptionOptionsInit options)
         </dt>
         <dt>
           Promise&lt;PushSubscription?&gt; getSubscription ()
         </dt>
         <dt>
-          Promise&lt;PushPermissionState&gt; permissionState (optional PushSubscriptionOptionsDict
+          Promise&lt;PushPermissionState&gt; permissionState (optional PushSubscriptionOptionsInit
           options)
         </dt>
       </dl>
       <p>
         The <code><dfn id=
-        "widl-PushManager-subscribe-Promise-PushSubscription--PushSubscriptionOptionsDict-options">subscribe</dfn></code>
+        "widl-PushManager-subscribe-Promise-PushSubscription--PushSubscriptionOptionsInit-options">subscribe</dfn></code>
         method when invoked MUST run the following steps:
       </p>
       <ol>
@@ -681,7 +681,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
       </ol>
       <p>
         The <code><dfn id=
-        "widl-PushManager-permissionState-Promise-PushPermissionState--PushSubscriptionOptionsDict-options">
+        "widl-PushManager-permissionState-Promise-PushPermissionState--PushSubscriptionOptionsInit-options">
         permissionState</dfn></code> method when invoked MUST run the following steps:
       </p>
       <ol>
@@ -712,7 +712,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
           <a>PushSubscriptionOptions</a> Interface and Dictionary
         </h2>
         <p>
-          A <a>PushSubscriptionOptionsDict</a> represents additional options associated with a
+          A <a>PushSubscriptionOptionsInit</a> represents additional options associated with a
           <a>push subscription</a>. The <a>user agent</a> MAY consider these options when
           requesting <a>express permission</a> from the user. When an option is considered, the
           <a>user agent</a> SHOULD enforce it on incoming <a>push messages</a>.
@@ -723,7 +723,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
           "#widl-PushSubscription-unsubscribe-Promise-boolean">unsubscribed</a> to create a <a>push
           subscription</a> with new options.
         </p>
-        <dl title="dictionary PushSubscriptionOptionsDict" class="idl" data-merge=
+        <dl title="dictionary PushSubscriptionOptionsInit" class="idl" data-merge=
         "PushSubscriptionOptions">
           <dt>
             boolean userVisibleOnly = false
@@ -733,7 +733,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
           </dt>
         </dl>
         <dl title="interface PushSubscriptionOptions" class="idl" data-merge=
-        "PushSubscriptionOptionsDict">
+        "PushSubscriptionOptionsInit">
           <dt>
             readonly attribute boolean userVisibleOnly
           </dt>
@@ -743,14 +743,14 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </dl>
         <p>
           The <code><dfn id=
-          "widl-PushSubscriptionOptionsDict-userVisibleOnly">userVisibleOnly</dfn></code> option,
+          "widl-PushSubscriptionOptionsInit-userVisibleOnly">userVisibleOnly</dfn></code> option,
           when set to <code>true</code>, indicates that the <a>push subscription</a> will only be
           used for <a>push messages</a> whose effect is made visible to the user, for example by
           displaying a Web Notification. [[NOTIFICATIONS]]
         </p>
         <p>
           The <code><dfn id=
-          "widl-PushSubscriptionOptionsDict-applicationServerKey">applicationServerKey</dfn></code>
+          "widl-PushSubscriptionOptionsInit-applicationServerKey">applicationServerKey</dfn></code>
           option includes an elliptic curve public key for an application server. This is the key
           that the application server will use to authenticate itself when sending push messages to
           this subscription as defined in [[!WEBPUSH-VAPID]]; the push service will reject any push
