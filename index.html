@@ -110,6 +110,16 @@
               status: "Internet-Draft",
               publisher: "IETF"
             },
+            "WEBPUSH-VAPID": {
+              title: "Voluntary Application Server Identification for Web Push",
+              href: "https://tools.ietf.org/html/draft-thomson-webpush-vapid",
+              authors: [
+                "Martin Thomson",
+                "Peter Beverloo",
+              ],
+              status: "Internet-Draft",
+              publisher: "IETF"
+            },
             "X9.62": {
               title: "Public Key Cryptography for the Financial Services Industry, The Elliptic Curve Digital Signature Algorithm (ECDSA)",
               status: "ANS X9.62–2005",
@@ -224,6 +234,8 @@
         <code><a href="http://www.w3.org/TR/dom/#aborterror"><dfn>AbortError</dfn></a></code>,
         <code><a href=
         "http://www.w3.org/TR/dom/#invalidstateerror"><dfn>InvalidStateError</dfn></a></code>,
+        <code><a href=
+        "http://www.w3.org/TR/dom/#invalidaccesserror"><dfn>InvalidAccessError</dfn></a></code>,
         <code><a href=
         "http://www.w3.org/TR/dom/#securityerror"><dfn>SecurityError</dfn></a></code>,
         <code><a href="http://www.w3.org/TR/dom/#networkerror"><dfn>NetworkError</dfn></a></code>,
@@ -534,19 +546,19 @@ navigator.serviceWorker.register('serviceworker.js').then(
       </p>
       <dl title="interface PushManager" class="idl">
         <dt>
-          Promise&lt;PushSubscription&gt; subscribe (optional PushSubscriptionOptions options)
+          Promise&lt;PushSubscription&gt; subscribe (optional PushSubscriptionOptionsInit options)
         </dt>
         <dt>
           Promise&lt;PushSubscription?&gt; getSubscription ()
         </dt>
         <dt>
-          Promise&lt;PushPermissionState&gt; permissionState (optional PushSubscriptionOptions
+          Promise&lt;PushPermissionState&gt; permissionState (optional PushSubscriptionOptionsInit
           options)
         </dt>
       </dl>
       <p>
         The <code><dfn id=
-        "widl-PushManager-subscribe-Promise-PushSubscription--PushSubscriptionOptions-options">subscribe</dfn></code>
+        "widl-PushManager-subscribe-Promise-PushSubscription--PushSubscriptionOptionsInit-options">subscribe</dfn></code>
         method when invoked MUST run the following steps:
       </p>
       <ol>
@@ -557,6 +569,15 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <li>If the scheme of the document url is not <code>https</code>, reject <var>promise</var>
         with a <code><a>DOMException</a></code> whose name is "<code><a>SecurityError</a></code>"
         and terminate these steps.
+        </li>
+        <li>Let <var>allOptions</var> be the value of the <code>options</code> argument, if
+        provided, or a <code><a>PushSubscriptionOptions</a></code> dictionary with default values.
+        </li>
+        <li>If <var>allOptions</var> includes a non-null value for the
+        <code><a>applicationServerKey</a></code> attribute, check that the value is valid (i.e.,
+        ensure that it describes a valid point on the P-256 curve). If the
+        <code><a>applicationServerKey</a></code> value is invalid, reject <var>promise</var> with
+        an <code><a>InvalidAccessError</a></code> and terminate these steps.
         </li>
         <li>Let <var>registration</var> be the <code><a>PushManager</a></code>'s associated
         <a>service worker registration</a>.
@@ -594,9 +615,17 @@ navigator.serviceWorker.register('serviceworker.js').then(
             <code><a>DOMException</a></code> whose name is "<code><a>AbortError</a></code>" and
             terminate these steps.
             </li>
-            <li>When the request has been completed, resolve <var>promise</var> with a
-            <a><code>PushSubscription</code></a> providing the details of the retrieved <a>push
-            subscription</a>.
+            <li>Let <var>subscription</var> be the retrieved subscription.
+            </li>
+            <li>Compare <var>allOptions</var> with the <code>options</code> attribute of
+            <var>subscription</var>. If any attribute on <var>allOptions</var> contains a different
+            value to that stored for <var>subscription</var>, then reject <var>promise</var> with
+            an <code><a>InvalidStateError</a></code> and terminate these steps. The contents of
+            <code><a>BufferSource</a></code> values are compared for equality rather than
+              <a href="https://tc39.github.io/ecma262/#sec-reference-specification-type">references</a>.
+            </li>
+            <li>When the request has been completed, resolve <var>promise</var> with
+            <var>subscription</var>.
             </li>
           </ol>
         </li>
@@ -606,16 +635,22 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <li>If there is an error, reject <var>promise</var> with a <code><a>DOMException</a></code>
         whose name is "<code><a>AbortError</a></code>" and terminate these steps.
         </li>
-        <li>Generate a new P-256 <a>ECDH</a> key pair. Store the private key in an internal slot
-        associated with the subscription; this value MUST NOT be made available to applications.
-        The public key is also stored in an internal slot and can be retrieved by calling the
+        <li>Let <var>subscription</var> be a new subscription.
+        </li>
+        <li>Set the <code>options</code> attribute of <var>subscription</var> to be a copy of <var>
+          allOptions</var>.
+        </li>
+        <li>Generate a new P-256 <a>ECDH</a> key pair. Store the private key in an internal slot on
+        <var>subscription</var>; this value MUST NOT be made available to applications. The public
+        key is also stored in an internal slot and can be retrieved by calling the
         <code>getKey</code> method of the <a><code>PushSubscription</code></a> with an argument of
         <code><a>p256dh</a></code>.
         </li>
         <li>Generate a new authentication secret, which is a sequence of octets as defined in
-        [[!WEBPUSH-ENCRYPTION]]. Store the authentication secret in an internal slot associated
-        with the subscription. This key can be retrieved by calling the <code>getKey</code> method
-        of the <a><code>PushSubscription</code></a> with an argument of <code><a>auth</a></code>.
+        [[!WEBPUSH-ENCRYPTION]]. Store the authentication secret in an internal slot on
+        <var>subscription</var>. This key can be retrieved by calling the <code>getKey</code>
+        method of the <a><code>PushSubscription</code></a> with an argument of
+        <code><a>auth</a></code>.
         </li>
         <li>When the request has been completed, resolve <var>promise</var> with a
         <a><code>PushSubscription</code></a> providing the details of the new <a>push
@@ -646,7 +681,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
       </ol>
       <p>
         The <code><dfn id=
-        "widl-PushManager-permissionState-Promise-PushPermissionState--PushSubscriptionOptions-options">
+        "widl-PushManager-permissionState-Promise-PushPermissionState--PushSubscriptionOptionsInit-options">
         permissionState</dfn></code> method when invoked MUST run the following steps:
       </p>
       <ol>
@@ -674,25 +709,59 @@ navigator.serviceWorker.register('serviceworker.js').then(
       </p>
       <section>
         <h2>
-          <a>PushSubscriptionOptions</a> dictionary
+          <a>PushSubscriptionOptions</a> Interface and Dictionary
         </h2>
         <p>
-          A <a>PushSubscriptionOptions</a> object represents additional options associated with a
+          A <a>PushSubscriptionOptionsInit</a> represents additional options associated with a
           <a>push subscription</a>. The <a>user agent</a> MAY consider these options when
           requesting <a>express permission</a> from the user. When an option is considered, the
           <a>user agent</a> SHOULD enforce it on incoming <a>push messages</a>.
         </p>
-        <dl title="dictionary PushSubscriptionOptions" class="idl">
+        <p>
+          Once set, options for a <a>push subscription</a> cannot change. A pre-existing <a>push
+          subscription</a> can be <a href=
+          "#widl-PushSubscription-unsubscribe-Promise-boolean">unsubscribed</a> to create a <a>push
+          subscription</a> with new options.
+        </p>
+        <dl title="dictionary PushSubscriptionOptionsInit" class="idl" data-merge=
+        "PushSubscriptionOptions">
           <dt>
             boolean userVisibleOnly = false
+          </dt>
+          <dt>
+            BufferSource? applicationServerKey = null
+          </dt>
+        </dl>
+        <dl title="interface PushSubscriptionOptions" class="idl" data-merge=
+        "PushSubscriptionOptionsInit">
+          <dt>
+            readonly attribute boolean userVisibleOnly
+          </dt>
+          <dt>
+            [Throws] readonly attribute ArrayBuffer? applicationServerKey
           </dt>
         </dl>
         <p>
           The <code><dfn id=
-          "widl-PushSubscriptionOptions-userVisibleOnly">userVisibleOnly</dfn></code> option, when
-          set to <code>true</code>, indicates that the <a>push subscription</a> will only be used
-          for <a>push messages</a> whose effect is made visible to the user, for example by
+          "widl-PushSubscriptionOptionsInit-userVisibleOnly">userVisibleOnly</dfn></code> option,
+          when set to <code>true</code>, indicates that the <a>push subscription</a> will only be
+          used for <a>push messages</a> whose effect is made visible to the user, for example by
           displaying a Web Notification. [[NOTIFICATIONS]]
+        </p>
+        <p>
+          The <code><dfn id=
+          "widl-PushSubscriptionOptionsInit-applicationServerKey">applicationServerKey</dfn></code>
+          option includes an elliptic curve public key for an application server. This is the key
+          that the application server will use to authenticate itself when sending push messages to
+          this subscription as defined in [[!WEBPUSH-VAPID]]; the push service will reject any push
+          message unless the corresponding private key is used to generate an authentication token.
+        </p>
+        <p>
+          If present, the value of <code><a>applicationServerKey</a></code> MUST include a point on
+          the P-256 elliptic curve [[!FIPS-186-3]], encoded in the uncompressed form described in
+          [[!X9.62]] Annex A (that is, 65 octets, starting with an 0x04 octet). The
+          <code><a>applicationServerKey</a></code> MUST be a different value to the one used for
+          message encryption [[WEBPUSH-ENCRYPTION]].
         </p>
       </section>
     </section>
@@ -706,6 +775,9 @@ navigator.serviceWorker.register('serviceworker.js').then(
       <dl title="interface PushSubscription" class="idl">
         <dt>
           readonly attribute USVString endpoint
+        </dt>
+        <dt>
+          [SameObject] readonly attribute PushSubscriptionOptions options
         </dt>
         <dt>
           ArrayBuffer? getKey (PushEncryptionKeyName name)
@@ -816,6 +888,9 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <li>Return <var>map</var>.
         </li>
       </ol>
+      <p>
+        Note that the options to a <code><a>PushSubscription</a></code> are not serialized.
+      </p>
       <section>
         <h2>
           <a>PushEncryptionKeyName</a> enumeration
