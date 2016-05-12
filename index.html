@@ -280,6 +280,8 @@
         "http://heycam.github.io/webidl/#idl-ArrayBuffer"><dfn>ArrayBuffer</dfn></a></code>,
         <code><a href=
         "http://heycam.github.io/webidl/#common-BufferSource"><dfn>BufferSource</dfn></a></code>,
+        <code><a href=
+        "http://heycam.github.io/webidl/#notallowederror"><dfn>NotAllowedError</dfn></a></code>,
         and <code><a href=
         "http://heycam.github.io/webidl/#idl-USVString"><dfn>USVString</dfn></a></code> are defined
         in [[!WEBIDL]].
@@ -605,7 +607,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
         permission explicitly for this <a>webapp</a>.
         </li>
         <li>If not granted, reject <var>promise</var> with a <code><a>DOMException</a></code> whose
-        name is "<code><a>PermissionDeniedError</a></code>" and terminate these steps.
+        name is "<code><a>NotAllowedError</a></code>" and terminate these steps.
         </li>
         <li>If the <a>Service Worker</a> is already subscribed, run the following substeps:
           <ol>
@@ -1221,32 +1223,6 @@ navigator.serviceWorker.register('serviceworker.js').then(
           </td>
           <td>
             The <a>webapp</a> needs to ask for permission in order to use the Push API.
-          </td>
-        </tr>
-      </table>
-    </section>
-    <section>
-      <h2>
-        Exceptions
-      </h2>
-      <p>
-        The Push API uses the following new <a>DOMException</a> names.
-      </p>
-      <table class="simple">
-        <tr>
-          <th>
-            Name
-          </th>
-          <th>
-            Description
-          </th>
-        </tr>
-        <tr>
-          <td>
-            <code><dfn>PermissionDeniedError</dfn></code>
-          </td>
-          <td>
-            The operation failed because the user denied permission to use the API.
           </td>
         </tr>
       </table>
