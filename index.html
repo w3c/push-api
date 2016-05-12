@@ -261,7 +261,9 @@
         <code><a href=
         "http://www.w3.org/TR/service-workers/#extendable-event-init-dictionary"><dfn>ExtendableEventInit</dfn></a></code>,
         <a href="http://www.w3.org/TR/service-workers/#dfn-extend-lifetime-promises"><dfn>extend
-        lifetime promises</dfn></a> and the <a href=
+        lifetime promises</dfn></a>, the <a href=
+        "http://www.w3.org/TR/service-workers/#clear-registration-algorithm"><dfn>Clear
+        Registration</dfn></a> algorithm, and the <a href=
         "http://www.w3.org/TR/service-workers/#handle-functional-event-algorithm"><dfn>Handle
         Functional Event</dfn></a> algorithm are defined in [[!SERVICE-WORKERS]].
       </p>
@@ -344,7 +346,8 @@
         <p>
           A <a>push subscription</a> is <a>deactivated</a> when its associated <a>service worker
           registration</a> is unregistered, though a <a>push subscription</a> MAY be
-          <a>deactivated</a> earlier.
+          <a>deactivated</a> earlier. A <a>push subscription</a> is removed when the <a>clear
+          registration</a> algorithm is run for the <a>service worker registration</a>.
         </p>
         <p>
           A <a>push subscription</a> has an associated <dfn data-lt=
