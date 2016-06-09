@@ -1065,10 +1065,21 @@ navigator.serviceWorker.register('serviceworker.js').then(
               associated with <var>subscription</var> and the process described in
               [[!WEBPUSH-ENCRYPTION]]. This produces the plain text of the message.
               </li>
-              <li>If the <a>push message</a> could not be decrypted for any reason, discard the
-              message and terminate this process. A <code>push</code> event MUST NOT be fired for a
-              <a>push message</a> that was not successfully decrypted using the key pair associated
-              with the <a>push subscription</a>.
+              <li>If the <a>push message</a> could not be decrypted for any reason, perform the
+              following steps:
+                <ol>
+                  <li>Acknowledge the receipt of the <a>push message</a> according to
+                  [[!WEBPUSH-PROTOCOL]]. Though the message was not successfully received and
+                  processed, this prevents the push service from attempting to retransmit the
+                  message; a badly encrypted message is not recoverable.
+                  </li>
+                  <li>Discard the <a>push message</a>.
+                  </li>
+                  <li>Terminate this process.
+                  </li>
+                </ol>A <code>push</code> event MUST NOT be fired for a <a>push message</a> that was
+                not successfully decrypted using the key pair associated with the <a>push
+                subscription</a>.
               </li>
               <li>Let <var>pushdata</var> be the decrypted plain text of the <a>push message</a>.
               </li>
