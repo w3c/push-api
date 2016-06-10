@@ -262,6 +262,8 @@
         "http://www.w3.org/TR/service-workers/#extendable-event-init-dictionary"><dfn>ExtendableEventInit</dfn></a></code>,
         <a href="http://www.w3.org/TR/service-workers/#dfn-extend-lifetime-promises"><dfn>extend
         lifetime promises</dfn></a>, the <a href=
+        "http://www.w3.org/TR/service-workers/#soft-update-algorithm"><dfn>Soft Update</dfn></a>
+        algorithm, the <a href=
         "http://www.w3.org/TR/service-workers/#clear-registration-algorithm"><dfn>Clear
         Registration</dfn></a> algorithm, and the <a href=
         "http://www.w3.org/TR/service-workers/#handle-functional-event-algorithm"><dfn>Handle
@@ -1107,10 +1109,31 @@ navigator.serviceWorker.register('serviceworker.js').then(
                   <li>Wait for all of the promises in the <a>extend lifetime promises</a> of <var>
                     e</var> to resolve.
                   </li>
-                  <li>If any promise rejects, abort these steps.
+                  <li>If all the promises resolve successfully, acknowledge the receipt of the <a>
+                    push message</a> according to [[!WEBPUSH-PROTOCOL]] and abort these steps.
                   </li>
-                  <li>Acknowledge the receipt of the <a>push message</a> according to
-                  [[!WEBPUSH-PROTOCOL]].
+                  <li>
+                    <p>
+                      If the same <a>push message</a> has been delivered to a <a>service worker
+                      registration</a> multiple times unsuccessfully, acknowledge the receipt of
+                      the <a>push message</a> according to [[!WEBPUSH-PROTOCOL]].
+                    </p>
+                    <p>
+                      Acknowledging the <a>push message</a> causes the <a>push service</a> to stop
+                      delivering the message and to report success to the <a>application
+                      server</a>. This prevents the same <a>push message</a> from being retried by
+                      the <a>push service</a> indefinitely.
+                    </p>
+                    <p>
+                      Acknowledging also means that an <a>application server</a> could incorrectly
+                      receive a delivery receipt indicating successful delivery of the <a>push
+                      message</a>. Therefore, multiple rejections SHOULD be permitted before
+                      acknowledging; allowing at least three attempts is recommended. A <a>user
+                      agent</a> SHOULD invoke the <a>Soft Update</a> algorithm for the <a>service
+                      worker registration</a> in response to each failure so that errors in scripts
+                      can be corrected; this invocation MAY include the <em>force bypass cache
+                      flag</em>.
+                    </p>
                   </li>
                 </ol>
               </li>
