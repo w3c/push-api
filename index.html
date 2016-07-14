@@ -725,6 +725,10 @@ navigator.serviceWorker.register('serviceworker.js').then(
           <a>user agent</a> SHOULD enforce it on incoming <a>push messages</a>.
         </p>
         <p>
+          These options are optional, and <a>user agents</a> MAY choose to support only a subset of
+          them. A <a>user agent</a> MUST NOT expose options that it does not support.
+        </p>
+        <p>
           Once set, options for a <a>push subscription</a> cannot change. A pre-existing <a>push
           subscription</a> can be <a href=
           "#widl-PushSubscription-unsubscribe-Promise-boolean">unsubscribed</a> to create a <a>push
