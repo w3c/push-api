@@ -210,17 +210,21 @@
         Dependencies
       </h2>
       <p>
-        The terms <dfn><a href="http://www.w3.org/TR/html5/webappapis.html#event-handlers">event
-        handler</a></dfn>, <dfn><a href=
-        "http://www.w3.org/TR/html5/webappapis.html#event-handler-event-type">event handler event
-        type</a></dfn>, <dfn><a href=
-        "http://www.w3.org/TR/html5/webappapis.html#queue-a-task">queue a task</a></dfn>,
+        The terms <dfn><a href=
+        "http://www.w3.org/TR/html51/webappapis.html#current-settings-object">current settings
+        object</a></dfn>, <dfn><a href=
+        "http://www.w3.org/TR/html51/webappapis.html#event-handlers">event handler</a></dfn>,
         <dfn><a href=
-        "http://www.w3.org/TR/html5/infrastructure.html#concept-events-trusted">trusted
-        event</a></dfn>, and <dfn><a href=
-        "http://www.w3.org/TR/html5/webappapis.html#fire-a-simple-event">fire a simple
-        event</a></dfn> are defined in [[!HTML5]].
+        "http://www.w3.org/TR/html51/webappapis.html#event-handler-event-type">event handler event
+        type</a></dfn>, <dfn><a href=
+        "http://www.w3.org/TR/html51/webappapis.html#fire-a-simple-event">fire a simple
+        event</a></dfn>, <dfn><a href=
+        "http://www.w3.org/TR/html51/webappapis.html#queue-a-task">queue a task</a></dfn> and
+        <dfn><a href=
+        "http://www.w3.org/TR/html51/infrastructure.html#concept-events-trusted">trusted
+        event</a></dfn> are defined in [[!HTML51]].
       </p>
+
       <p>
         <code><a href=
         "https://tc39.github.io/ecma262/#sec-promise-objects"><dfn>Promise</dfn></a></code>, and
@@ -268,6 +272,10 @@
         Registration</dfn></a> algorithm, and the <a href=
         "http://www.w3.org/TR/service-workers/#handle-functional-event-algorithm"><dfn>Handle
         Functional Event</dfn></a> algorithm are defined in [[!SERVICE-WORKERS]].
+      </p>
+      <p>
+        The term <a href="https://www.w3.org/TR/secure-contexts/#secure-context"><dfn>secure context</dfn></a>
+        is defined in [[!POWERFUL-FEATURES]].
       </p>
       <p>
         The algorithms <a href="http://www.w3.org/TR/encoding/#utf-8-encode"><dfn>utf-8
@@ -414,9 +422,10 @@
         <a>push subscription</a> to send <a>push messages</a> to another <a>push subscription</a>.
       </p>
       <p>
-        <a>User agents</a> MUST implement the Push API to be HTTPS-only. SSL-only support provides
-        better protection for the user against man-in-the-middle attacks intended to obtain push
-        subscription data. Browsers may ignore this rule for development purposes only.
+        <a>User agents</a> MUST implement the Push API to only be available in
+        <a data-lt="secure context">secure contexts</a>. This provides better protection for the
+        user against man-in-the-middle attacks intended to obtain push subscription data. Browsers
+        may ignore this rule for development purposes only.
       </p>
     </section>
     <section class='informative' id="pushframework">
@@ -573,9 +582,9 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </li>
         <li>Return <var>promise</var> and continue the following steps asynchronously.
         </li>
-        <li>If the scheme of the document url is not <code>https</code>, reject <var>promise</var>
-        with a <code><a>DOMException</a></code> whose name is "<code><a>SecurityError</a></code>"
-        and terminate these steps.
+        <li>If the <a>current settings object</a> is not a <a>secure context</a>, reject
+        <var>promise</var> with a <code><a>DOMException</a></code> whose name is
+        "<code><a>SecurityError</a></code>" and terminate these steps.
         </li>
         <li>Let <var>allOptions</var> be the value of the <code>options</code> argument, if
         provided, or a <code><a>PushSubscriptionOptions</a></code> dictionary with default values.
