@@ -7,12 +7,11 @@ cmake ?= cmake
 
 .PHONY: check
 check: install_tidy
-	$(tidy) -quiet -config tidyconf.txt index.html | sed -f fixup.sed | diff -q index.html -
+	$(tidy) -quiet -config tidyconf.txt index.html | diff -q index.html -
 
 .PHONY: tidy
 tidy: install_tidy
 	$(tidy) -quiet -config tidyconf.txt -modify index.html || true
-	sed -i~t -f fixup.sed index.html && rm -f index.html~t
 
 .PHONY: install_tidy
 install_tidy: $(tidy)
