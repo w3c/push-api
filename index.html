@@ -152,13 +152,12 @@
       </h2>
       <p>
         The Push API allows a <a>webapp</a> to communicate with a <a>user agent</a> asynchronously.
-        This allows a <a>webapp</a> to provide the <a>user agent</a> with time-sensitive
-        information whenever that information becomes known, rather than waiting for a user to open
-        the <a>webapp</a>.
+        This allows an <a>application server</a> to provide the <a>user agent</a> with
+        time-sensitive information whenever that information becomes known, rather than waiting for
+        a user to open the <a>webapp</a>.
       </p>
       <p>
-        As defined here, <a>push services</a> support delivery of <a>application server</a>
-        messages at any time.
+        As defined here, <a>push services</a> support delivery of <a>push messages</a> at any time.
       </p>
       <p>
         In particular, a <a>push message</a> will be delivered to the <a>webapp</a> even if that
@@ -172,25 +171,28 @@
         In support of this, the <a>push service</a> stores messages for the <a>user agent</a> until
         the <a>user agent</a> becomes available. This supports use cases where a <a>webapp</a>
         learns of changes that occur while a user is offline and ensures that the <a>user agent</a>
-        can be provided with relevant information in a timely fashion. For example, a user that is
-        away from network access might receive a new message; the message is stored by the <a>push
-        service</a> until the <a>user agent</a> becomes reachable and the message can be delivered.
+        can be provided with relevant information in a timely fashion. <a>Push messages</a> are
+        stored by the <a>push service</a> until the <a>user agent</a> becomes reachable and the
+        message can be delivered.
       </p>
       <p>
         The Push API will also ensure reliable delivery of push messages while a <a>user agent</a>
         is actively using a <a>webapp</a>, for instance if a user is actively using the
-        <a>webapp</a> or the <a>webapp</a> has an active worker, frame, or background window.
-        However, as mentioned, these are not the primary use case for the API.
+        <a>webapp</a> or the <a>webapp</a> is in active communication with an <a>application
+        server</a> through an active worker, frame, or background window. This is not the primary
+        use case for the Push API. A <a>webapp</a> might choose to use the Push API for infrequent
+        messages to avoid having to maintain constant communications with the <a>application
+        server</a>.
       </p>
       <p>
         Push messaging is best suited to occasions where there is not already an active
-        communications channel established between <a>user agent</a> and <a>webapp</a>. Sending a
-        <a>push message</a> requires considerably more resources when compared with more direct
+        communications channel established between <a>user agent</a> and <a>webapp</a>. Sending
+        <a>push messages</a> requires considerably more resources when compared with more direct
         methods of communication such as <a href="https://fetch.spec.whatwg.org/">fetch()</a> or
         <a href="https://html.spec.whatwg.org/multipage/comms.html#network">websockets</a>. <a>Push
-        message</a> usually have higher latency than direct communications and they can also be
-        subject to restrictions on use. Most push services limit the size and quantity of <a>push
-        messages</a> that can be sent.
+        messages</a> usually have higher latency than direct communications and they can also be
+        subject to restrictions on use. Most <a>push services</a> limit the size and quantity of
+        <a>push messages</a> that can be sent.
       </p>
     </section>
     <section id="conformance">
