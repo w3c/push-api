@@ -151,47 +151,49 @@
         Introduction
       </h2>
       <p>
-        As defined here, <a>push services</a> support delivery of <a>application server</a>
-        messages in the following contexts and related use cases:
+        The Push API allows a <a>webapp</a> to communicate with a <a>user agent</a> asynchronously.
+        This allows an <a>application server</a> to provide the <a>user agent</a> with
+        time-sensitive information whenever that information becomes known, rather than waiting for
+        a user to open the <a>webapp</a>.
       </p>
-      <ul>
-        <li>the user is actively involved in the use of a <a>webapp</a>: this relates to any normal
-        use case in which a <a>webapp</a> user may benefit from <a>push messages</a> while the user
-        is actively using the <a>webapp</a>
-        </li>
-        <li>the user is not actively involved in the use of a <a>webapp</a>, but the <a>webapp</a>
-        is active in a window of the browser or executing as a web worker: this relates to use
-        cases such as social networking, messaging, web feed readers, etc in which the user may not
-        be actively using a <a>webapp</a> but still benefits from <a>push messages</a> being sent
-        to (or via) the <a>webapp</a>, to keep the user up-to-date
-        </li>
-        <li>the <a>webapp</a> is not currently active in a browser window: this relates to use
-        cases in which the user may close the <a>webapp</a>, but still benefits from the
-        <a>webapp</a> being able to be restarted when a <a>push message</a> is received, e.g. the
-        WebRTC use case in which an incoming call can invoke the WebRTC <a>webapp</a>
-        </li>
-        <li>multiple <a>webapps</a> are running, but <a>push messages</a> are delivered only to the
-        <a>webapp</a> that requested them, e.g. any normal use case in which multiple
-        <a>webapps</a> are active in the browser and utilizing <a>push services</a>
-        </li>
-        <li>multiple instances of the same <a>webapp</a> are active in the browser, and <a>push
-        messages</a> specific to each instance of the <a>webapp</a> are delivered only to the
-        specific instance, e.g. when a mail <a>webapp</a> is active in two windows using different
-        mail accounts
-        </li>
-        <li>multiple instances of the same <a>webapp</a> are active in different browsers, and push
-        messages are delivered to a set of instances of the <a>webapp</a>, e.g. when a mail
-        <a>webapp</a> is active in two browsers using the same email account
-        </li>
-        <li>multiple instances of the same <a>webapp</a> are active in different browsers, and push
-        messages are delivered to all instances of the <a>webapp</a>, e.g. when a message is to be
-        broadcasted to all users of the <a>webapp</a>
-        </li>
-        <li>the <a>user agent</a> is temporarily offline: this case depends on the <a>push
-        service</a> providing reliable message delivery and supports use cases where a
-        <a>webapp</a> learns of changes that occur while offline in a timely fashion.
-        </li>
-      </ul>
+      <p>
+        As defined here, <a>push services</a> support delivery of <a>push messages</a> at any time.
+      </p>
+      <p>
+        In particular, a <a>push message</a> will be delivered to the <a>webapp</a> even if that
+        <a>webapp</a> is not currently active in a browser window: this relates to use cases in
+        which the user may close the <a>webapp</a>, but still benefits from the <a>webapp</a> being
+        able to be restarted when a <a>push message</a> is received. For example, a <a>push
+        message</a> might be used to inform the user of an incoming WebRTC call.
+      </p>
+      <p>
+        A <a>push message</a> can also be sent when the <a>user agent</a> is temporarily offline.
+        In support of this, the <a>push service</a> stores messages for the <a>user agent</a> until
+        the <a>user agent</a> becomes available. This supports use cases where a <a>webapp</a>
+        learns of changes that occur while a user is offline and ensures that the <a>user agent</a>
+        can be provided with relevant information in a timely fashion. <a>Push messages</a> are
+        stored by the <a>push service</a> until the <a>user agent</a> becomes reachable and the
+        message can be delivered.
+      </p>
+      <p>
+        The Push API will also ensure reliable delivery of push messages while a <a>user agent</a>
+        is actively using a <a>webapp</a>, for instance if a user is actively using the
+        <a>webapp</a> or the <a>webapp</a> is in active communication with an <a>application
+        server</a> through an active worker, frame, or background window. This is not the primary
+        use case for the Push API. A <a>webapp</a> might choose to use the Push API for infrequent
+        messages to avoid having to maintain constant communications with the <a>application
+        server</a>.
+      </p>
+      <p>
+        Push messaging is best suited to occasions where there is not already an active
+        communications channel established between <a>user agent</a> and <a>webapp</a>. Sending
+        <a>push messages</a> requires considerably more resources when compared with more direct
+        methods of communication such as <a href="https://fetch.spec.whatwg.org/">fetch()</a> or
+        <a href="https://html.spec.whatwg.org/multipage/comms.html#network">websockets</a>. <a>Push
+        messages</a> usually have higher latency than direct communications and they can also be
+        subject to restrictions on use. Most <a>push services</a> limit the size and quantity of
+        <a>push messages</a> that can be sent.
+      </p>
     </section>
     <section id="conformance">
       <p>
