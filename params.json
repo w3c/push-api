@@ -1,0 +1,6 @@
+{
+  "name": "Push-api",
+  "tagline": "",
+  "body": "push-api\r\n========\r\n\r\nDocuments in this repository\r\n----------------------------\r\n\r\n* [Specification](https://w3c.github.io/push-api/)\r\n\r\nCommunication\r\n-------------\r\n\r\n* Send comments to [public-webapps@w3.org](http://lists.w3.org/Archives/Public/public-webapps/).\r\n* [Github Issue Tracker](https://github.com/w3c/push-api/issues)\r\n\r\nImplementations\r\n---------------\r\n\r\n* [Shipped in Chrome 42](https://groups.google.com/a/chromium.org/forum/#!msg/blink-dev/UdGlL9PtBLo/HOZZ4sjV-QkJ)\r\n* [Mozilla issue tracker](https://bugzilla.mozilla.org/buglist.cgi?quicksearch=push+api+component%3A%22Push+Notifications%22)\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
