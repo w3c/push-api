@@ -273,8 +273,6 @@
         "http://www.w3.org/TR/service-workers/#extendable-event-init-dictionary"><dfn>ExtendableEventInit</dfn></a></code>,
         <a href="http://www.w3.org/TR/service-workers/#dfn-extend-lifetime-promises"><dfn>extend
         lifetime promises</dfn></a>, the <a href=
-        "http://www.w3.org/TR/service-workers/#soft-update-algorithm"><dfn>Soft Update</dfn></a>
-        algorithm, the <a href=
         "http://www.w3.org/TR/service-workers/#clear-registration-algorithm"><dfn>Clear
         Registration</dfn></a> algorithm, and the <a href=
         "http://www.w3.org/TR/service-workers/#handle-functional-event-algorithm"><dfn>Handle
@@ -1148,11 +1146,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
                       Acknowledging also means that an <a>application server</a> could incorrectly
                       receive a delivery receipt indicating successful delivery of the <a>push
                       message</a>. Therefore, multiple rejections SHOULD be permitted before
-                      acknowledging; allowing at least three attempts is recommended. A <a>user
-                      agent</a> SHOULD invoke the <a>Soft Update</a> algorithm for the <a>service
-                      worker registration</a> in response to each failure so that errors in scripts
-                      can be corrected; this invocation MAY include the <em>force bypass cache
-                      flag</em>.
+                      acknowledging; allowing at least three attempts is recommended.
                     </p>
                   </li>
                 </ol>
