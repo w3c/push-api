@@ -350,6 +350,12 @@
           most one <a>push subscription</a>.
         </p>
         <p>
+          A <a>push subscription</a> has internal slots for a P-256 <a>ECDH</a> key pair and an
+          authentication secret in accordance with [[!WEBPUSH-ENCRYPTION]]. These slots MUST be
+          populated when creating the <a>push subscription</a>, and MUST remain constant for its
+          lifetime.
+        </p>
+        <p>
           When a <a>push subscription</a> is <dfn data-lt=
           "deactivated|deactivate">deactivated</dfn>, both the <a>user agent</a> and the <a>push
           service</a> MUST delete any stored copies of its details. Subsequent <a>push messages</a>
@@ -845,7 +851,9 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </li>
       </ol>
       <p>
-        Keys named <code><a>p256dh</a></code> and <code><a>auth</a></code> MUST be supported.
+        Keys named <code><a>p256dh</a></code> and <code><a>auth</a></code> MUST be supported, and
+        their values MUST correspond to those necessary for the user agent to decrypt received push
+        messages in accordance with [[!WEBPUSH-ENCRYPTION]].
       </p>
       <p>
         The <code><dfn id=
