@@ -552,11 +552,11 @@ navigator.serviceWorker.register('serviceworker.js').then(
         The Service Worker specification defines a <code>ServiceWorkerRegistration</code> interface
         [[!SERVICE-WORKERS]], which this specification extends.
       </p>
-      <dl title="partial interface ServiceWorkerRegistration" class="idl">
-        <dt>
-          readonly attribute PushManager pushManager
-        </dt>
-      </dl>
+      <pre class="idl">
+partial interface ServiceWorkerRegistration {
+    readonly attribute PushManager pushManager;
+};
+</pre>
       <p>
         The <code><dfn id="widl-ServiceWorkerRegistration-pushManager">pushManager</dfn></code>
         attribute exposes a <code><a>PushManager</a></code>, which has an associated <a>service
@@ -571,18 +571,13 @@ navigator.serviceWorker.register('serviceworker.js').then(
       <p>
         The <a>PushManager</a> interface defines the operations to access <a>push services</a>.
       </p>
-      <dl title="interface PushManager" class="idl">
-        <dt>
-          Promise&lt;PushSubscription&gt; subscribe (optional PushSubscriptionOptionsInit options)
-        </dt>
-        <dt>
-          Promise&lt;PushSubscription?&gt; getSubscription ()
-        </dt>
-        <dt>
-          Promise&lt;PushPermissionState&gt; permissionState (optional PushSubscriptionOptionsInit
-          options)
-        </dt>
-      </dl>
+      <pre class="idl">
+interface PushManager {
+    Promise&lt;PushSubscription&gt; subscribe(optional PushSubscriptionOptionsInit options);
+    Promise&lt;PushSubscription?&gt; getSubscription();
+    Promise&lt;PushPermissionState&gt; permissionState(optional PushSubscriptionOptionsInit options);
+};
+</pre>
       <p>
         The <code><dfn id=
         "widl-PushManager-subscribe-Promise-PushSubscription--PushSubscriptionOptionsInit-options">subscribe</dfn></code>
@@ -754,24 +749,17 @@ navigator.serviceWorker.register('serviceworker.js').then(
           "#widl-PushSubscription-unsubscribe-Promise-boolean">unsubscribed</a> to create a <a>push
           subscription</a> with new options.
         </p>
-        <dl title="dictionary PushSubscriptionOptionsInit" class="idl" data-merge=
-        "PushSubscriptionOptions">
-          <dt>
-            boolean userVisibleOnly = false
-          </dt>
-          <dt>
-            BufferSource? applicationServerKey = null
-          </dt>
-        </dl>
-        <dl title="interface PushSubscriptionOptions" class="idl" data-merge=
-        "PushSubscriptionOptionsInit">
-          <dt>
-            readonly attribute boolean userVisibleOnly
-          </dt>
-          <dt>
-            [SameObject] readonly attribute ArrayBuffer? applicationServerKey
-          </dt>
-        </dl>
+        <pre class="idl">
+dictionary PushSubscriptionOptionsInit {
+    boolean userVisibleOnly = false;
+    BufferSource? applicationServerKey = null;
+};
+
+interface PushSubscriptionOptions {
+    readonly attribute boolean userVisibleOnly;
+    [SameObject] readonly attribute ArrayBuffer? applicationServerKey;
+};
+</pre>
         <p>
           The <code><dfn id=
           "widl-PushSubscriptionOptionsInit-userVisibleOnly">userVisibleOnly</dfn></code> option,
@@ -803,23 +791,15 @@ navigator.serviceWorker.register('serviceworker.js').then(
       <p>
         A <a>PushSubscription</a> object represents a <a>push subscription</a>.
       </p>
-      <dl title="interface PushSubscription" class="idl">
-        <dt>
-          readonly attribute USVString endpoint
-        </dt>
-        <dt>
-          [SameObject] readonly attribute PushSubscriptionOptions options
-        </dt>
-        <dt>
-          ArrayBuffer? getKey (PushEncryptionKeyName name)
-        </dt>
-        <dt>
-          Promise&lt;boolean&gt; unsubscribe ()
-        </dt>
-        <dt>
-          serializer
-        </dt>
-      </dl>
+      <pre class="idl">
+interface PushSubscription {
+    readonly attribute USVString endpoint;
+    [SameObject] readonly attribute PushSubscriptionOptions options;
+    ArrayBuffer? getKey(PushEncryptionKeyName name);
+    Promise&lt;boolean&gt; unsubscribe();
+    serializer;
+};
+</pre>
       <p>
         When getting the <code><dfn id="widl-PushSubscription-endpoint">endpoint</dfn></code>
         attribute, the <a>user agent</a> MUST return the <a>push endpoint</a> associated with the
@@ -934,14 +914,12 @@ navigator.serviceWorker.register('serviceworker.js').then(
           <code><a>PushSubscription</a></code>. Each key is named using a value from the
           <code><dfn>PushEncryptionKeyName</dfn></code> enumeration.
         </p>
-        <dl title="enum PushEncryptionKeyName" class="idl">
-          <dt>
-            p256dh
-          </dt>
-          <dt>
-            auth
-          </dt>
-        </dl>
+        <pre class="idl">
+enum PushEncryptionKeyName {
+    "p256dh",
+    "auth"
+};
+        </pre>
         <p>
           The <code><dfn id="idl-def-PushEncryptionKeyName.p256dh">p256dh</dfn></code> value is
           used to retrieve the P-256 ECDH Diffie-Hellman public key described in
@@ -957,21 +935,17 @@ navigator.serviceWorker.register('serviceworker.js').then(
       <h2>
         <a>PushMessageData</a> interface
       </h2>
-      <dl title="[Exposed=ServiceWorker] interface PushMessageData" class="idl" data-merge="JSON">
-        <dt>
-          ArrayBuffer arrayBuffer ()
-        </dt>
-        <dt>
-          Blob blob ()
-        </dt>
-        <dt>
-          JSON json ()
-        </dt>
-        <dt>
-          USVString text ()
-        </dt>
-      </dl>
-      <dl title="typedef any JSON" class="idl"></dl>
+        <pre class="idl">
+typedef any JSON;
+
+[Exposed=ServiceWorker]
+interface PushMessageData {
+    ArrayBuffer arrayBuffer();
+    Blob blob();
+    JSON json();
+    USVString text();
+};
+</pre>
       <p>
         <a>PushMessageData</a> objects have an associated <dfn>bytes</dfn> (a byte sequence) set on
         creation, which is <code>null</code> if there was no data in the <a>push message</a>.
@@ -998,7 +972,6 @@ navigator.serviceWorker.register('serviceworker.js').then(
         The <code><dfn id="widl-PushMessageData-text-USVString">text()</dfn></code> method, when
         invoked, MUST return the result of running <a>utf-8 decode</a> on <var>bytes</var>.
       </p>
-      <div class="idl" title="typedef (BufferSource or USVString) PushMessageDataInit"></div>
       <p>
         To <dfn>extract a byte sequence</dfn> from <var>object</var>, run these steps:
       </p>
@@ -1034,14 +1007,12 @@ navigator.serviceWorker.register('serviceworker.js').then(
         The Service Worker specification defines a <code>ServiceWorkerGlobalScope</code> interface
         [[!SERVICE-WORKERS]], which this specification extends.
       </p>
-      <dl title="partial interface ServiceWorkerGlobalScope" class="idl">
-        <dt>
-          attribute EventHandler onpush
-        </dt>
-        <dt>
-          attribute EventHandler onpushsubscriptionchange
-        </dt>
-      </dl>
+      <pre class="idl">
+partial interface ServiceWorkerGlobalScope {
+    attribute EventHandler onpush;
+    attribute EventHandler onpushsubscriptionchange;
+};
+</pre>
       <p>
         The <code><dfn id="widl-ServiceWorkerGlobalScope-onpush">onpush</dfn></code> attribute is
         an <a>event handler</a> whose corresponding <a>event handler event type</a> is
@@ -1060,18 +1031,18 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <p>
           The <a>PushEvent</a> interface represents a received <a>push message</a>.
         </p>
-        <dl title=
-        "[Constructor(DOMString type, optional PushEventInit eventInitDict), Exposed=ServiceWorker] interface PushEvent : ExtendableEvent"
-        class="idl" data-merge="PushEventInit">
-          <dt>
-            readonly attribute PushMessageData? data
-          </dt>
-        </dl>
-        <dl title="dictionary PushEventInit : ExtendableEventInit" class="idl">
-          <dt>
-            PushMessageDataInit data
-          </dt>
-        </dl>
+        <pre class="idl">
+typedef (BufferSource or USVString) PushMessageDataInit;
+
+dictionary PushEventInit : ExtendableEventInit {
+    PushMessageDataInit data;
+};
+
+[Constructor(DOMString type, optional PushEventInit eventInitDict), Exposed=ServiceWorker]
+interface PushEvent : ExtendableEvent {
+    readonly attribute PushMessageData? data;
+};
+</pre>
         <p>
           Upon receiving a <a>push message</a> from the <a>push service</a>, the <a>user agent</a>
           MUST run the following steps:
@@ -1238,19 +1209,15 @@ navigator.serviceWorker.register('serviceworker.js').then(
     </section>
     <section>
       <h2>
-        Enumerations
+        Permission Enumeration
       </h2>
-      <dl class="idl" title="enum PushPermissionState">
-        <dt>
-          granted
-        </dt>
-        <dt>
-          denied
-        </dt>
-        <dt>
-          prompt
-        </dt>
-      </dl>
+        <pre class="idl">
+enum PushPermissionState {
+    "granted",
+    "denied",
+    "prompt"
+};
+</pre>
       <table class="simple">
         <tr>
           <th>
