@@ -603,24 +603,9 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <li>Let <var>registration</var> be the <a>PushManager</a>'s associated
         <a>service worker registration</a>.
         </li>
-        <li>If <var>registration</var> has no <a>active worker</a>, run the following substeps:
-          <ol>
-            <li>If <var>registration</var> has no <a>installing worker</a> and no <a>waiting
-            worker</a>, reject <var>promise</var> with a <a>DOMException</a> whose
-            name is "<a>InvalidStateError</a>" and terminate these steps.
-            </li>
-            <li>Wait for the <a>installing worker</a> or <a>waiting worker</a> of
-            <var>registration</var> to become its <a>active worker</a>.
-            </li>
-            <li>If <var>registration</var> fails to activate either worker, reject
-            <var>promise</var> with a <a>DOMException</a> whose name is
-            "<a>InvalidStateError</a>" and terminate these steps.
-            </li>
-            <li>Once <var>registration</var> has an <a>active worker</a>, proceed with the steps
-            below.
-            </li>
-          </ol>
-        </li>
+        <li>If <var>registration</var>'s <a>active worker</a> is null, reject <var>promise</var>
+        with a <code><a>DOMException</a></code> whose name is
+        "<code><a>InvalidStateError</a></code>" and terminate these steps.</li>
         <li>Ask the user whether they allow the <a>webapp</a> to receive <a>push messages</a>,
         unless a prearranged trust relationship applies or the user has already granted or denied
         permission explicitly for this <a>webapp</a>.
