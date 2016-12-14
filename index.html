@@ -248,6 +248,8 @@
         <code><a href=
         "http://www.w3.org/TR/dom/#invalidaccesserror"><dfn>InvalidAccessError</dfn></a></code>,
         <code><a href=
+        "http://www.w3.org/TR/dom/#invalidcharactererror"><dfn>InvalidCharacterError</dfn></a></code>,
+        <code><a href=
         "http://www.w3.org/TR/dom/#securityerror"><dfn>SecurityError</dfn></a></code>,
         <code><a href="http://www.w3.org/TR/dom/#networkerror"><dfn>NetworkError</dfn></a></code>,
         <a href="http://www.w3.org/TR/dom/#concept-event-listener"><dfn>event listener</dfn></a>,
@@ -297,6 +299,8 @@
         "http://heycam.github.io/webidl/#idl-ArrayBuffer"><dfn>ArrayBuffer</dfn></a></code>,
         <code><a href=
         "http://heycam.github.io/webidl/#common-BufferSource"><dfn>BufferSource</dfn></a></code>,
+        <code><a href=
+        "https://heycam.github.io/webidl/#idl-DOMString"><dfn>DOMString</dfn></a></code>,
         <code><a href=
         "http://heycam.github.io/webidl/#notallowederror"><dfn>NotAllowedError</dfn></a></code>,
         and <code><a href=
@@ -595,10 +599,22 @@ navigator.serviceWorker.register('serviceworker.js').then(
         provided, or a <a>PushSubscriptionOptions</a> dictionary with default values.
         </li>
         <li>If <var>allOptions</var> includes a non-null value for the
-        <a>applicationServerKey</a> attribute, check that the value is valid (i.e.,
-        ensure that it describes a valid point on the P-256 curve). If the
-        <a>applicationServerKey</a> value is invalid, reject <var>promise</var> with
-        an <a>InvalidAccessError</a> and terminate these steps.
+        <code><a>applicationServerKey</a></code> attribute, run the following substeps:
+          <ol>
+            <li>Let <var>applicationServerKey</var> be the sequence of octets in
+            <code><a>applicationServerKey</a></code> when provided as a <code><a>BufferSource</a></code>,
+            or the sequence of octets that results from decoding
+            <code><a>applicationServerKey</a></code> using the base64url encoding [[!RFC7515]] when
+            provided as a <code><a>DOMString</a></code>. If decoding fails, reject
+            <var>promise</var> with a <code><a>DOMException</a></code> whose name is
+            "<code><a>InvalidCharacterError</a></code>" and terminate these steps.
+            </li>
+            <li>Ensure that <var>applicationServerKey</var> describes a valid point on the P-256
+            curve. If the <var>applicationServerKey</var> value is invalid, reject <var>promise</var>
+            with a <code><a>DOMException</a></code> whose name is
+            "<code><a>InvalidAccessError</a></code>" and terminate these steps.
+            </li>
+          </ol>
         </li>
         <li>Let <var>registration</var> be the <a>PushManager</a>'s associated
         <a>service worker registration</a>.
@@ -636,7 +652,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
           </ol>
         </li>
         <li>Make a request to the push service to create a new <a>push subscription</a> for the <a>
-          Service Worker</a>.
+        Service Worker</a>.
         </li>
         <li>If there is an error, reject <var>promise</var> with a <a>DOMException</a>
         whose name is "<a>AbortError</a>" and terminate these steps.
@@ -734,7 +750,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <pre class="idl">
           dictionary PushSubscriptionOptionsInit {
             boolean userVisibleOnly = false;
-            BufferSource? applicationServerKey = null;
+            (BufferSource or DOMString)? applicationServerKey = null;
           };
 
           interface PushSubscriptionOptions {
@@ -758,8 +774,12 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <p>
           If present, the value of <a>applicationServerKey</a> MUST include a point on
           the P-256 elliptic curve [[!DSS]], encoded in the uncompressed form described in
-          [[!X9.62]] Annex A (that is, 65 octets, starting with an 0x04 octet). The
-          <a>applicationServerKey</a> MUST be a different value to the one used for
+          [[!X9.62]] Annex A (that is, 65 octets, starting with an 0x04 octet). This value MUST be
+          encoded using the base64url encoding [[!RFC7515]] when provided as a
+          <code><a>DOMString</a></code>.
+        </p>
+        <p>
+          The <code><a>applicationServerKey</a></code> MUST be a different value to the one used for
           message encryption [[WEBPUSH-ENCRYPTION]].
         </p>
       </section>
