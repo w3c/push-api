@@ -205,7 +205,7 @@
     <section id="conformance">
       <p>
         This specification defines conformance criteria that apply to a single product: the
-        <dfn data-lt="user agent|user agents">user agent</dfn> that implements the interfaces that
+        <dfn data-lt="agents|user agents">user agent</dfn> that implements the interfaces that
         it contains.
       </p>
       <p>
@@ -320,12 +320,12 @@
           Webapp
         </h2>
         <p>
-          The term <dfn data-lt="webapp|webapps">webapp</dfn> refers to a Web application, i.e. an
+          The term <dfn data-lt="webapps">webapp</dfn> refers to a Web application, i.e. an
           application implemented using Web technologies, and executing within the context of a Web
           <a>user agent</a>, e.g. a Web browser or other Web runtime environment.
         </p>
         <p>
-          The term <dfn data-lt="application server|application servers">application server</dfn>
+          The term <dfn data-lt="application servers">application server</dfn>
           refers to server-side components of a <a>webapp</a>.
         </p>
       </section>
@@ -334,7 +334,7 @@
           Push message
         </h2>
         <p>
-          A <dfn data-lt="push message|push messages">push message</dfn> is data sent to a
+          A <dfn data-lt="push messages">push message</dfn> is data sent to a
           <a>webapp</a> from an <a>application server</a>.
         </p>
         <p>
@@ -348,7 +348,7 @@
           Push subscription
         </h2>
         <p>
-          A <dfn data-lt="push subscription|push subscriptions">push subscription</dfn> is a
+          A <dfn data-lt="push subscriptions">push subscription</dfn> is a
           message delivery context established between the <a>user agent</a> and the <a>push
           service</a> on behalf of a <a>webapp</a>. Each <a>push subscription</a> is associated
           with a <a>service worker registration</a> and a <a>service worker registration</a> has at
@@ -362,7 +362,7 @@
         </p>
         <p>
           When a <a>push subscription</a> is <dfn data-lt=
-          "deactivated|deactivate">deactivated</dfn>, both the <a>user agent</a> and the <a>push
+          "deactivate">deactivated</dfn>, both the <a>user agent</a> and the <a>push
           service</a> MUST delete any stored copies of its details. Subsequent <a>push messages</a>
           for this <a>push subscription</a> MUST NOT be delivered.
         </p>
@@ -374,7 +374,7 @@
         </p>
         <p>
           A <a>push subscription</a> has an associated <dfn data-lt=
-          "push endpoint|push endpoints">push endpoint</dfn>. It MUST be the absolute URL exposed
+          "push endpoints">push endpoint</dfn>. It MUST be the absolute URL exposed
           by the <a>push service</a> where the <a>application server</a> can send <a>push
           messages</a> to. A <a>push endpoint</a> MUST uniquely identify the <a>push
           subscription</a>.
@@ -385,7 +385,7 @@
           Push service
         </h2>
         <p>
-          The term <dfn data-lt="push service|push services">push service</dfn> refers to a system
+          The term <dfn data-lt="push services">push service</dfn> refers to a system
           that allows <a>application servers</a> to send <a>push messages</a> to a <a>webapp</a>. A
           push service serves the <a>push endpoint</a> or <a data-lt="push endpoints">endpoints</a>
           for the <a>push subscriptions</a> it serves.
@@ -415,7 +415,7 @@
         revocable.
       </p>
       <p>
-        The <a>user agent</a> MAY consider the <code><a>PushSubscriptionOptions</a></code> when
+        The <a>user agent</a> MAY consider the <a>PushSubscriptionOptions</a> when
         acquiring permission or determining the permission status.
       </p>
       <p>
@@ -525,16 +525,16 @@ navigator.serviceWorker.register('serviceworker.js').then(
           push protocol</a>. These parameters and attributes include:
         </p>
         <ul>
-          <li>The <code><a data-lt="PushSubscription-endpoint">push endpoint</a></code> of a <code>
+          <li>The <a data-lt="PushSubscription.endpoint">push endpoint</a> of a <code>
             PushSubscription</code> is a URL that allows an <a>application server</a> to request
             delivery of a <a>push message</a> to a <a>webapp</a>.
           </li>
-          <li>The <code><a data-lt="PushSubscription-getKey">getKey</a></code> method on a
+          <li>The <code><a data-lt="PushSubscription.getKey">getKey</a></code> method on a
           <code>PushSubscription</code> is used to retrieve keying material used to encrypt and
           authenticate <a>push messages</a>. Each invocation of the function returns a new
           <code>ArrayBuffer</code> that contains the value of the corresponding key, or
           <code>null</code> if the identified key doesn't exist. Passing a value of
-          <code><a>p256dh</a></code> retrieves a <dfn data-lt="ECDH">elliptic curve Diffie-Hellman
+          <a>p256dh</a> retrieves a <dfn data-lt="ECDH">elliptic curve Diffie-Hellman
           (ECDH)</dfn> public key associated with the <a>push subscription</a>. Passing a value of
           <code>auth</code> returns an authentication secret that an application server uses in
           authentication of its messages. These keys are used by the <a>application server</a> to
@@ -544,64 +544,63 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </ul>
       </section>
     </section>
-    <section>
+    <section data-dfn-for="ServiceWorkerRegistration">
       <h2>
         Extensions to the <a>ServiceWorkerRegistration</a> interface
       </h2>
       <p>
-        The Service Worker specification defines a <code>ServiceWorkerRegistration</code> interface
+        The Service Worker specification defines a <a>ServiceWorkerRegistration</a> interface
         [[!SERVICE-WORKERS]], which this specification extends.
       </p>
       <pre class="idl">
-partial interface ServiceWorkerRegistration {
-    readonly attribute PushManager pushManager;
-};
-</pre>
+        partial interface ServiceWorkerRegistration {
+          readonly attribute PushManager pushManager;
+        };
+      </pre>
       <p>
-        The <code><dfn id="widl-ServiceWorkerRegistration-pushManager">pushManager</dfn></code>
-        attribute exposes a <code><a>PushManager</a></code>, which has an associated <a>service
-        worker registration</a> represented by the <code><a>ServiceWorkerRegistration</a></code> on
+        The <dfn>pushManager</dfn>
+        attribute exposes a <a>PushManager</a>, which has an associated <a>service
+        worker registration</a> represented by the <a>ServiceWorkerRegistration</a> on
         which the attribute is exposed.
       </p>
     </section>
-    <section>
+    <section data-dfn-for="PushManager">
       <h2>
-        <a>PushManager</a> interface
+        <dfn>PushManager</dfn> interface
       </h2>
       <p>
         The <a>PushManager</a> interface defines the operations to access <a>push services</a>.
       </p>
       <pre class="idl">
-interface PushManager {
-    Promise&lt;PushSubscription&gt; subscribe(optional PushSubscriptionOptionsInit options);
-    Promise&lt;PushSubscription?&gt; getSubscription();
-    Promise&lt;PushPermissionState&gt; permissionState(optional PushSubscriptionOptionsInit options);
-};
-</pre>
+        interface PushManager {
+          Promise&lt;PushSubscription&gt; subscribe(optional PushSubscriptionOptionsInit options);
+          Promise&lt;PushSubscription?&gt; getSubscription();
+          Promise&lt;PushPermissionState&gt; permissionState(optional PushSubscriptionOptionsInit options);
+        };
+      </pre>
       <p>
-        The <code><dfn id=
-        "widl-PushManager-subscribe-Promise-PushSubscription--PushSubscriptionOptionsInit-options">subscribe</dfn></code>
+        The <dfn>subscribe</dfn>
         method when invoked MUST run the following steps:
       </p>
       <ol>
-        <li>Let <var>promise</var> be a new <a><code>Promise</code></a>.
+        <li>Let <var>promise</var> be a new <a>Promise</a>.
         </li>
         <li>Return <var>promise</var> and continue the following steps asynchronously.
         </li>
         <li>If the <a>current settings object</a> is not a <a>secure context</a>, reject
-        <var>promise</var> with a <code><a>DOMException</a></code> whose name is
-        "<code><a>SecurityError</a></code>" and terminate these steps.
+        <var>promise</var> with a <a>DOMException</a> whose name is
+        "<a>SecurityError</a>" and terminate these steps.
         </li>
         <li>Let <var>allOptions</var> be the value of the <code>options</code> argument, if
-        provided, or a <code><a>PushSubscriptionOptions</a></code> dictionary with default values.
+        provided, or a <a>PushSubscriptionOptions</a> dictionary with default values.
         </li>
         <li>If <var>allOptions</var> includes a non-null value for the
-        <code><a>applicationServerKey</a></code> attribute, check that the value is valid (i.e.,
+        <a>applicationServerKey</a> attribute, check that the value is valid (i.e.,
         ensure that it describes a valid point on the P-256 curve). If the
-        <code><a>applicationServerKey</a></code> value is invalid, reject <var>promise</var> with
-        an <code><a>InvalidAccessError</a></code> and terminate these steps.
+        <a>applicationServerKey</a> value is invalid, reject <var>promise</var> with
+        an <a>InvalidAccessError</a> and terminate these steps.
         </li>
-        <li>Let <var>registration</var> be the <code><a>PushManager</a></code>'s associated
+        <li>Let <var>registration</var> be the <a>PushManager</a>'s associated
         <a>service worker registration</a>.
         </li>
         <li>If <var>registration</var>'s <a>active worker</a> is null, reject <var>promise</var>
@@ -611,15 +610,15 @@ interface PushManager {
         unless a prearranged trust relationship applies or the user has already granted or denied
         permission explicitly for this <a>webapp</a>.
         </li>
-        <li>If not granted, reject <var>promise</var> with a <code><a>DOMException</a></code> whose
-        name is "<code><a>NotAllowedError</a></code>" and terminate these steps.
+        <li>If not granted, reject <var>promise</var> with a <a>DOMException</a> whose
+        name is "<a>NotAllowedError</a>" and terminate these steps.
         </li>
         <li>If the <a>Service Worker</a> is already subscribed, run the following substeps:
           <ol>
             <li>Retrieve the <a>push subscription</a> associated with the <a>Service Worker</a>.
             </li>
             <li>If there is an error, reject <var>promise</var> with a
-            <code><a>DOMException</a></code> whose name is "<code><a>AbortError</a></code>" and
+            <a>DOMException</a> whose name is "<a>AbortError</a>" and
             terminate these steps.
             </li>
             <li>Let <var>subscription</var> be the retrieved subscription.
@@ -627,8 +626,8 @@ interface PushManager {
             <li>Compare <var>allOptions</var> with the <code>options</code> attribute of
             <var>subscription</var>. If any attribute on <var>allOptions</var> contains a different
             value to that stored for <var>subscription</var>, then reject <var>promise</var> with
-            an <code><a>InvalidStateError</a></code> and terminate these steps. The contents of
-            <code><a>BufferSource</a></code> values are compared for equality rather than
+            an <a>InvalidStateError</a> and terminate these steps. The contents of
+            <a>BufferSource</a> values are compared for equality rather than
               <a href="https://tc39.github.io/ecma262/#sec-reference-specification-type">references</a>.
             </li>
             <li>When the request has been completed, resolve <var>promise</var> with
@@ -639,8 +638,8 @@ interface PushManager {
         <li>Make a request to the push service to create a new <a>push subscription</a> for the <a>
           Service Worker</a>.
         </li>
-        <li>If there is an error, reject <var>promise</var> with a <code><a>DOMException</a></code>
-        whose name is "<code><a>AbortError</a></code>" and terminate these steps.
+        <li>If there is an error, reject <var>promise</var> with a <a>DOMException</a>
+        whose name is "<a>AbortError</a>" and terminate these steps.
         </li>
         <li>Let <var>subscription</var> be a new subscription.
         </li>
@@ -650,27 +649,26 @@ interface PushManager {
         <li>Generate a new P-256 <a>ECDH</a> key pair. Store the private key in an internal slot on
         <var>subscription</var>; this value MUST NOT be made available to applications. The public
         key is also stored in an internal slot and can be retrieved by calling the
-        <code>getKey</code> method of the <a><code>PushSubscription</code></a> with an argument of
-        <code><a>p256dh</a></code>.
+        <code>getKey</code> method of the <a>PushSubscription</a> with an argument of
+        <a>p256dh</a>.
         </li>
         <li>Generate a new authentication secret, which is a sequence of octets as defined in
         [[!WEBPUSH-ENCRYPTION]]. Store the authentication secret in an internal slot on
         <var>subscription</var>. This key can be retrieved by calling the <code>getKey</code>
-        method of the <a><code>PushSubscription</code></a> with an argument of
-        <code><a>auth</a></code>.
+        method of the <a>PushSubscription</a> with an argument of
+        <a>auth</a>.
         </li>
         <li>When the request has been completed, resolve <var>promise</var> with a
-        <a><code>PushSubscription</code></a> providing the details of the new <a>push
+        <a>PushSubscription</a> providing the details of the new <a>push
         subscription</a>.
         </li>
       </ol>
       <p>
-        The <code><dfn id=
-        "widl-PushManager-getSubscription-Promise-PushSubscription">getSubscription</dfn></code>
+        The <dfn>getSubscription</dfn>
         method when invoked MUST run the following steps:
       </p>
       <ol>
-        <li>Let <var>promise</var> be a new <a><code>Promise</code></a>.
+        <li>Let <var>promise</var> be a new <a>Promise</a>.
         </li>
         <li>Return <var>promise</var> and continue the following steps asynchronously.
         </li>
@@ -678,32 +676,31 @@ interface PushManager {
         </li>
         <li>Retrieve the <a>push subscription</a> associated with the <a>Service Worker</a>.
         </li>
-        <li>If there is an error, reject <var>promise</var> with a <code><a>DOMException</a></code>
-        whose name is "<code><a>AbortError</a></code>" and terminate these steps.
+        <li>If there is an error, reject <var>promise</var> with a <a>DOMException</a>
+        whose name is "<a>AbortError</a>" and terminate these steps.
         </li>
         <li>When the request has been completed, resolve <var>promise</var> with a
-        <a><code>PushSubscription</code></a> providing the details of the retrieved <a>push
+        <a>PushSubscription</a> providing the details of the retrieved <a>push
         subscription</a>.
         </li>
       </ol>
       <p>
-        The <code><dfn id=
-        "widl-PushManager-permissionState-Promise-PushPermissionState--PushSubscriptionOptionsInit-options">
-        permissionState</dfn></code> method when invoked MUST run the following steps:
+        The <dfn>
+        permissionState</dfn> method when invoked MUST run the following steps:
       </p>
       <ol>
-        <li>Let <var>promise</var> be a new <a><code>Promise</code></a>.
+        <li>Let <var>promise</var> be a new <a>Promise</a>.
         </li>
         <li>Return <var>promise</var> and continue the following steps asynchronously.
         </li>
-        <li>Retrieve the push permission status (<a><code>PushPermissionState</code></a>) of the
+        <li>Retrieve the push permission status (<a>PushPermissionState</a>) of the
         requesting <a>webapp</a>.
         </li>
         <li>If there is an error, reject <var>promise</var> with no arguments and terminate these
         steps.
         </li>
         <li>When the request has been completed, resolve <var>promise</var> with
-        <a><code>PushPermissionState</code></a> providing the push permission status.
+        <a>PushPermissionState</a> providing the push permission status.
         </li>
       </ol>
       <p>
@@ -712,11 +709,11 @@ interface PushManager {
       </p>
       <p>
         If there is a need to ask for permission, it needs to be done by invoking the
-        <a><code>subscribe</code></a> method.
+        <a data-lt="PushManager.subscribe">subscribe</a> method.
       </p>
-      <section>
+      <section data-dfn-for="PushSubscriptionOptions">
         <h2>
-          <a>PushSubscriptionOptions</a> Interface and Dictionary
+          <dfn>PushSubscriptionOptions</dfn> Interface and Dictionary
         </h2>
         <p>
           A <a>PushSubscriptionOptionsInit</a> represents additional options associated with a
@@ -735,65 +732,62 @@ interface PushManager {
           subscription</a> with new options.
         </p>
         <pre class="idl">
-dictionary PushSubscriptionOptionsInit {
-    boolean userVisibleOnly = false;
-    BufferSource? applicationServerKey = null;
-};
+          dictionary PushSubscriptionOptionsInit {
+            boolean userVisibleOnly = false;
+            BufferSource? applicationServerKey = null;
+          };
 
-interface PushSubscriptionOptions {
-    readonly attribute boolean userVisibleOnly;
-    [SameObject] readonly attribute ArrayBuffer? applicationServerKey;
-};
-</pre>
+          interface PushSubscriptionOptions {
+            readonly attribute boolean userVisibleOnly;
+            [SameObject] readonly attribute ArrayBuffer? applicationServerKey;
+          };
+        </pre>
         <p>
-          The <code><dfn id=
-          "widl-PushSubscriptionOptionsInit-userVisibleOnly">userVisibleOnly</dfn></code> option,
+          The <dfn>userVisibleOnly</dfn> option,
           when set to <code>true</code>, indicates that the <a>push subscription</a> will only be
           used for <a>push messages</a> whose effect is made visible to the user, for example by
           displaying a Web Notification. [[NOTIFICATIONS]]
         </p>
         <p>
-          The <code><dfn id=
-          "widl-PushSubscriptionOptionsInit-applicationServerKey">applicationServerKey</dfn></code>
+          The <dfn>applicationServerKey</dfn>
           option includes an elliptic curve public key for an application server. This is the key
           that the application server will use to authenticate itself when sending push messages to
           this subscription as defined in [[!WEBPUSH-VAPID]]; the push service will reject any push
           message unless the corresponding private key is used to generate an authentication token.
         </p>
         <p>
-          If present, the value of <code><a>applicationServerKey</a></code> MUST include a point on
+          If present, the value of <a>applicationServerKey</a> MUST include a point on
           the P-256 elliptic curve [[!DSS]], encoded in the uncompressed form described in
           [[!X9.62]] Annex A (that is, 65 octets, starting with an 0x04 octet). The
-          <code><a>applicationServerKey</a></code> MUST be a different value to the one used for
+          <a>applicationServerKey</a> MUST be a different value to the one used for
           message encryption [[WEBPUSH-ENCRYPTION]].
         </p>
       </section>
     </section>
-    <section>
+    <section data-dfn-for="PushSubscription">
       <h2>
-        <a>PushSubscription</a> interface
+        <dfn>PushSubscription</dfn> interface
       </h2>
       <p>
         A <a>PushSubscription</a> object represents a <a>push subscription</a>.
       </p>
       <pre class="idl">
-interface PushSubscription {
-    readonly attribute USVString endpoint;
-    [SameObject] readonly attribute PushSubscriptionOptions options;
-    ArrayBuffer? getKey(PushEncryptionKeyName name);
-    Promise&lt;boolean&gt; unsubscribe();
-    serializer;
-};
-</pre>
+        interface PushSubscription {
+          readonly attribute USVString endpoint;
+          [SameObject] readonly attribute PushSubscriptionOptions options;
+          ArrayBuffer? getKey(PushEncryptionKeyName name);
+          Promise&lt;boolean&gt; unsubscribe();
+          serializer;
+        };
+      </pre>
       <p>
-        When getting the <code><dfn id="widl-PushSubscription-endpoint">endpoint</dfn></code>
+        When getting the <dfn>endpoint</dfn>
         attribute, the <a>user agent</a> MUST return the <a>push endpoint</a> associated with the
         <a>push subscription</a>.
       </p>
       <p>
-        The <code><dfn id="widl-PushSubscription-getKey-ArrayBuffer-PushEncryptionKeyName-name"
-        data-lt="PushSubscription-getKey">getKey</dfn></code> method retrieves keying material that
-        can be used for encrypting and authenticating messages. When <code><a>getKey</a></code> is
+        The <dfn>getKey</dfn> method retrieves keying material that
+        can be used for encrypting and authenticating messages. When <a data-lt="PushSubscription.getKey">getKey</a> is
         invoked the following process is followed:
       </p>
       <ol>
@@ -808,7 +802,7 @@ interface PushSubscription {
         <li>If the internal slot contains an asymmetric key pair, set the contents of
         <var>key</var> to the serialized value of the public key from the key pair. This uses the
         serialization format described in the specification that defines the name. For example,
-        [[!WEBPUSH-ENCRYPTION]] specifies that the <code><a>p256dh</a></code> public key is encoded
+        [[!WEBPUSH-ENCRYPTION]] specifies that the <a>p256dh</a> public key is encoded
         using the uncompressed format defined in [[X9.62]] Annex A (that is, a 65 octet sequence
         that starts with a 0x04 octet).
         </li>
@@ -821,17 +815,16 @@ interface PushSubscription {
         </li>
       </ol>
       <p>
-        Keys named <code><a>p256dh</a></code> and <code><a>auth</a></code> MUST be supported, and
+        Keys named <a>p256dh</a> and <a>auth</a> MUST be supported, and
         their values MUST correspond to those necessary for the user agent to decrypt received push
         messages in accordance with [[!WEBPUSH-ENCRYPTION]].
       </p>
       <p>
-        The <code><dfn id=
-        "widl-PushSubscription-unsubscribe-Promise-boolean">unsubscribe</dfn></code> method when
+        The <dfn>unsubscribe</dfn> method when
         invoked MUST run the following steps:
       </p>
       <ol>
-        <li>Let <var>promise</var> be a new <a><code>Promise</code></a>.
+        <li>Let <var>promise</var> be a new <a>Promise</a>.
         </li>
         <li>Return <var>promise</var> and continue the following steps asynchronously.
         </li>
@@ -842,20 +835,20 @@ interface PushSubscription {
         subscription</a>.
         </li>
         <li>If it was not possible to access the <a>push service</a>, reject <var>promise</var>
-        with a "<code><a>NetworkError</a></code>" exception and terminate these steps.
+        with a "<a>NetworkError</a>" exception and terminate these steps.
         </li>
         <li>When the request has been completed, resolve <var>promise</var> with <code>true</code>.
         </li>
       </ol>
       <p>
-        The serializer for a <a><code>PushSubscription</code></a> invokes the following steps:
+        The serializer for a <a>PushSubscription</a> invokes the following steps:
       </p>
       <ol>
         <li>Let <var>map</var> be an empty map.
         </li>
         <li>Add an entry to <var>map</var> whose key name is <code>endpoint</code> and whose value
         is the result of converting the <code>endpoint</code> attribute of the
-        <a><code>PushSubscription</code></a> to a serialized value. The <a>user agent</a> MUST use
+        <a>PushSubscription</a> to a serialized value. The <a>user agent</a> MUST use
         a serialization method that does not contain input-dependent branchs (that is, one that is
         constant time). Note that a URL - as ASCII text - will not ordinarily require special
         treatment.
@@ -863,16 +856,16 @@ interface PushSubscription {
         <li>Let <var>keys</var> be an empty map.
         </li>
         <li>For each identifier <var>i</var> corresponding to keys in internal slots on the
-        <a><code>PushSubscription</code></a>, ordered by the name of the key:
+        <a>PushSubscription</a>, ordered by the name of the key:
           <ol>
             <li>If the internal slot corresponds to an asymmetric key pair, let <var>b</var> be the
             encoded value of the public key corresponding to the key name <var>i</var>, using the
-            encoding defined for the key name (see <code><a>getKey</a></code>).
+            encoding defined for the key name (see <a data-lt="PushSubscription.getKey">getKey</a>).
             </li>
-            <li>Otherwise, let <var>b</var> be the value as returned by <code><a>getKey</a></code>.
+            <li>Otherwise, let <var>b</var> be the value as returned by <a data-lt="PushSubscription.getKey">getKey</a>.
             </li>
             <li>Let <var>s</var> be the URL-safe base64 encoding without padding [[!RFC4648]] of
-            <var>b</var> as a <code><a>USVString</a></code>. The <a>user agent</a> MUST use a
+            <var>b</var> as a <a>USVString</a>. The <a>user agent</a> MUST use a
             serialization method that does not branch based on the value of <var>b</var>.
             </li>
             <li>Add an entry to <var>keys</var> whose key name is the name of <var>i</var> and
@@ -887,74 +880,72 @@ interface PushSubscription {
         </li>
       </ol>
       <p>
-        Note that the options to a <code><a>PushSubscription</a></code> are not serialized.
+        Note that the options to a <a>PushSubscription</a> are not serialized.
       </p>
       <section>
         <h2>
-          <a>PushEncryptionKeyName</a> enumeration
+          <dfn>PushEncryptionKeyName</dfn> enumeration
         </h2>
         <p>
           Encryption keys used for <a>push message</a> encryption are provided to a <a>webapp</a>
-          through the <code><a>getKey</a></code> method or the serializer of
-          <code><a>PushSubscription</a></code>. Each key is named using a value from the
-          <code><dfn>PushEncryptionKeyName</dfn></code> enumeration.
+          through the <a data-lt="PushSubscription.getKey">getKey</a> method or the serializer of
+          <a>PushSubscription</a>. Each key is named using a value from the
+          <a>PushEncryptionKeyName</a> enumeration.
         </p>
         <pre class="idl">
-enum PushEncryptionKeyName {
-    "p256dh",
-    "auth"
-};
+          enum PushEncryptionKeyName {
+            "p256dh",
+            "auth"
+          };
         </pre>
         <p>
-          The <code><dfn id="idl-def-PushEncryptionKeyName.p256dh">p256dh</dfn></code> value is
+          The <dfn>p256dh</dfn> value is
           used to retrieve the P-256 ECDH Diffie-Hellman public key described in
           [[!WEBPUSH-ENCRYPTION]].
         </p>
         <p>
-          The <code><dfn id="idl-def-PushEncryptionKeyName.auth">auth</dfn></code> value is used to
+          The <dfn>auth</dfn> value is used to
           retrieve the authentication secret described in [[!WEBPUSH-ENCRYPTION]].
         </p>
       </section>
     </section>
-    <section>
+    <section data-dfn-for="PushMessageData">
       <h2>
-        <a>PushMessageData</a> interface
+        <dfn>PushMessageData</dfn> interface
       </h2>
       <pre class="idl">
-typedef any JSON;
-
-[Exposed=ServiceWorker]
-interface PushMessageData {
-    ArrayBuffer arrayBuffer();
-    Blob blob();
-    JSON json();
-    USVString text();
-};
-</pre>
+        [Exposed=ServiceWorker]
+        interface PushMessageData {
+          ArrayBuffer arrayBuffer();
+          Blob blob();
+          any json();
+          USVString text();
+        };
+      </pre>
       <p>
         <a>PushMessageData</a> objects have an associated <dfn>bytes</dfn> (a byte sequence) set on
         creation, which is <code>null</code> if there was no data in the <a>push message</a>.
       </p>
       <p>
-        The <code><dfn id="widl-PushMessageData-arrayBuffer-ArrayBuffer">arrayBuffer()</dfn></code>
-        method, when invoked, MUST return an <a><code>ArrayBuffer</code></a> whose contents are
+        The <dfn>arrayBuffer</dfn>
+        method, when invoked, MUST return an <a>ArrayBuffer</a> whose contents are
         <var>bytes</var>. Exceptions thrown during the creation of the
-        <a><code>ArrayBuffer</code></a> object are re-thrown.
+        <a>ArrayBuffer</a> object are re-thrown.
       </p>
       <p>
-        The <code><dfn id="widl-PushMessageData-blob-Blob">blob()</dfn></code> method, when
-        invoked, MUST return a <a><code>Blob</code></a> whose contents are <var>bytes</var> and
+        The <dfn>blob</dfn> method, when
+        invoked, MUST return a <a>Blob</a> whose contents are <var>bytes</var> and
         <var>type</var> is not provided.
       </p>
       <p>
-        The <code><dfn id="widl-PushMessageData-json-JSON">json()</dfn></code> method, when
+        The <dfn>json</dfn> method, when
         invoked, MUST return the result of invoking the initial value of
-        <a><code>JSON.parse</code></a> with the result of running <a>utf-8 decode</a> on
+        <a>JSON.parse</a> with the result of running <a>utf-8 decode</a> on
         <var>bytes</var> as argument. Re-throw any exceptions thrown by
-        <a><code>JSON.parse</code></a>.
+        <a>JSON.parse</a>.
       </p>
       <p>
-        The <code><dfn id="widl-PushMessageData-text-USVString">text()</dfn></code> method, when
+        The <dfn>text</dfn> method, when
         invoked, MUST return the result of running <a>utf-8 decode</a> on <var>bytes</var>.
       </p>
       <p>
@@ -966,13 +957,13 @@ interface PushMessageData {
         <li>Switch on <var>object</var>'s type:
           <dl>
             <dt>
-              <a><code>BufferSource</code></a>
+              <a>BufferSource</a>
             </dt>
             <dd>
               Set <var>bytes</var> to a copy of <var>object</var>'s contents.
             </dd>
             <dt>
-              <a><code>USVString</code></a>
+              <a>USVString</a>
             </dt>
             <dd>
               Set <var>bytes</var> to the result of running <a>utf-8 encode</a> on
@@ -993,41 +984,40 @@ interface PushMessageData {
         [[!SERVICE-WORKERS]], which this specification extends.
       </p>
       <pre class="idl">
-partial interface ServiceWorkerGlobalScope {
-    attribute EventHandler onpush;
-    attribute EventHandler onpushsubscriptionchange;
-};
-</pre>
+        partial interface ServiceWorkerGlobalScope {
+          attribute EventHandler onpush;
+          attribute EventHandler onpushsubscriptionchange;
+        };
+      </pre>
       <p>
-        The <code><dfn id="widl-ServiceWorkerGlobalScope-onpush">onpush</dfn></code> attribute is
+        The <dfn>onpush</dfn> attribute is
         an <a>event handler</a> whose corresponding <a>event handler event type</a> is
         <code>push</code>.
       </p>
       <p>
-        The <code><dfn id=
-        "widl-ServiceWorkerGlobalScope-onpushsubscriptionchange">onpushsubscriptionchange</dfn></code>
+        The <dfn>onpushsubscriptionchange</dfn>
         attribute is an <a>event handler</a> whose corresponding <a>event handler event type</a> is
-        <code>pushsubscriptionchange</code>.
+        <a>pushsubscriptionchange</a>.
       </p>
       <section>
         <h2>
-          The <code>push</code> event
+          <dfn>PushEvent</dfn> interface
         </h2>
         <p>
           The <a>PushEvent</a> interface represents a received <a>push message</a>.
         </p>
         <pre class="idl">
-typedef (BufferSource or USVString) PushMessageDataInit;
+          typedef (BufferSource or USVString) PushMessageDataInit;
 
-dictionary PushEventInit : ExtendableEventInit {
-    PushMessageDataInit data;
-};
+          dictionary PushEventInit : ExtendableEventInit {
+            PushMessageDataInit data;
+          };
 
-[Constructor(DOMString type, optional PushEventInit eventInitDict), Exposed=ServiceWorker]
-interface PushEvent : ExtendableEvent {
-    readonly attribute PushMessageData? data;
-};
-</pre>
+          [Constructor(DOMString type, optional PushEventInit eventInitDict), Exposed=ServiceWorker]
+          interface PushEvent : ExtendableEvent {
+            readonly attribute PushMessageData? data;
+          };
+        </pre>
         <p>
           Upon receiving a <a>push message</a> from the <a>push service</a>, the <a>user agent</a>
           MUST run the following steps:
@@ -1076,12 +1066,12 @@ interface PushEvent : ExtendableEvent {
               <li>Set <var>global</var> to the global object that was provided as an argument.
               </li>
               <li>Create a <a>trusted event</a>, <var>e</var>, that uses the
-              <code><a>PushEvent</a></code> interface, with the event type <code>push</code>, which
+              <a>PushEvent</a> interface, with the event type <code>push</code>, which
               does not bubble, is not cancelable, and has no default action.
               </li>
               <li>If the <a>push message</a> contains valid data - that is, if the message can be
               successfully decoded and decrypted - set the <code>data</code> attribute of
-              <var>e</var> to a new <code><a>PushMessageData</a></code> instance with <a>bytes</a>
+              <var>e</var> to a new <a>PushMessageData</a> instance with <a>bytes</a>
               set to the binary <a>push message</a> data.
               </li>
               <li>Dispatch <var>e</var> to <var>global</var>.
@@ -1137,10 +1127,10 @@ interface PushEvent : ExtendableEvent {
       </section>
       <section>
         <h2>
-          The <code>pushsubscriptionchange</code> event
+          The "<dfn>pushsubscriptionchange</dfn>" event
         </h2>
         <p>
-          The <code>pushsubscriptionchange</code> event indicates that a <a>push subscription</a>
+          The <a>pushsubscriptionchange</a> event indicates that a <a>push subscription</a>
           has been invalidated, or will soon be invalidated. For example, the <a>push service</a>
           MAY set an expiration time. A <a>Service Worker</a> SHOULD attempt to resubscribe while
           handling this event, in order to continue receiving <a>push messages</a>.
@@ -1162,8 +1152,8 @@ interface PushEvent : ExtendableEvent {
               <li>Set <var>global</var> to the global object that was provided as an argument.
               </li>
               <li>Create a <a>trusted event</a>, <var>e</var>, that uses the
-              <code><a>ExtendableEvent</a></code> interface, with the event type
-              <code>pushsubscriptionchange</code>, which does not bubble, is not cancelable, and
+              <a>ExtendableEvent</a> interface, with the event type
+              "<a>pushsubscriptionchange</a>", which does not bubble, is not cancelable, and
               has no default action.
               </li>
               <li>Dispatch <var>e</var> to <var>global</var>.
@@ -1192,17 +1182,17 @@ interface PushEvent : ExtendableEvent {
         </p>
       </section>
     </section>
-    <section>
+    <section data-dfn-for="PushPermissionState">
       <h2>
-        Permission Enumeration
+        <dfn>PushPermissionState</dfn> Enumeration
       </h2>
       <pre class="idl">
-enum PushPermissionState {
-    "granted",
-    "denied",
-    "prompt"
-};
-</pre>
+        enum PushPermissionState {
+          "denied",
+          "granted",
+          "prompt",
+        };
+      </pre>
       <table class="simple">
         <tr>
           <th>
@@ -1214,7 +1204,7 @@ enum PushPermissionState {
         </tr>
         <tr>
           <td>
-            <code id="idl-def-PushPermissionState.granted">granted</code>
+            <dfn>granted</dfn>
           </td>
           <td>
             The <a>webapp</a> has permission to use the Push API.
@@ -1222,7 +1212,7 @@ enum PushPermissionState {
         </tr>
         <tr>
           <td>
-            <code id="idl-def-PushPermissionState.denied">denied</code>
+            <dfn>denied</dfn>
           </td>
           <td>
             The <a>webapp</a> has been denied permission to use the Push API.
@@ -1230,7 +1220,7 @@ enum PushPermissionState {
         </tr>
         <tr>
           <td>
-            <code id="idl-def-PushPermissionState.prompt">prompt</code>
+            <dfn>prompt</dfn>
           </td>
           <td>
             The <a>webapp</a> needs to ask for permission in order to use the Push API.
