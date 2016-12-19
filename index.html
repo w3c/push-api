@@ -999,26 +999,29 @@ navigator.serviceWorker.register('serviceworker.js').then(
       <h2>
         Events
       </h2>
-      <p>
-        The Service Worker specification defines a <code>ServiceWorkerGlobalScope</code> interface
-        [[!SERVICE-WORKERS]], which this specification extends.
-      </p>
-      <pre class="idl">
-        partial interface ServiceWorkerGlobalScope {
-          attribute EventHandler onpush;
-          attribute EventHandler onpushsubscriptionchange;
-        };
-      </pre>
-      <p>
-        The <dfn>onpush</dfn> attribute is
-        an <a>event handler</a> whose corresponding <a>event handler event type</a> is
-        <code>push</code>.
-      </p>
-      <p>
-        The <dfn>onpushsubscriptionchange</dfn>
-        attribute is an <a>event handler</a> whose corresponding <a>event handler event type</a> is
-        <a>pushsubscriptionchange</a>.
-      </p>
+      <section data-dfn-for="ServiceWorkerGlobalScope">
+        <h2>Extensions to the <a>ServiceWorkerGlobalScope</a> interface</h2>
+        <p>
+          The Service Worker specification defines a <code>ServiceWorkerGlobalScope</code> interface
+          [[!SERVICE-WORKERS]], which this specification extends.
+        </p>
+        <pre class="idl">
+          partial interface ServiceWorkerGlobalScope {
+            attribute EventHandler onpush;
+            attribute EventHandler onpushsubscriptionchange;
+          };
+        </pre>
+        <p>
+          The <dfn>onpush</dfn> attribute is
+          an <a>event handler</a> whose corresponding <a>event handler event type</a> is
+          <code>push</code>.
+        </p>
+        <p>
+          The <dfn>onpushsubscriptionchange</dfn>
+          attribute is an <a>event handler</a> whose corresponding <a>event handler event type</a> is
+          <code>pushsubscriptionchange</code>.
+        </p>
+      </section>
       <section>
         <h2>
           <dfn>PushEvent</dfn> interface
