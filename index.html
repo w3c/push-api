@@ -359,10 +359,25 @@
           most one <a>push subscription</a>.
         </p>
         <p>
+          A <a>push subscription</a> has an associated <dfn data-lt=
+          "push endpoints">push endpoint</dfn>. It MUST be the absolute URL exposed
+          by the <a>push service</a> where the <a>application server</a> can send <a>push
+          messages</a> to. A <a>push endpoint</a> MUST uniquely identify the <a>push
+          subscription</a>.
+        </p>
+        <p>
           A <a>push subscription</a> has internal slots for a P-256 <a>ECDH</a> key pair and an
           authentication secret in accordance with [[!WEBPUSH-ENCRYPTION]]. These slots MUST be
-          populated when creating the <a>push subscription</a>, and MUST remain constant for its
-          lifetime.
+          populated when creating the <a>push subscription</a>.
+        </p>
+        <p>
+          If the <a>user agent</a> has to change the keys for any reason,
+          it MUST <a>fire the pushsubscriptionchange event</a> with the
+          <a>service worker registration</a> associated with the <a>push subscription</a> as
+          <var>registration</var>, a <a>PushSubscription</a> instance representing the
+          <a>push subscription</a> having the old keys as <var>oldSubscription</var> and a
+          <a>PushSubscription</a> instance representing the <a>push subscription</a> having the new
+          keys as <var>newSubscription</var>.
         </p>
         <p>
           When a <a>push subscription</a> is <dfn data-lt=
@@ -375,13 +390,6 @@
           registration</a> is unregistered, though a <a>push subscription</a> MAY be
           <a>deactivated</a> earlier. A <a>push subscription</a> is removed when the <a>clear
           registration</a> algorithm is run for the <a>service worker registration</a>.
-        </p>
-        <p>
-          A <a>push subscription</a> has an associated <dfn data-lt=
-          "push endpoints">push endpoint</dfn>. It MUST be the absolute URL exposed
-          by the <a>push service</a> where the <a>application server</a> can send <a>push
-          messages</a> to. A <a>push endpoint</a> MUST uniquely identify the <a>push
-          subscription</a>.
         </p>
       </section>
       <section>
