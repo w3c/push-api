@@ -1158,14 +1158,15 @@ navigator.serviceWorker.register('serviceworker.js').then(
           refreshed, revoked or lost.
         </p>
         <p>
-          To <dfn>fire the pushsubscriptionchange event</dfn> given <var>registration</var>,
-          <var>newSubscription</var> and <var>oldSubscription</var>, the <a>user agent</a> must run
-          the following steps:
+          To <dfn>fire the pushsubscriptionchange event</dfn> given a
+          <a>service worker registration</a> of <var>registration</var>, <var>newSubscription</var>
+          and <var>oldSubscription</var>, the <a>user agent</a> must run the following steps:
         </p>
         <ol>
           <li>Create a <a>trusted event</a>, <var>event</var>, that uses the
-          <a>PushSubscriptionChangeEvent</a> interface, with the event type <code>pushsubscriptionchange</code>,
-          which does not bubble, is not cancelable, and has no default action.
+          <a>PushSubscriptionChangeEvent</a> interface, with the event type
+          <code>pushsubscriptionchange</code>, which does not bubble, is not cancelable, and has no
+          default action.
           </li>
           <li>Set the <code>newSubscription</code> attribute of <var>event</var> to
           <var>newSubscription</var>.
@@ -1173,9 +1174,8 @@ navigator.serviceWorker.register('serviceworker.js').then(
           <li>Set the <code>oldSubscription</code> attribute of <var>event</var> to
           <var>oldSubscription</var>.
           </li>
-          <li>Invoke the <a>Handle Functional Event</a> algorithm with <var>event</var>, a
-          <a>service worker registration</a> of <var>registration</var> and <var>callbackSteps</var>
-          set to the following steps:
+          <li>Invoke the <a>Handle Functional Event</a> algorithm with <var>event</var>,
+          <var>registration</var> and <var>callbackSteps</var> set to the following steps:
             <ol>
               <li>Set <var>global</var> to the global object associated with the
               <var>registration</var>.
@@ -1188,7 +1188,8 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <p class="note">
           Consider using a more reliable synchronization mechanism such as [[WEB-BACKGROUND-SYNC]]
           when sending the details of the new <a>push subscription</a> to your
-          <a>application server</a>. The user might be subject to unreliable network conditions.
+          <a>application server</a>. The user might be subject to unreliable network conditions that
+          could cause a fetch to fail.
         </p>
 
         <section data-dfn-for="PushSubscriptionChangeEvent">
