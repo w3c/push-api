@@ -473,8 +473,13 @@
         acquiring permission or determining the permission status.
       </p>
       <p>
-        When a permission is revoked, all <a>push subscriptions</a> created with that permission
-        MUST be <a>deactivated</a>.
+        When a permission is revoked, the <a>user agent</a> MAY
+        <a>fire the pushsubscriptionchange event</a> for subscriptions created with that permission,
+        with the <a>servce worker registration</a> associated with the <a>push subscription</a> as
+        <var>registration</var>, a <a>PushSubscription</a> instance representing the
+        <a>push subscription</a> as <var>oldSubscription</var>, and <code>null</code> as
+        <var>newSubscription</var>. The <a>user agent</a> MUST, in parallel, <a>deactivate</a>
+        the affected subscriptions.
       </p>
       <p>
         When a <a>service worker registration</a> is unregistered, any associated <a>push
