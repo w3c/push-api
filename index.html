@@ -1150,59 +1150,86 @@ navigator.serviceWorker.register('serviceworker.js').then(
       </section>
       <section>
         <h2>
-          The "<dfn>pushsubscriptionchange</dfn>" event
+          The <dfn>pushsubscriptionchange</dfn> event
         </h2>
         <p>
-          The <a>pushsubscriptionchange</a> event indicates that a <a>push subscription</a>
-          has been invalidated, or will soon be invalidated. For example, the <a>push service</a>
-          MAY set an expiration time. A <a>Service Worker</a> SHOULD attempt to resubscribe while
-          handling this event, in order to continue receiving <a>push messages</a>.
+          The <a>pushsubscriptionchange</a> event indicates a change in a <a>push subscription</a>
+          that was triggered outside of the application's control, for example because it has been
+          refreshed, revoked or lost.
         </p>
         <p>
-          When new <a>push subscription</a> information becomes available, the <a>user agent</a>
-          MUST run the following steps:
+          To <dfn>fire the pushsubscriptionchange event</dfn> given <var>registration</var>,
+          <var>newSubscription</var> and <var>oldSubscription</var>, the <a>user agent</a> must run
+          the following steps:
         </p>
         <ol>
-          <li>Let <var>registration</var> be the <a>service worker registration</a> corresponding
-          to the push message.
+          <li>Create a <a>trusted event</a>, <var>event</var>, that uses the
+          <a>PushSubscriptionChangeEvent</a> interface, with the event type <code>pushsubscriptionchange</code>,
+          which does not bubble, is not cancelable, and has no default action.
           </li>
-          <li>If <var>registration</var> is not found, abort these steps.
+          <li>Set the <code>newSubscription</code> attribute of <var>event</var> to
+          <var>newSubscription</var>.
           </li>
-          <li>Invoke the <a>Handle Functional Event</a> algorithm with a <a>service worker
-          registration</a> of <var>registration</var> and <var>callbackSteps</var> set to the
-          following steps:
+          <li>Set the <code>oldSubscription</code> attribute of <var>event</var> to
+          <var>oldSubscription</var>.
+          </li>
+          <li>Invoke the <a>Handle Functional Event</a> algorithm with <var>event</var>, a
+          <a>service worker registration</a> of <var>registration</var> and <var>callbackSteps</var>
+          set to the following steps:
             <ol>
-              <li>Set <var>global</var> to the global object that was provided as an argument.
+              <li>Set <var>global</var> to the global object associated with the
+              <var>registration</var>.
               </li>
-              <li>Create a <a>trusted event</a>, <var>e</var>, that uses the
-              <a>ExtendableEvent</a> interface, with the event type
-              "<a>pushsubscriptionchange</a>", which does not bubble, is not cancelable, and
-              has no default action.
-              </li>
-              <li>Dispatch <var>e</var> to <var>global</var>.
-              </li>
-              <li>If the previous <a>push subscription</a> is still active, perform the following
-              steps in parallel:
-                <ol>
-                  <li>Set <var>oldSubscription</var> to the previous <a>push subscription</a>.
-                  </li>
-                  <li>Wait for all of the promises in the <a>extend lifetime promises</a> of <var>
-                    e</var> to either resolve or reject.
-                  </li>
-                  <li>Unsubscribe <var>oldSubscription</var>.
-                  </li>
-                </ol>
+              <li>Dispatch <var>event</var> to <var>global</var>.
               </li>
             </ol>
           </li>
         </ol>
-        <p>
-          This algorithm ensures that the <a>Service Worker</a> is able to react to any
-          non-destructive change in a <a>push subscription</a>, such as an automatic refresh,
-          without causing any active <a>push subscription</a> to be terminated prematurely. A
-          <a>Service Worker</a> can request a new <a>push subscription</a> during this process and
-          ensure that no <a>push messages</a> are lost.
+        <p class="note">
+          Consider using a more reliable synchronization mechanism such as [[WEB-BACKGROUND-SYNC]]
+          when sending the details of the new <a>push subscription</a> to your
+          <a>application server</a>. The user might be subject to unreliable network conditions.
         </p>
+
+        <section data-dfn-for="PushSubscriptionChangeEvent">
+          <h2>
+            <dfn>PushSubscriptionChangeEvent</dfn> interface
+          </h2>
+          <pre class="idl">
+            dictionary PushSubscriptionChangeInit : ExtendableEventInit {
+              PushSubscription newSubscription = null;
+              PushSubscription oldSubscription = null;
+            };
+
+            [Constructor(DOMString type, optional PushSubscriptionChangeInit eventInitDict), Exposed=ServiceWorker]
+            interface PushSubscriptionChangeEvent : ExtendableEvent {
+              readonly attribute PushSubscription? newSubscription;
+              readonly attribute PushSubscription? oldSubscription;
+            };
+          </pre>
+          <p>
+            The <dfn>newSubscription</dfn> attribute contains the details of the
+            <a>push subscription</a> that is valid per invocation of the <a>pushsubscriptionchange</a>
+            event. The value will be <code>null</code> when no new <a>push subscription</a> could be
+            established, for example because the <a>webapp</a> has lost <a>express permission</a>.
+          </p>
+          <p>
+            The <dfn>oldSubscription</dfn> attribute contains the details of the
+            <a>push subscription</a> that SHOULD NOT be used anymore. The value will be
+            <code>null</code> when the <a>user agent</a> is not able to provide the full set of
+            details, for example because of partial database corruption.
+          </p>
+          <p>
+            <a>User agents</a> MAY continue to accept messages for the <code>oldSubscription</code>
+            for a brief period of time, but MUST stop doing so once the first message for the
+            <code>newSubscription</code> has been received, as this indicates that the
+            <a>application server</a> has propagated the subscription change.
+          </p>
+          <p class="issue">
+            Should we include an attribute that indicates whether the <code>oldSubscription</code>
+            has been decisively invalidated? How would developers use this information?
+          </p>
+        </section>
       </section>
     </section>
     <section data-dfn-for="PushPermissionState">
