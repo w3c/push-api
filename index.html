@@ -381,7 +381,7 @@
         </p>
         <section>
           <h2>
-            Subscription refreshes
+            Subscription Refreshes
           </h2>
           <p>
             A <a>user agent</a> or <a>push service</a> MAY choose to <dfn>refresh</dfn> a
@@ -402,23 +402,24 @@
             instance representing the new <a>push subscription</a> as <var>newSubscription</var>.
           </p>
           <p>
-            <a>User agents</a> MAY continue to accept messages for the old <a>push subscription</a>
-            for a brief amount of time, but MUST stop doing so once the first message for the
-            refreshed <a>push subscription</a> has been received, as this indicates that the
-            <a>application server</a> has propagated the subscription change.
+            To allow for time to propagate changes to <a>application servers</a>, a <a>user agent</a>
+            MAY continue to accept messages for an old <a>push subscription</a> for a brief time
+            after a refresh. Once messages have been received for a refreshed
+            <a>push subscription</a>, any old <a>push subscriptions</a> MUST be <a>deactivated</a>.
           </p>
-
-          <p class="issue">
-            The steps for creating a subscription should be separated from the
-            <a lt="PushManager.subscribe">subscribe</a> method into an algorithm of its own so that
-            it can be referenced here. Similarly, the <a>PushSubscriptionOptions</a> provided to the
-            <a lt="PushManager.subscribe">subscribe</a> method should be associated with the
-            <a>push subscription</a> so that the refresh can access them.
+          <p>
+            If the <a>user agent</a> is not able to refresh the <a>push subscription</a>, it SHOULD
+            periodically retry the refresh. When the <a>push subscription</a> can no longer be used,
+            for example because it has expired, the <a>user agent</a> MUST
+            <a>fire the pushsubscriptionchange event</a> with the <a>service worker registration</a>
+            associated with the <a>push subscription</a> as <var>registration</var>, a
+            <a>PushSubscription</a> instance representing the deactivating <a>push subscription</a>
+            as <var>oldSubscription</var> and <code>null</code> as the <var>newSubscription</var>.
           </p>
         </section>
         <section>
           <h2>
-            Subscription deactivation
+            Subscription Deactivation
           </h2>
           <p>
             When a <a>push subscription</a> is <dfn data-lt=
@@ -475,11 +476,11 @@
       <p>
         When a permission is revoked, the <a>user agent</a> MAY
         <a>fire the pushsubscriptionchange event</a> for subscriptions created with that permission,
-        with the <a>servce worker registration</a> associated with the <a>push subscription</a> as
+        with the <a>service worker registration</a> associated with the <a>push subscription</a> as
         <var>registration</var>, a <a>PushSubscription</a> instance representing the
         <a>push subscription</a> as <var>oldSubscription</var>, and <code>null</code> as
-        <var>newSubscription</var>. The <a>user agent</a> MUST, in parallel, <a>deactivate</a>
-        the affected subscriptions.
+        <var>newSubscription</var>. The <a>user agent</a> MUST <a>deactivate</a> the affected
+        subscriptions in parallel.
       </p>
       <p>
         When a <a>service worker registration</a> is unregistered, any associated <a>push
@@ -605,7 +606,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
     </section>
     <section data-dfn-for="ServiceWorkerRegistration">
       <h2>
-        Extensions to the <a>ServiceWorkerRegistration</a> interface
+        Extensions to the <a>ServiceWorkerRegistration</a> Interface
       </h2>
       <p>
         The Service Worker specification defines a <a>ServiceWorkerRegistration</a> interface
@@ -1205,7 +1206,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
       </section>
       <section>
         <h2>
-          The <dfn>pushsubscriptionchange</dfn> event
+          The <dfn>pushsubscriptionchange</dfn> Event
         </h2>
         <p>
           The <a>pushsubscriptionchange</a> event indicates a change in a <a>push subscription</a>
@@ -1229,8 +1230,8 @@ navigator.serviceWorker.register('serviceworker.js').then(
           <li>Set the <code>oldSubscription</code> attribute of <var>event</var> to
           <var>oldSubscription</var>.
           </li>
-          <li>Invoke the <a>Handle Functional Event</a> algorithm with <var>event</var>,
-          <var>registration</var> and <var>callbackSteps</var> set to the following steps:
+          <li>Invoke the <a>Handle Functional Event</a> algorithm with <var>event</var> and
+          <var>registration</var>, and <var>callbackSteps</var> set to the following steps:
             <ol>
               <li>Set <var>global</var> to the global object associated with the
               <var>registration</var>.
@@ -1249,7 +1250,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
 
         <section data-dfn-for="PushSubscriptionChangeEvent">
           <h2>
-            <dfn>PushSubscriptionChangeEvent</dfn> interface
+            <dfn>PushSubscriptionChangeEvent</dfn> Interface
           </h2>
           <pre class="idl">
             dictionary PushSubscriptionChangeInit : ExtendableEventInit {
@@ -1274,10 +1275,6 @@ navigator.serviceWorker.register('serviceworker.js').then(
             <a>push subscription</a> that SHOULD NOT be used anymore. The value will be
             <code>null</code> when the <a>user agent</a> is not able to provide the full set of
             details, for example because of partial database corruption.
-          </p>
-          <p class="issue">
-            Should we include an attribute that indicates whether the <code>oldSubscription</code>
-            has been decisively invalidated? How would developers use this information?
           </p>
         </section>
       </section>
