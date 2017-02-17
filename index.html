@@ -359,30 +359,81 @@
           most one <a>push subscription</a>.
         </p>
         <p>
-          A <a>push subscription</a> has internal slots for a P-256 <a>ECDH</a> key pair and an
-          authentication secret in accordance with [[!WEBPUSH-ENCRYPTION]]. These slots MUST be
-          populated when creating the <a>push subscription</a>, and MUST remain constant for its
-          lifetime.
-        </p>
-        <p>
-          When a <a>push subscription</a> is <dfn data-lt=
-          "deactivate">deactivated</dfn>, both the <a>user agent</a> and the <a>push
-          service</a> MUST delete any stored copies of its details. Subsequent <a>push messages</a>
-          for this <a>push subscription</a> MUST NOT be delivered.
-        </p>
-        <p>
-          A <a>push subscription</a> is <a>deactivated</a> when its associated <a>service worker
-          registration</a> is unregistered, though a <a>push subscription</a> MAY be
-          <a>deactivated</a> earlier. A <a>push subscription</a> is removed when the <a>clear
-          registration</a> algorithm is run for the <a>service worker registration</a>.
-        </p>
-        <p>
           A <a>push subscription</a> has an associated <dfn data-lt=
           "push endpoints">push endpoint</dfn>. It MUST be the absolute URL exposed
           by the <a>push service</a> where the <a>application server</a> can send <a>push
           messages</a> to. A <a>push endpoint</a> MUST uniquely identify the <a>push
           subscription</a>.
         </p>
+        <p>
+          A <a>push subscription</a> has internal slots for a P-256 <a>ECDH</a> key pair and an
+          authentication secret in accordance with [[!WEBPUSH-ENCRYPTION]]. These slots MUST be
+          populated when creating the <a>push subscription</a>.
+        </p>
+        <p>
+          If the <a>user agent</a> has to change the keys for any reason,
+          it MUST <a>fire the pushsubscriptionchange event</a> with the
+          <a>service worker registration</a> associated with the <a>push subscription</a> as
+          <var>registration</var>, a <a>PushSubscription</a> instance representing the
+          <a>push subscription</a> having the old keys as <var>oldSubscription</var> and a
+          <a>PushSubscription</a> instance representing the <a>push subscription</a> having the new
+          keys as <var>newSubscription</var>.
+        </p>
+        <section>
+          <h2>
+            Subscription Refreshes
+          </h2>
+          <p>
+            A <a>user agent</a> or <a>push service</a> MAY choose to <dfn>refresh</dfn> a
+            <a>push subscription</a> at any time, for example because it has reached a certain age.
+          </p>
+          <p>
+            When this happens, the <a>user agent</a> MUST create a new <a>push subscription</a>
+            with the <a>push service</a> on behalf of the application, using the
+            <a>PushSubscriptionOptions</a> that were provided for creating the current
+            <a>push subscription</a>. The new <a>push subscription</a> MUST have a key pair that's
+            different from the original subscription.
+          </p>
+          <p>
+            When successful, <a>user agent</a> then MUST <a>fire the pushsubscriptionchange event</a>
+            with the <a>service worker registration</a> associated with the <a>push subscription</a>
+            as <var>registration</var>, a <a>PushSubscription</a> instance representing the initial
+            <a>push subscription</a> as <var>oldSubscription</var> and a <a>PushSubscription</a>
+            instance representing the new <a>push subscription</a> as <var>newSubscription</var>.
+          </p>
+          <p>
+            To allow for time to propagate changes to <a>application servers</a>, a <a>user agent</a>
+            MAY continue to accept messages for an old <a>push subscription</a> for a brief time
+            after a refresh. Once messages have been received for a refreshed
+            <a>push subscription</a>, any old <a>push subscriptions</a> MUST be <a>deactivated</a>.
+          </p>
+          <p>
+            If the <a>user agent</a> is not able to refresh the <a>push subscription</a>, it SHOULD
+            periodically retry the refresh. When the <a>push subscription</a> can no longer be used,
+            for example because it has expired, the <a>user agent</a> MUST
+            <a>fire the pushsubscriptionchange event</a> with the <a>service worker registration</a>
+            associated with the <a>push subscription</a> as <var>registration</var>, a
+            <a>PushSubscription</a> instance representing the deactivating <a>push subscription</a>
+            as <var>oldSubscription</var> and <code>null</code> as the <var>newSubscription</var>.
+          </p>
+        </section>
+        <section>
+          <h2>
+            Subscription Deactivation
+          </h2>
+          <p>
+            When a <a>push subscription</a> is <dfn data-lt=
+            "deactivate">deactivated</dfn>, both the <a>user agent</a> and the <a>push
+            service</a> MUST delete any stored copies of its details. Subsequent
+            <a>push messages</a> for this <a>push subscription</a> MUST NOT be delivered.
+          </p>
+          <p>
+            A <a>push subscription</a> is <a>deactivated</a> when its associated <a>service worker
+            registration</a> is unregistered, though a <a>push subscription</a> MAY be
+            <a>deactivated</a> earlier. A <a>push subscription</a> is removed when the <a>clear
+            registration</a> algorithm is run for the <a>service worker registration</a>.
+          </p>
+        </section>
       </section>
       <section>
         <h2>
@@ -423,8 +474,13 @@
         acquiring permission or determining the permission status.
       </p>
       <p>
-        When a permission is revoked, all <a>push subscriptions</a> created with that permission
-        MUST be <a>deactivated</a>.
+        When a permission is revoked, the <a>user agent</a> MAY
+        <a>fire the pushsubscriptionchange event</a> for subscriptions created with that permission,
+        with the <a>service worker registration</a> associated with the <a>push subscription</a> as
+        <var>registration</var>, a <a>PushSubscription</a> instance representing the
+        <a>push subscription</a> as <var>oldSubscription</var>, and <code>null</code> as
+        <var>newSubscription</var>. The <a>user agent</a> MUST <a>deactivate</a> the affected
+        subscriptions in parallel.
       </p>
       <p>
         When a <a>service worker registration</a> is unregistered, any associated <a>push
@@ -550,7 +606,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
     </section>
     <section data-dfn-for="ServiceWorkerRegistration">
       <h2>
-        Extensions to the <a>ServiceWorkerRegistration</a> interface
+        Extensions to the <a>ServiceWorkerRegistration</a> Interface
       </h2>
       <p>
         The Service Worker specification defines a <a>ServiceWorkerRegistration</a> interface
@@ -999,26 +1055,29 @@ navigator.serviceWorker.register('serviceworker.js').then(
       <h2>
         Events
       </h2>
-      <p>
-        The Service Worker specification defines a <code>ServiceWorkerGlobalScope</code> interface
-        [[!SERVICE-WORKERS]], which this specification extends.
-      </p>
-      <pre class="idl">
-        partial interface ServiceWorkerGlobalScope {
-          attribute EventHandler onpush;
-          attribute EventHandler onpushsubscriptionchange;
-        };
-      </pre>
-      <p>
-        The <dfn>onpush</dfn> attribute is
-        an <a>event handler</a> whose corresponding <a>event handler event type</a> is
-        <code>push</code>.
-      </p>
-      <p>
-        The <dfn>onpushsubscriptionchange</dfn>
-        attribute is an <a>event handler</a> whose corresponding <a>event handler event type</a> is
-        <a>pushsubscriptionchange</a>.
-      </p>
+      <section data-dfn-for="ServiceWorkerGlobalScope">
+        <h2>Extensions to the <a>ServiceWorkerGlobalScope</a> interface</h2>
+        <p>
+          The Service Worker specification defines a <code>ServiceWorkerGlobalScope</code> interface
+          [[!SERVICE-WORKERS]], which this specification extends.
+        </p>
+        <pre class="idl">
+          partial interface ServiceWorkerGlobalScope {
+            attribute EventHandler onpush;
+            attribute EventHandler onpushsubscriptionchange;
+          };
+        </pre>
+        <p>
+          The <dfn>onpush</dfn> attribute is
+          an <a>event handler</a> whose corresponding <a>event handler event type</a> is
+          <code>push</code>.
+        </p>
+        <p>
+          The <dfn>onpushsubscriptionchange</dfn>
+          attribute is an <a>event handler</a> whose corresponding <a>event handler event type</a> is
+          <code>pushsubscriptionchange</code>.
+        </p>
+      </section>
       <section>
         <h2>
           <dfn>PushEvent</dfn> interface
@@ -1147,59 +1206,77 @@ navigator.serviceWorker.register('serviceworker.js').then(
       </section>
       <section>
         <h2>
-          The "<dfn>pushsubscriptionchange</dfn>" event
+          The <dfn>pushsubscriptionchange</dfn> Event
         </h2>
         <p>
-          The <a>pushsubscriptionchange</a> event indicates that a <a>push subscription</a>
-          has been invalidated, or will soon be invalidated. For example, the <a>push service</a>
-          MAY set an expiration time. A <a>Service Worker</a> SHOULD attempt to resubscribe while
-          handling this event, in order to continue receiving <a>push messages</a>.
+          The <a>pushsubscriptionchange</a> event indicates a change in a <a>push subscription</a>
+          that was triggered outside of the application's control, for example because it has been
+          refreshed, revoked or lost.
         </p>
         <p>
-          When new <a>push subscription</a> information becomes available, the <a>user agent</a>
-          MUST run the following steps:
+          To <dfn>fire the pushsubscriptionchange event</dfn> given a
+          <a>service worker registration</a> of <var>registration</var>, <var>newSubscription</var>
+          and <var>oldSubscription</var>, the <a>user agent</a> must run the following steps:
         </p>
         <ol>
-          <li>Let <var>registration</var> be the <a>service worker registration</a> corresponding
-          to the push message.
+          <li>Create a <a>trusted event</a>, <var>event</var>, that uses the
+          <a>PushSubscriptionChangeEvent</a> interface, with the event type
+          <code>pushsubscriptionchange</code>, which does not bubble, is not cancelable, and has no
+          default action.
           </li>
-          <li>If <var>registration</var> is not found, abort these steps.
+          <li>Set the <code>newSubscription</code> attribute of <var>event</var> to
+          <var>newSubscription</var>.
           </li>
-          <li>Invoke the <a>Handle Functional Event</a> algorithm with a <a>service worker
-          registration</a> of <var>registration</var> and <var>callbackSteps</var> set to the
-          following steps:
+          <li>Set the <code>oldSubscription</code> attribute of <var>event</var> to
+          <var>oldSubscription</var>.
+          </li>
+          <li>Invoke the <a>Handle Functional Event</a> algorithm with <var>event</var> and
+          <var>registration</var>, and <var>callbackSteps</var> set to the following steps:
             <ol>
-              <li>Set <var>global</var> to the global object that was provided as an argument.
+              <li>Set <var>global</var> to the global object associated with the
+              <var>registration</var>.
               </li>
-              <li>Create a <a>trusted event</a>, <var>e</var>, that uses the
-              <a>ExtendableEvent</a> interface, with the event type
-              "<a>pushsubscriptionchange</a>", which does not bubble, is not cancelable, and
-              has no default action.
-              </li>
-              <li>Dispatch <var>e</var> to <var>global</var>.
-              </li>
-              <li>If the previous <a>push subscription</a> is still active, perform the following
-              steps in parallel:
-                <ol>
-                  <li>Set <var>oldSubscription</var> to the previous <a>push subscription</a>.
-                  </li>
-                  <li>Wait for all of the promises in the <a>extend lifetime promises</a> of <var>
-                    e</var> to either resolve or reject.
-                  </li>
-                  <li>Unsubscribe <var>oldSubscription</var>.
-                  </li>
-                </ol>
+              <li>Dispatch <var>event</var> to <var>global</var>.
               </li>
             </ol>
           </li>
         </ol>
-        <p>
-          This algorithm ensures that the <a>Service Worker</a> is able to react to any
-          non-destructive change in a <a>push subscription</a>, such as an automatic refresh,
-          without causing any active <a>push subscription</a> to be terminated prematurely. A
-          <a>Service Worker</a> can request a new <a>push subscription</a> during this process and
-          ensure that no <a>push messages</a> are lost.
+        <p class="note">
+          Consider using a more reliable synchronization mechanism such as [[WEB-BACKGROUND-SYNC]]
+          when sending the details of the new <a>push subscription</a> to your
+          <a>application server</a>. The user might be subject to unreliable network conditions that
+          could cause a fetch to fail.
         </p>
+
+        <section data-dfn-for="PushSubscriptionChangeEvent">
+          <h2>
+            <dfn>PushSubscriptionChangeEvent</dfn> Interface
+          </h2>
+          <pre class="idl">
+            dictionary PushSubscriptionChangeInit : ExtendableEventInit {
+              PushSubscription newSubscription = null;
+              PushSubscription oldSubscription = null;
+            };
+
+            [Constructor(DOMString type, optional PushSubscriptionChangeInit eventInitDict), Exposed=ServiceWorker]
+            interface PushSubscriptionChangeEvent : ExtendableEvent {
+              readonly attribute PushSubscription? newSubscription;
+              readonly attribute PushSubscription? oldSubscription;
+            };
+          </pre>
+          <p>
+            The <dfn>newSubscription</dfn> attribute contains the details of the
+            <a>push subscription</a> that is valid per invocation of the <a>pushsubscriptionchange</a>
+            event. The value will be <code>null</code> when no new <a>push subscription</a> could be
+            established, for example because the <a>webapp</a> has lost <a>express permission</a>.
+          </p>
+          <p>
+            The <dfn>oldSubscription</dfn> attribute contains the details of the
+            <a>push subscription</a> that SHOULD NOT be used anymore. The value will be
+            <code>null</code> when the <a>user agent</a> is not able to provide the full set of
+            details, for example because of partial database corruption.
+          </p>
+        </section>
       </section>
     </section>
     <section data-dfn-for="PushPermissionState">
