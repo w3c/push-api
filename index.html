@@ -251,7 +251,6 @@
         "http://www.w3.org/TR/dom/#invalidcharactererror"><dfn>InvalidCharacterError</dfn></a></code>,
         <code><a href=
         "http://www.w3.org/TR/dom/#securityerror"><dfn>SecurityError</dfn></a></code>,
-        <code><a href="http://www.w3.org/TR/dom/#networkerror"><dfn>NetworkError</dfn></a></code>,
         <a href="http://www.w3.org/TR/dom/#concept-event-listener"><dfn>event listener</dfn></a>,
         and <a href="http://www.w3.org/TR/dom/#concept-event-constructor"><dfn>steps for
         constructing events</dfn></a> are defined in [[!DOM]].
@@ -907,13 +906,17 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <li>If the <a>push subscription</a> has already been <a>deactivated</a>, resolve
         <var>promise</var> with <code>false</code> and terminate these steps.
         </li>
-        <li>Make a request to the <a>push service</a> to <a>deactivate</a> the <a>push
-        subscription</a>.
+        <li>Run the following step in parallel:
+          <ol>
+            <li><a>Deactivate</a> the <a>push subscription</a>. The <a>user agent</a> MUST NOT
+            deliver any further <a>push messages</a> for the <a>push subscription</a>.
+            <p>If the <a>user agent</a> failed to request the <a>push service</a> to <a>deactivate</a>
+            the <a>push subscription</a>, for example because of network failures, it SHOULD retry
+            the request to the <a>push service</a> for a reasonable amount of time.
+            </li>
+          </ol>
         </li>
-        <li>If it was not possible to access the <a>push service</a>, reject <var>promise</var>
-        with a "<a>NetworkError</a>" exception and terminate these steps.
-        </li>
-        <li>When the request has been completed, resolve <var>promise</var> with <code>true</code>.
+        <li>Resolve <var>promise</var> with <code>true</code>.
         </li>
       </ol>
       <p>
