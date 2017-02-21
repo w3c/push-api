@@ -1086,129 +1086,155 @@ navigator.serviceWorker.register('serviceworker.js').then(
       </section>
       <section>
         <h2>
-          <dfn>PushEvent</dfn> interface
+          The <dfn>push</dfn> Event
         </h2>
         <p>
-          The <a>PushEvent</a> interface represents a received <a>push message</a>.
+          The <a>push</a> event indicates that a <a>push message</a> has been received for a
+          <a>push subscription</a>.
         </p>
-        <pre class="idl">
-          typedef (BufferSource or USVString) PushMessageDataInit;
-
-          dictionary PushEventInit : ExtendableEventInit {
-            PushMessageDataInit data;
-          };
-
-          [Constructor(DOMString type, optional PushEventInit eventInitDict), Exposed=ServiceWorker]
-          interface PushEvent : ExtendableEvent {
-            readonly attribute PushMessageData? data;
-          };
-        </pre>
         <p>
-          Upon receiving a <a>push message</a> from the <a>push service</a>, the <a>user agent</a>
-          MUST run the following steps:
+          To <dfn>fire the push event</dfn> given a <a>service worker registration</a> of
+          <var>registration</var> and a <code>PushMessageData</code> of <var>data</var>, the
+          <a>user agent</a> must run the following steps:
         </p>
         <ol>
-          <li>Let <var>registration</var> be the <a>service worker registration</a> corresponding
-          to the <a>push message</a>.
+          <li>Create a <a>trusted event</a>, <var>event</var>, that uses the
+          <a>PushEvent</a> interface, with the event type <code>pushevent</code>, which does not
+          bubble, is not cancelable, and has no default action.
           </li>
-          <li>If <var>registration</var> is not found, abort these steps.
+          <li>Set the <code>data</code> attribute of <var>event</var> to <var>data</var>.
           </li>
-          <li>Let <var>subscription</var> be the active <a>push subscription</a> for
-          <var>registration</var>.
-          </li>
-          <li>Initialize <var>pushdata</var> to a value of <code>null</code>.
-          </li>
-          <li>If the <a>push message</a> contains a payload, perform the following steps:
+          <li>Invoke the <a>Handle Functional Event</a> algorithm with <var>event</var> and
+          <var>registration</var>, and <var>callbackSteps</var> set to the following steps:
             <ol>
-              <li>Decrypt the <a>push message</a> using the private key from the key pair
-              associated with <var>subscription</var> and the process described in
-              [[!WEBPUSH-ENCRYPTION]]. This produces the plain text of the message.
+              <li>Set <var>global</var> to the global object associated with the
+              <var>registration</var>.
               </li>
-              <li>If the <a>push message</a> could not be decrypted for any reason, perform the
-              following steps:
-                <ol>
-                  <li>Acknowledge the receipt of the <a>push message</a> according to
-                  [[!WEBPUSH-PROTOCOL]]. Though the message was not successfully received and
-                  processed, this prevents the push service from attempting to retransmit the
-                  message; a badly encrypted message is not recoverable.
-                  </li>
-                  <li>Discard the <a>push message</a>.
-                  </li>
-                  <li>Terminate this process.
-                  </li>
-                </ol>A <code>push</code> event MUST NOT be fired for a <a>push message</a> that was
-                not successfully decrypted using the key pair associated with the <a>push
-                subscription</a>.
-              </li>
-              <li>Let <var>pushdata</var> be the decrypted plain text of the <a>push message</a>.
+              <li>Dispatch <var>event</var> to <var>global</var>.
               </li>
             </ol>
           </li>
-          <li>Invoke the <a>Handle Functional Event</a> algorithm with a <a>service worker
-          registration</a> of <var>registration</var> and <var>callbackSteps</var> set to the
-          following steps:
-            <ol>
-              <li>Set <var>global</var> to the global object that was provided as an argument.
-              </li>
-              <li>Create a <a>trusted event</a>, <var>e</var>, that uses the
-              <a>PushEvent</a> interface, with the event type <code>push</code>, which
-              does not bubble, is not cancelable, and has no default action.
-              </li>
-              <li>If the <a>push message</a> contains valid data - that is, if the message can be
-              successfully decoded and decrypted - set the <code>data</code> attribute of
-              <var>e</var> to a new <a>PushMessageData</a> instance with <a>bytes</a>
-              set to the binary <a>push message</a> data.
-              </li>
-              <li>Dispatch <var>e</var> to <var>global</var>.
-              </li>
-              <li>Run the following steps in parallel:
-                <ol>
-                  <li>Wait for all of the promises in the <a>extend lifetime promises</a> of <var>
-                    e</var> to resolve.
-                  </li>
-                  <li>If all the promises resolve successfully, acknowledge the receipt of the <a>
-                    push message</a> according to [[!WEBPUSH-PROTOCOL]] and abort these steps.
-                  </li>
-                  <li>
-                    <p>
-                      If the same <a>push message</a> has been delivered to a <a>service worker
-                      registration</a> multiple times unsuccessfully, acknowledge the receipt of
-                      the <a>push message</a> according to [[!WEBPUSH-PROTOCOL]].
-                    </p>
-                    <p>
-                      Acknowledging the <a>push message</a> causes the <a>push service</a> to stop
-                      delivering the message and to report success to the <a>application
-                      server</a>. This prevents the same <a>push message</a> from being retried by
-                      the <a>push service</a> indefinitely.
-                    </p>
-                    <p>
-                      Acknowledging also means that an <a>application server</a> could incorrectly
-                      receive a delivery receipt indicating successful delivery of the <a>push
-                      message</a>. Therefore, multiple rejections SHOULD be permitted before
-                      acknowledging; allowing at least three attempts is recommended.
-                    </p>
-                  </li>
-                </ol>
-              </li>
-            </ol>
+          <li>Return <var>event</var>.
           </li>
         </ol>
-        <p>
-          When a constructor of the <a>PushEvent</a> interface, or of an interface that inherits
-          from the <a>PushEvent</a> interface, is invoked, the usual <a>steps for constructing
-          events</a> are extended to include the following steps:
-        </p>
-        <ol>
-          <li>If <var>eventInitDict</var>'s <code>data</code> member is not present, set the <code>
+        <section data-dfn-for="PushEvent">
+          <h2>
+            <dfn>PushEvent</dfn> Interface
+          </h2>
+          <pre class="idl">
+            typedef (BufferSource or USVString) PushMessageDataInit;
+
+            dictionary PushEventInit : ExtendableEventInit {
+              PushMessageDataInit data;
+            };
+
+            [Constructor(DOMString type, optional PushEventInit eventInitDict), Exposed=ServiceWorker]
+            interface PushEvent : ExtendableEvent {
+              readonly attribute PushMessageData? data;
+            };
+          </pre>
+          <p>
+            When a constructor of the <a>PushEvent</a> interface, or of an interface that inherits
+            from the <a>PushEvent</a> interface, is invoked, the usual <a>steps for constructing
+            events</a> are extended to include the following steps:
+          </p>
+          <ol>
+            <li>If <var>eventInitDict</var>'s <code>data</code> member is not present, set the <code>
             data</code> attribute of the event to <code>null</code> and terminate these steps.
-          </li>
-          <li>Set <var>b</var> to the result of <a data-lt="extract a byte sequence">extracting a
-          byte sequence</a> from the "<code>data</code>" member of <var>eventInitDict</var>.
-          </li>
-          <li>Set the <code>data</code> attribute of the event to a new <a>PushMessageData</a>
-          instance with <code>bytes</code> set to <var>b</var>.
-          </li>
-        </ol>
+            </li>
+            <li>Set <var>b</var> to the result of <a data-lt="extract a byte sequence">extracting a
+            byte sequence</a> from the "<code>data</code>" member of <var>eventInitDict</var>.
+            </li>
+            <li>Set the <code>data</code> attribute of the event to a new <a>PushMessageData</a>
+            instance with <code>bytes</code> set to <var>b</var>.
+            </li>
+          </ol>
+          <p>
+            The <dfn>data</dfn> attribute contains the data included in the <a>push message</a> when
+            included and the <a>user agent</a> verified its authenticity. The value will be set to
+            <code>null</code> in all other cases.
+          </p>
+        </section>
+        <section>
+          <h2>
+            Receiving a <a>Push Message</a>
+          </h2>
+          <p>
+            When the <a>user agent</a> receives a <a>push message</a> from the <a>push service</a>,
+            it MUST run the following steps.
+          </p>
+          <ol>
+            <li>Let <var>registration</var> be the <a>service worker registration</a> corresponding
+            to the <a>push message</a>.
+            </li>
+            <li>If <var>registration</var> is not found, abort these steps.
+            </li>
+            <li>Let <var>subscription</var> be the active <a>push subscription</a> for
+            <var>registration</var>.
+            </li>
+            <li>Initialize <var>data</var> to a value of <code>null</code>.
+            </li>
+            <li>If the <a>push message</a> contains a payload, perform the following steps:
+              <ol>
+                <li>Decrypt the <a>push message</a> using the private key from the key pair
+                associated with <var>subscription</var> and the process described in
+                [[!WEBPUSH-ENCRYPTION]]. This produces the plain text of the message.
+                </li>
+                <li>If the <a>push message</a> could not be decrypted for any reason, perform the
+                following steps:
+                  <ol>
+                    <li>Acknowledge the receipt of the <a>push message</a> according to
+                    [[!WEBPUSH-PROTOCOL]]. Though the message was not successfully received and
+                    processed, this prevents the push service from attempting to retransmit the
+                    message; a badly encrypted message is not recoverable.
+                    </li>
+                    <li>Discard the <a>push message</a>.
+                    </li>
+                    <li>Terminate this process.
+                    </li>
+                  </ol>A <code>push</code> event MUST NOT be fired for a <a>push message</a> that was
+                  not successfully decrypted using the key pair associated with the <a>push
+                  subscription</a>.
+                </li>
+                <li>Let <var>data</var> be a new <a>PushMessageData</a> instance with the decrypted
+                plain text of the <a>push message</a>.
+                </li>
+              </ol>
+            </li>
+            <li><a>Fire the push event</a> with <var>registration</var> and <var>data</var>, and
+            set <var>event</var> to the returned <a>trusted event</a>.
+            </li>
+            <li>Run the following steps in parallel:
+              <ol>
+                <li>Wait for all of the promises in the <a>extend lifetime promises</a> of
+                <var>event</var> to resolve.
+                </li>
+                <li>If all the promises resolve successfully, acknowledge the receipt of the
+                <a>push message</a> according to [[!WEBPUSH-PROTOCOL]] and abort these steps.
+                </li>
+                <li>
+                  <p>
+                    If the same <a>push message</a> has been delivered to a <a>service worker
+                    registration</a> multiple times unsuccessfully, acknowledge the receipt of
+                    the <a>push message</a> according to [[!WEBPUSH-PROTOCOL]].
+                  </p>
+                  <p>
+                    Acknowledging the <a>push message</a> causes the <a>push service</a> to stop
+                    delivering the message and to report success to the <a>application
+                    server</a>. This prevents the same <a>push message</a> from being retried by
+                    the <a>push service</a> indefinitely.
+                  </p>
+                  <p>
+                    Acknowledging also means that an <a>application server</a> could incorrectly
+                    receive a delivery receipt indicating successful delivery of the <a>push
+                    message</a>. Therefore, multiple rejections SHOULD be permitted before
+                    acknowledging; allowing at least three attempts is recommended.
+                  </p>
+                </li>
+              </ol>
+            </li>
+          </ol>
+        </section>
       </section>
       <section>
         <h2>
