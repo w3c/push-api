@@ -293,17 +293,19 @@
         [[!FILEAPI]].
       </p>
       <p>
-        <code><a href="http://www.w3.org/TR/WebIDL/#idl-any"><dfn>Any</dfn></a></code>,
+        <code><a href="https://www.w3.org/TR/WebIDL/#idl-any"><dfn>Any</dfn></a></code>,
         <code><a href=
-        "http://heycam.github.io/webidl/#idl-ArrayBuffer"><dfn>ArrayBuffer</dfn></a></code>,
+        "https://heycam.github.io/webidl/#idl-ArrayBuffer"><dfn>ArrayBuffer</dfn></a></code>,
         <code><a href=
-        "http://heycam.github.io/webidl/#common-BufferSource"><dfn>BufferSource</dfn></a></code>,
+        "https://heycam.github.io/webidl/#common-BufferSource"><dfn>BufferSource</dfn></a></code>,
         <code><a href=
         "https://heycam.github.io/webidl/#idl-DOMString"><dfn>DOMString</dfn></a></code>,
         <code><a href=
-        "http://heycam.github.io/webidl/#notallowederror"><dfn>NotAllowedError</dfn></a></code>,
+        "https://heycam.github.io/webidl/#DOMTimeStamp"><dfn>DOMTimeStamp</dfn></a></code>,
+        <code><a href=
+        "https://heycam.github.io/webidl/#notallowederror"><dfn>NotAllowedError</dfn></a></code>,
         and <code><a href=
-        "http://heycam.github.io/webidl/#idl-USVString"><dfn>USVString</dfn></a></code> are defined
+        "https://heycam.github.io/webidl/#idl-USVString"><dfn>USVString</dfn></a></code> are defined
         in [[!WEBIDL]].
       </p>
       <p>
@@ -363,6 +365,12 @@
           by the <a>push service</a> where the <a>application server</a> can send <a>push
           messages</a> to. A <a>push endpoint</a> MUST uniquely identify the <a>push
           subscription</a>.
+        </p>
+        <p>
+          A <a>push subscription</a> MAY have an associated <dfn>subscription expiration time</dfn>.
+          When set, it MUST be the time, in milliseconds since 00:00:00 UTC on 1 January 1970,
+          at which the subscription will be <a>deactivated</a>. The <a>user agent</a> SHOULD attempt
+          to <a>refresh</a> the push subscription before the subscription expires.
         </p>
         <p>
           A <a>push subscription</a> has internal slots for a P-256 <a>ECDH</a> key pair and an
@@ -855,6 +863,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
       <pre class="idl">
         interface PushSubscription {
           readonly attribute USVString endpoint;
+          readonly attribute DOMTimeStamp? expirationTime;
           [SameObject] readonly attribute PushSubscriptionOptions options;
           ArrayBuffer? getKey(PushEncryptionKeyName name);
           Promise&lt;boolean&gt; unsubscribe();
@@ -866,6 +875,10 @@ navigator.serviceWorker.register('serviceworker.js').then(
         attribute, the <a>user agent</a> MUST return the <a>push endpoint</a> associated with the
         <a>push subscription</a>.
       </p>
+      <p>
+        When getting the <dfn>expirationTime</dfn> attribute, the <a>user agent</a> MUST return the
+        <a>subscription expiration time</a> associated with the <a>push subscription</a> if there is
+        one, or <code>null</code> otherwise.
       <p>
         The <dfn>getKey</dfn> method retrieves keying material that
         can be used for encrypting and authenticating messages. When <a data-lt="PushSubscription.getKey">getKey</a> is
@@ -928,11 +941,14 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <li>Let <var>map</var> be an empty map.
         </li>
         <li>Add an entry to <var>map</var> whose key name is <code>endpoint</code> and whose value
-        is the result of converting the <code>endpoint</code> attribute of the
-        <a>PushSubscription</a> to a serialized value. The <a>user agent</a> MUST use
-        a serialization method that does not contain input-dependent branchs (that is, one that is
-        constant time). Note that a URL - as ASCII text - will not ordinarily require special
-        treatment.
+        is the result of converting the <code>endpoint</code> attribute to a serialized value. The
+        <a>user agent</a> MUST use a serialization method that does not contain input-dependent
+        branchs (that is, one that is constant time). Note that a URL - as ASCII text - will not
+        ordinarily require special treatment.
+        </li>
+        <li>Add an entry to <var>map</var> whose key name is <code>expirationTime</code> and whose
+        value is the result of converting the <code>expirationTime</code> attribute to a serialized
+        value.
         </li>
         <li>Let <var>keys</var> be an empty map.
         </li>
