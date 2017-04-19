@@ -823,17 +823,21 @@ navigator.serviceWorker.register('serviceworker.js').then(
           visible to the user, for example by displaying a Web Notification. [[NOTIFICATIONS]]
         </p>
         <p>
-          The <dfn>applicationServerKey</dfn> option includes an elliptic curve public key for an
-          application server. This is the key that the application server will use to authenticate
-          itself when sending push messages to this subscription as defined in [[!WEBPUSH-VAPID]];
-          the push service will reject any push message unless the corresponding private key is
-          used to generate an authentication token.
+          The <dfn>applicationServerKey</dfn> option is used by the <a>user agent</a> when
+          establishing a <a>subscription</a> with a <a>push service</a>. The
+          <code><a>applicationServerKey</a></code> option includes an elliptic curve public key for
+          an <a>application server</a>. This is the key that the <a>application server</a> will use
+          to authenticate itself when sending <a>push messages</a> to this <a>subscription</a> as
+          defined in [[!WEBPUSH-VAPID]]; the <a>push service</a> will reject any <a>push
+          message</a> unless the corresponding private key is used to generate an authentication
+          token.
         </p>
         <p>
           If present, the value of <a>applicationServerKey</a> MUST include a point on the P-256
           elliptic curve [[!DSS]], encoded in the uncompressed form described in [[!X9.62]] Annex A
-          (that is, 65 octets, starting with an 0x04 octet). This value MUST be encoded using the
-          base64url encoding [[!RFC7515]] when provided as a <code><a>DOMString</a></code>.
+          (that is, 65 octets, starting with an 0x04 octet). When provided as a
+          <code><a>DOMString</a></code>, the value MUST be encoded using the base64url encoding
+          [[!RFC7515]].
         </p>
         <p>
           The <code><a>applicationServerKey</a></code> MUST be a different value to the one used
