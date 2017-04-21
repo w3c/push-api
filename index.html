@@ -314,6 +314,10 @@
         specification assumes the use of this protocol; alternative protocols are expected to
         provide compatible semantics.
       </p>
+      <p>
+        The <dfn>Content-Encoding</dfn> HTTP header, described in Section 3.1.2.2 of [[!RFC7231]],
+        indicates the content coding applied to the payload of a <a>push message</a>.
+      </p>
     </section>
     <section>
       <h2>
@@ -642,11 +646,24 @@ navigator.serviceWorker.register('serviceworker.js').then(
       </p>
       <pre class="idl">
         interface PushManager {
+          [SameObject] static readonly attribute FrozenArray&lt;DOMString&gt; supportedContentEncodings;
+
           Promise&lt;PushSubscription&gt; subscribe(optional PushSubscriptionOptionsInit options);
           Promise&lt;PushSubscription?&gt; getSubscription();
           Promise&lt;PushPermissionState&gt; permissionState(optional PushSubscriptionOptionsInit options);
         };
       </pre>
+      <p>
+        The <dfn>supportedContentEncodings</dfn> attribute exposes the sequence of supported content
+        codings that can be used to encrypt the payload of a <a>push message</a>. A content coding
+        is indicated using the <a>Content-Encoding</a> header field when requesting the sending of
+        a <a>push message</a> from the <a>push service</a>.
+      </p>
+      <p>
+        <a>User agents</a> MUST support the <code>aes128gcm</code> content coding defined in
+        [[!WEBPUSH-ENCRYPTION]], and MAY support content codings defined in previous versions of
+        the draft for compatibility reasons.
+      </p>
       <p>
         The <dfn>subscribe</dfn> method when invoked MUST run the following steps:
       </p>
