@@ -386,6 +386,35 @@
           <var>oldSubscription</var> and a <a>PushSubscription</a> instance representing the
           <a>push subscription</a> having the new keys as <var>newSubscription</var>.
         </p>
+        <p>
+          To <dfn>create a push subscription</dfn>, given an <a>PushSubscriptionOptions</a> object
+          of <var>options</var>, the <a>user agent</a> must run the following steps:
+        </p>
+        <ol>
+          <li>Let <var>subscription</var> be a new <a>push subscription</a>.
+          </li>
+          <li>Set the <code>options</code> attribute of <var>subscription</var> to be a copy of
+          <var>options</var>.
+          </li>
+          <li>Generate a new P-256 <a>ECDH</a> key pair [[!X9.62]]. Store the private key in an
+          internal slot on <var>subscription</var>; this value MUST NOT be made available to
+          applications. The public key is also stored in an internal slot and can be retrieved by
+          calling the <code>getKey</code> method of the <a>PushSubscription</a> with an argument of
+          <a data-link-for="PushEncryptionKeyName">p256dh</a>.
+          </li>
+          <li>Generate a new authentication secret, which is a sequence of octets as defined in
+          [[!WEBPUSH-ENCRYPTION]]. Store the authentication secret in an internal slot on
+          <var>subscription</var>. This key can be retrieved by calling the <code>getKey</code>
+          method of the <a>PushSubscription</a> with an argument of <a data-link-for=
+          "PushEncryptionKeyName">auth</a>.
+          </li>
+          <li>Make a request to the <a>push service</a> to create a new <a>push subscription</a>.
+          Include the <a data-link-for="PushSubscriptionOptions">applicationServerKey</a> attribute
+          of <var>options</var> when it has been set.
+          </li>
+          <li>When the request has completed, return <var>subscription</var>.
+          </li>
+        </ol>
         <section>
           <h2>
             Subscription Refreshes
@@ -395,11 +424,10 @@
             subscription</a> at any time, for example because it has reached a certain age.
           </p>
           <p>
-            When this happens, the <a>user agent</a> MUST create a new <a>push subscription</a>
-            with the <a>push service</a> on behalf of the application, using the
-            <a>PushSubscriptionOptions</a> that were provided for creating the current <a>push
-            subscription</a>. The new <a>push subscription</a> MUST have a key pair that's
-            different from the original subscription.
+            When this happens, the <a>user agent</a> MUST run the steps to <a>create a push
+            subscription</a> given the <a>PushSubscriptionOptions</a> that were provided for
+            creating the current <a>push subscription</a>. The new <a>push subscription</a> MUST
+            have a key pair that's different from the original subscription.
           </p>
           <p>
             When successful, <a>user agent</a> then MUST <a>fire the pushsubscriptionchange
@@ -734,31 +762,14 @@ navigator.serviceWorker.register('serviceworker.js').then(
             </li>
           </ol>
         </li>
-        <li>Make a request to the push service to create a new <a>push subscription</a> for the <a>
-          Service Worker</a>.
+        <li>Let <var>subscription</var> be the result of running the <a>create a push
+        subscription</a> steps given <var>allOptions</var>.
         </li>
         <li>If there is an error, reject <var>promise</var> with a <a>DOMException</a> whose name
         is "<a>AbortError</a>" and terminate these steps.
         </li>
-        <li>Let <var>subscription</var> be a new subscription.
-        </li>
-        <li>Set the <code>options</code> attribute of <var>subscription</var> to be a copy of <var>
-          allOptions</var>.
-        </li>
-        <li>Generate a new P-256 <a>ECDH</a> key pair. Store the private key in an internal slot on
-        <var>subscription</var>; this value MUST NOT be made available to applications. The public
-        key is also stored in an internal slot and can be retrieved by calling the
-        <code>getKey</code> method of the <a>PushSubscription</a> with an argument of
-        <a data-link-for="PushEncryptionKeyName">p256dh</a>.
-        </li>
-        <li>Generate a new authentication secret, which is a sequence of octets as defined in
-        [[!WEBPUSH-ENCRYPTION]]. Store the authentication secret in an internal slot on
-        <var>subscription</var>. This key can be retrieved by calling the <code>getKey</code>
-        method of the <a>PushSubscription</a> with an argument of <a data-link-for=
-        "PushEncryptionKeyName">auth</a>.
-        </li>
-        <li>When the request has been completed, resolve <var>promise</var> with a
-        <a>PushSubscription</a> providing the details of the new <a>push subscription</a>.
+        <li>Resolve <var>promise</var> with a <a>PushSubscription</a> providing the details of the
+        new <var>subscription</var>.
         </li>
       </ol>
       <p>
