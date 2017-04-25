@@ -5,8 +5,7 @@
       Push API
     </title>
     <meta charset="utf-8">
-    <script src="https://www.w3.org/Tools/respec/respec-w3c-common" class="remove">
-    </script>
+    <script src="https://www.w3.org/Tools/respec/respec-w3c-common" class="remove"></script>
     <script class="remove">
     // (this is to make tidy happy)
       // See http://www.w3.org/respec/ for ReSpec documentation.
@@ -603,17 +602,17 @@ navigator.serviceWorker.register('serviceworker.js').then(
           <code>PushSubscription</code> is a URL that allows an <a>application server</a> to
           request delivery of a <a>push message</a> to a <a>webapp</a>.
           </li>
-          <li>The <code><a data-lt="PushSubscription.getKey">getKey</a></code> method on a
+          <li>The <code><a data-link-for="PushSubscription">getKey</a></code> method on a
           <code>PushSubscription</code> is used to retrieve keying material used to encrypt and
           authenticate <a>push messages</a>. Each invocation of the function returns a new
           <code>ArrayBuffer</code> that contains the value of the corresponding key, or
-          <code>null</code> if the identified key doesn't exist. Passing a value of <a>p256dh</a>
-          retrieves a <dfn data-lt="ECDH">elliptic curve Diffie-Hellman (ECDH)</dfn> public key
-          associated with the <a>push subscription</a>. Passing a value of <code>auth</code>
-          returns an authentication secret that an application server uses in authentication of its
-          messages. These keys are used by the <a>application server</a> to encrypt and
-          authenticate messages for the <a>push subscription</a>, as described in
-          [[!WEBPUSH-ENCRYPTION]].
+          <code>null</code> if the identified key doesn't exist. Passing a value of
+          <a data-link-for="PushEncryptionKeyName">p256dh</a> retrieves a <dfn data-lt=
+          "ECDH">elliptic curve Diffie-Hellman (ECDH)</dfn> public key associated with the <a>push
+          subscription</a>. Passing a value of <code>auth</code> returns an authentication secret
+          that an application server uses in authentication of its messages. These keys are used by
+          the <a>application server</a> to encrypt and authenticate messages for the <a>push
+          subscription</a>, as described in [[!WEBPUSH-ENCRYPTION]].
           </li>
         </ul>
       </section>
@@ -637,7 +636,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
         which the attribute is exposed.
       </p>
     </section>
-    <section data-dfn-for="PushManager">
+    <section>
       <h2>
         <dfn>PushManager</dfn> interface
       </h2>
@@ -654,10 +653,10 @@ navigator.serviceWorker.register('serviceworker.js').then(
         };
       </pre>
       <p>
-        The <dfn>supportedContentEncodings</dfn> attribute exposes the sequence of supported content
-        codings that can be used to encrypt the payload of a <a>push message</a>. A content coding
-        is indicated using the <a>Content-Encoding</a> header field when requesting the sending of
-        a <a>push message</a> from the <a>push service</a>.
+        The <dfn data-dfn-for="PushManager">supportedContentEncodings</dfn> attribute exposes the
+        sequence of supported content codings that can be used to encrypt the payload of a <a>push
+        message</a>. A content coding is indicated using the <a>Content-Encoding</a> header field
+        when requesting the sending of a <a>push message</a> from the <a>push service</a>.
       </p>
       <p>
         <a>User agents</a> MUST support the <code>aes128gcm</code> content coding defined in
@@ -665,7 +664,8 @@ navigator.serviceWorker.register('serviceworker.js').then(
         the draft for compatibility reasons.
       </p>
       <p>
-        The <dfn>subscribe</dfn> method when invoked MUST run the following steps:
+        The <dfn data-dfn-for="PushManager">subscribe</dfn> method when invoked MUST run the
+        following steps:
       </p>
       <ol>
         <li>Let <var>promise</var> be a new <a>Promise</a>.
@@ -679,15 +679,17 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <li>Let <var>allOptions</var> be the value of the <code>options</code> argument, if
         provided, or a <a>PushSubscriptionOptions</a> dictionary with default values.
         </li>
-        <li>If <var>allOptions</var> includes a non-null value for the
-        <code><a>applicationServerKey</a></code> attribute, run the following substeps:
+        <li>If <var>allOptions</var> includes a non-null value for the <code><a data-link-for=
+        "PushSubscriptionOptions">applicationServerKey</a></code> attribute, run the following
+        substeps:
           <ol>
             <li>Let <var>applicationServerKey</var> be the sequence of octets in
-            <code><a>applicationServerKey</a></code> when provided as a
-            <code><a>BufferSource</a></code>, or the sequence of octets that results from decoding
-            <code><a>applicationServerKey</a></code> using the base64url encoding [[!RFC7515]] when
-            provided as a <code><a>DOMString</a></code>. If decoding fails, reject
-            <var>promise</var> with a <code><a>DOMException</a></code> whose name is
+            <code><a data-link-for="PushSubscriptionOptions">applicationServerKey</a></code> when
+            provided as a <code><a>BufferSource</a></code>, or the sequence of octets that results
+            from decoding <code><a data-link-for=
+            "PushSubscriptionOptions">applicationServerKey</a></code> using the base64url encoding
+            [[!RFC7515]] when provided as a <code><a>DOMString</a></code>. If decoding fails,
+            reject <var>promise</var> with a <code><a>DOMException</a></code> whose name is
             "<code><a>InvalidCharacterError</a></code>" and terminate these steps.
             </li>
             <li>Ensure that <var>applicationServerKey</var> describes a valid point on the P-256
@@ -747,19 +749,21 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <var>subscription</var>; this value MUST NOT be made available to applications. The public
         key is also stored in an internal slot and can be retrieved by calling the
         <code>getKey</code> method of the <a>PushSubscription</a> with an argument of
-        <a>p256dh</a>.
+        <a data-link-for="PushEncryptionKeyName">p256dh</a>.
         </li>
         <li>Generate a new authentication secret, which is a sequence of octets as defined in
         [[!WEBPUSH-ENCRYPTION]]. Store the authentication secret in an internal slot on
         <var>subscription</var>. This key can be retrieved by calling the <code>getKey</code>
-        method of the <a>PushSubscription</a> with an argument of <a>auth</a>.
+        method of the <a>PushSubscription</a> with an argument of <a data-link-for=
+        "PushEncryptionKeyName">auth</a>.
         </li>
         <li>When the request has been completed, resolve <var>promise</var> with a
         <a>PushSubscription</a> providing the details of the new <a>push subscription</a>.
         </li>
       </ol>
       <p>
-        The <dfn>getSubscription</dfn> method when invoked MUST run the following steps:
+        The <dfn data-dfn-for="PushManager">getSubscription</dfn> method when invoked MUST run the
+        following steps:
       </p>
       <ol>
         <li>Let <var>promise</var> be a new <a>Promise</a>.
@@ -778,7 +782,8 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </li>
       </ol>
       <p>
-        The <dfn>permissionState</dfn> method when invoked MUST run the following steps:
+        The <dfn data-dfn-for="PushManager">permissionState</dfn> method when invoked MUST run the
+        following steps:
       </p>
       <ol>
         <li>Let <var>promise</var> be a new <a>Promise</a>.
@@ -847,14 +852,15 @@ navigator.serviceWorker.register('serviceworker.js').then(
           used to generate an authentication token.
         </p>
         <p>
-          If present, the value of <a>applicationServerKey</a> MUST include a point on the P-256
+          If present, the value of <a data-link-for=
+          "PushSubscriptionOptions">applicationServerKey</a> MUST include a point on the P-256
           elliptic curve [[!DSS]], encoded in the uncompressed form described in [[!X9.62]] Annex A
           (that is, 65 octets, starting with an 0x04 octet). This value MUST be encoded using the
           base64url encoding [[!RFC7515]] when provided as a <code><a>DOMString</a></code>.
         </p>
         <p>
-          The <code><a>applicationServerKey</a></code> MUST be a different value to the one used
-          for message encryption [[WEBPUSH-ENCRYPTION]].
+          The <code><a data-link-for="PushSubscriptionOptions">applicationServerKey</a></code> MUST
+          be a different value to the one used for message encryption [[WEBPUSH-ENCRYPTION]].
         </p>
       </section>
     </section>
@@ -885,9 +891,14 @@ navigator.serviceWorker.register('serviceworker.js').then(
         is one, or <code>null</code> otherwise.
       </p>
       <p>
+        When getting the <dfn>options</dfn> attribute, the <a>user agent</a> MUST return a
+        <code><a>PushSubscriptionOptions</a></code> object representing the options associated with
+        the <a>push subscription</a>.
+      </p>
+      <p>
         The <dfn>getKey</dfn> method retrieves keying material that can be used for encrypting and
-        authenticating messages. When <a data-lt="PushSubscription.getKey">getKey</a> is invoked
-        the following process is followed:
+        authenticating messages. When <a data-link-for="PushSubscription">getKey</a> is invoked the
+        following process is followed:
       </p>
       <ol>
         <li>Find the internal slot corresponding to the key named by the <code>name</code>
@@ -901,9 +912,9 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <li>If the internal slot contains an asymmetric key pair, set the contents of
         <var>key</var> to the serialized value of the public key from the key pair. This uses the
         serialization format described in the specification that defines the name. For example,
-        [[!WEBPUSH-ENCRYPTION]] specifies that the <a>p256dh</a> public key is encoded using the
-        uncompressed format defined in [[X9.62]] Annex A (that is, a 65 octet sequence that starts
-        with a 0x04 octet).
+        [[!WEBPUSH-ENCRYPTION]] specifies that the <a data-link-for=
+        "PushEncryptionKeyName">p256dh</a> public key is encoded using the uncompressed format
+        defined in [[X9.62]] Annex A (that is, a 65 octet sequence that starts with a 0x04 octet).
         </li>
         <li>Otherwise, if the internal slot contains a symmetric key, set the contents of
         <var>key</var> to a copy of the value from the internal slot. For example, the
@@ -914,9 +925,10 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </li>
       </ol>
       <p>
-        Keys named <a>p256dh</a> and <a>auth</a> MUST be supported, and their values MUST
-        correspond to those necessary for the user agent to decrypt received push messages in
-        accordance with [[!WEBPUSH-ENCRYPTION]].
+        Keys named <a data-link-for="PushEncryptionKeyName">p256dh</a> and <a data-link-for=
+        "PushEncryptionKeyName">auth</a> MUST be supported, and their values MUST correspond to
+        those necessary for the user agent to decrypt received push messages in accordance with
+        [[!WEBPUSH-ENCRYPTION]].
       </p>
       <p>
         The <dfn>unsubscribe</dfn> method when invoked MUST run the following steps:
@@ -947,7 +959,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </li>
       </ol>
       <p>
-        The serializer for a <a>PushSubscription</a> invokes the following steps:
+        The <dfn>serializer</dfn> for a <a>PushSubscription</a> invokes the following steps:
       </p>
       <ol>
         <li>Let <var>map</var> be an empty map.
@@ -993,13 +1005,13 @@ navigator.serviceWorker.register('serviceworker.js').then(
       <p>
         Note that the options to a <a>PushSubscription</a> are not serialized.
       </p>
-      <section>
+      <section data-dfn-for="PushEncryptionKeyName">
         <h2>
           <dfn>PushEncryptionKeyName</dfn> enumeration
         </h2>
         <p>
           Encryption keys used for <a>push message</a> encryption are provided to a <a>webapp</a>
-          through the <a data-lt="PushSubscription.getKey">getKey</a> method or the serializer of
+          through the <a data-link-for="PushSubscription">getKey</a> method or the serializer of
           <a>PushSubscription</a>. Each key is named using a value from the
           <a>PushEncryptionKeyName</a> enumeration.
         </p>
