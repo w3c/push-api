@@ -672,6 +672,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
         The <a>PushManager</a> interface defines the operations to access <a>push services</a>.
       </p>
       <pre class="idl">
+        [Exposed=(Window,Worker)]
         interface PushManager {
           [SameObject] static readonly attribute FrozenArray&lt;DOMString&gt; supportedContentEncodings;
 
@@ -845,6 +846,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
             (BufferSource or DOMString)? applicationServerKey = null;
           };
 
+          [Exposed=(Window,Worker)]
           interface PushSubscriptionOptions {
             readonly attribute boolean userVisibleOnly;
             [SameObject] readonly attribute ArrayBuffer? applicationServerKey;
@@ -887,6 +889,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
         A <a>PushSubscription</a> object represents a <a>push subscription</a>.
       </p>
       <pre class="idl">
+        [Exposed=(Window,Worker)]
         interface PushSubscription {
           readonly attribute USVString endpoint;
           readonly attribute DOMTimeStamp? expirationTime;
@@ -1121,6 +1124,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
           interface [[!SERVICE-WORKERS]], which this specification extends.
         </p>
         <pre class="idl">
+          [Exposed=(Window,Worker)]
           partial interface ServiceWorkerGlobalScope {
             attribute EventHandler onpush;
             attribute EventHandler onpushsubscriptionchange;
