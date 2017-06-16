@@ -675,6 +675,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
         [Exposed=(Window,Worker)]
         interface PushManager {
           [SameObject] static readonly attribute FrozenArray&lt;DOMString&gt; supportedContentEncodings;
+          [SameObject] static readonly attribute FrozenArray&lt;DOMString&gt; supportedAuthenticationSchemes;
 
           Promise&lt;PushSubscription&gt; subscribe(optional PushSubscriptionOptionsInit options);
           Promise&lt;PushSubscription?&gt; getSubscription();
@@ -686,6 +687,11 @@ navigator.serviceWorker.register('serviceworker.js').then(
         sequence of supported content codings that can be used to encrypt the payload of a <a>push
         message</a>. A content coding is indicated using the <a>Content-Encoding</a> header field
         when requesting the sending of a <a>push message</a> from the <a>push service</a>.
+      </p>
+      <p>
+        The <dfn data-dfn-for="PushManager">supportedAuthenticationSchemes</dfn> attribute exposes
+        the sequence of supported authentication schemes that can be used by <a>applications
+        servers</a> to authenticate with the <a>push service</a>.
       </p>
       <p>
         <a>User agents</a> MUST support the <code>aes128gcm</code> content coding defined in
