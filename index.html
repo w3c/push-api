@@ -232,10 +232,12 @@
       </p>
       <p>
         <code><a href=
-        "https://tc39.github.io/ecma262/#sec-promise-objects"><dfn>Promise</dfn></a></code>, and
+        "https://tc39.github.io/ecma262/#sec-promise-objects"><dfn>Promise</dfn></a></code>,
         <code><a href=
-        "https://tc39.github.io/ecma262/#sec-json.parse"><dfn>JSON.parse</dfn></a></code> are
-        defined in [[!ECMASCRIPT]].
+        "https://tc39.github.io/ecma262/#sec-json.parse"><dfn>JSON.parse</dfn></a></code> and
+        <code><a href=
+        "https://tc39.github.io/ecma262/#sec-json.stringify"><dfn>JSON.stringify</dfn></a></code>
+        are defined in [[!ECMASCRIPT]].
       </p>
       <p>
         <code><a href="http://www.w3.org/TR/dom/#eventinit"><dfn>EventInit</dfn></a></code>,
@@ -301,10 +303,14 @@
         <code><a href=
         "https://heycam.github.io/webidl/#DOMTimeStamp"><dfn>DOMTimeStamp</dfn></a></code>,
         <code><a href=
+        "https://heycam.github.io/webidl/#dfn-json-types"><dfn>JSON type</dfn></a></code>,
+        <code><a href=
         "https://heycam.github.io/webidl/#notallowederror"><dfn>NotAllowedError</dfn></a></code>,
-        and <code><a href=
-        "https://heycam.github.io/webidl/#idl-USVString"><dfn>USVString</dfn></a></code> are
-        defined in [[!WEBIDL]].
+        <code><a href=
+        "https://heycam.github.io/webidl/#idl-USVString"><dfn>USVString</dfn></a></code> and
+        <code><a href=
+        "https://heycam.github.io/webidl/#get-the-underlying-value"><dfn>get the underlying value</dfn></a></code>
+        are defined in [[!WEBIDL]].
       </p>
       <p>
         The <dfn>web push protocol</dfn> [[!WEBPUSH-PROTOCOL]] describes a protocol that enables
@@ -896,12 +902,24 @@ navigator.serviceWorker.register('serviceworker.js').then(
           [SameObject] readonly attribute PushSubscriptionOptions options;
           ArrayBuffer? getKey(PushEncryptionKeyName name);
           Promise&lt;boolean&gt; unsubscribe();
-          serializer;
+
+          PushSubscriptionJSON toJSON();
+        };
+
+        dictionary PushSubscriptionJSON {
+          USVString endpoint;
+          DOMTimeStamp? expirationTime;
+
+          // TODO: This should be record&lt;DOMString, USVString&gt;.
+          // https://github.com/w3c/respec/issues/1297
+          record keys;
         };
       </pre>
       <p>
         When getting the <dfn>endpoint</dfn> attribute, the <a>user agent</a> MUST return the
-        <a>push endpoint</a> associated with the <a>push subscription</a>.
+        <a>push endpoint</a> associated with the <a>push subscription</a>. The <a>user agent</a>
+        MUST use a serialization method that does not contain input-dependent branchs (that is, one
+        that is constant time).
       </p>
       <p>
         When getting the <dfn>expirationTime</dfn> attribute, the <a>user agent</a> MUST return the
@@ -977,23 +995,23 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </li>
       </ol>
       <p>
-        The <dfn>serializer</dfn> for a <a>PushSubscription</a> invokes the following steps:
+        The <dfn>toJSON</dfn> method when invoked MUST run the following steps:
       </p>
       <ol>
-        <li>Let <var>map</var> be an empty map.
+        <li>Let <var>json</var> be a new <code>PushSubscriptionJSON</code> dictionary.
         </li>
-        <li>Add an entry to <var>map</var> whose key name is <code>endpoint</code> and whose value
-        is the result of converting the <code>endpoint</code> attribute to a serialized value. The
-        <a>user agent</a> MUST use a serialization method that does not contain input-dependent
-        branchs (that is, one that is constant time). Note that a URL - as ASCII text - will not
-        ordinarily require special treatment.
+        <li>Set <var>json</var>["endpoint"] to the result of
+        <a data-lt="get the underlying value">getting the underlying value</a> of the
+        <a data-link-for="PushSubscription">endpoint</a> attribute given this
+        <code>PushSubscription</code> object.
         </li>
-        <li>Add an entry to <var>map</var> whose key name is <code>expirationTime</code> and whose
-        value is the result of converting the <code>expirationTime</code> attribute to a serialized
-        value.
+        <li>Set <var>json</var>["expirationTime"] to the result of
+        <a data-lt="get the underlying value">getting the underlying value</a> of the
+        <a data-link-for="PushSubscription">expirationTime</a> attribute given this
+        <code>PushSubscription</code> object.
         </li>
-        <li>Let <var>keys</var> be an empty map.
-        </li>
+        <li>Let <var>keys</var> be a new empty instance of <code>record&lt;DOMString, USVString&gt;
+        </code>.</li>
         <li>For each identifier <var>i</var> corresponding to keys in internal slots on the
         <a>PushSubscription</a>, ordered by the name of the key:
           <ol>
@@ -1009,20 +1027,40 @@ navigator.serviceWorker.register('serviceworker.js').then(
             <var>b</var> as a <a>USVString</a>. The <a>user agent</a> MUST use a serialization
             method that does not branch based on the value of <var>b</var>.
             </li>
-            <li>Add an entry to <var>keys</var> whose key name is the name of <var>i</var> and
-            whose value is <var>s</var>.
+            <li>Set <var>keys</var>[<var>i</var>] to <var>s</var>.
             </li>
           </ol>
         </li>
-        <li>Add an entry to <var>map</var> whose key name is <code>keys</code> and whose value is
-        <var>keys</var>.
+        <li>Set <var>json</var>["keys"] to <var>keys</var>.
         </li>
-        <li>Return <var>map</var>.
-        </li>
+        <li>Return <var>json</var>.
       </ol>
+
+      <p>
+        A <dfn>PushSubscriptionJSON</dfn> dictionary represents the <a>JSON type</a> of a
+        <a>PushSubscription</a>. In ECMAScript this can be converted into a JSON string through the
+        <a>JSON.stringify</a> function.
+      </p>
+      <p>
+        The <dfn data-dfn-for="PushSubscriptionJSON">endpoint</dfn> contains the
+        <a data-lt="get the underlying value">underlying value</a> of the
+        <a data-link-for="PushSubscription">endpoint</a> attribute.
+      </p>
+      <p>
+        The <dfn data-dfn-for="PushSubscriptionJSON">expirationTime</dfn> contains the
+        <a data-lt="get the underlying value">underlying value</a> of the
+        <a data-link-for="PushSubscription">expirationTime</a> attribute.
+      </p>
+      <p>
+        The <dfn data-dfn-for="PushSubscriptionJSON">keys</dfn> record contains an entry for each
+        of the supported <a>PushEncryptionKeyName</a> entries to the URL-safe base64 encoded
+        representation [[!RFC4648]] of its value.
+      </p>
+
       <p>
         Note that the options to a <a>PushSubscription</a> are not serialized.
       </p>
+
       <section data-dfn-for="PushEncryptionKeyName">
         <h2>
           <dfn>PushEncryptionKeyName</dfn> enumeration
