@@ -907,10 +907,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
         dictionary PushSubscriptionJSON {
           USVString endpoint;
           DOMTimeStamp? expirationTime;
-
-          // TODO: This should be record&lt;DOMString, USVString&gt;.
-          // https://github.com/w3c/respec/issues/1297
-          record keys;
+          record&lt;DOMString, USVString&gt; keys;
         };
       </pre>
       <p>
