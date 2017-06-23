@@ -302,15 +302,13 @@
         "https://heycam.github.io/webidl/#idl-DOMString"><dfn>DOMString</dfn></a></code>,
         <code><a href=
         "https://heycam.github.io/webidl/#DOMTimeStamp"><dfn>DOMTimeStamp</dfn></a></code>,
-        <code><a href=
-        "https://heycam.github.io/webidl/#dfn-json-types"><dfn>JSON type</dfn></a></code>,
-        <code><a href=
+        <code><a href="https://heycam.github.io/webidl/#dfn-json-types"><dfn>JSON
+        type</dfn></a></code>, <code><a href=
         "https://heycam.github.io/webidl/#notallowederror"><dfn>NotAllowedError</dfn></a></code>,
         <code><a href=
         "https://heycam.github.io/webidl/#idl-USVString"><dfn>USVString</dfn></a></code> and
-        <code><a href=
-        "https://heycam.github.io/webidl/#get-the-underlying-value"><dfn>get the underlying value</dfn></a></code>
-        are defined in [[!WEBIDL]].
+        <code><a href="https://heycam.github.io/webidl/#get-the-underlying-value"><dfn>get the
+        underlying value</dfn></a></code> are defined in [[!WEBIDL]].
       </p>
       <p>
         The <dfn>web push protocol</dfn> [[!WEBPUSH-PROTOCOL]] describes a protocol that enables
@@ -1000,18 +998,18 @@ navigator.serviceWorker.register('serviceworker.js').then(
       <ol>
         <li>Let <var>json</var> be a new <code>PushSubscriptionJSON</code> dictionary.
         </li>
-        <li>Set <var>json</var>["endpoint"] to the result of
-        <a data-lt="get the underlying value">getting the underlying value</a> of the
-        <a data-link-for="PushSubscription">endpoint</a> attribute given this
-        <code>PushSubscription</code> object.
+        <li>Set <var>json</var>["endpoint"] to the result of <a data-lt="get the underlying value">
+          getting the underlying value</a> of the <a data-link-for="PushSubscription">endpoint</a>
+          attribute given this <code>PushSubscription</code> object.
         </li>
-        <li>Set <var>json</var>["expirationTime"] to the result of
-        <a data-lt="get the underlying value">getting the underlying value</a> of the
-        <a data-link-for="PushSubscription">expirationTime</a> attribute given this
-        <code>PushSubscription</code> object.
+        <li>Set <var>json</var>["expirationTime"] to the result of <a data-lt=
+        "get the underlying value">getting the underlying value</a> of the <a data-link-for=
+        "PushSubscription">expirationTime</a> attribute given this <code>PushSubscription</code>
+        object.
         </li>
-        <li>Let <var>keys</var> be a new empty instance of <code>record&lt;DOMString, USVString&gt;
-        </code>.</li>
+        <li>Let <var>keys</var> be a new empty instance of <code>record&lt;DOMString,
+        USVString&gt;</code> .
+        </li>
         <li>For each identifier <var>i</var> corresponding to keys in internal slots on the
         <a>PushSubscription</a>, ordered by the name of the key:
           <ol>
@@ -1034,33 +1032,31 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <li>Set <var>json</var>["keys"] to <var>keys</var>.
         </li>
         <li>Return <var>json</var>.
+        </li>
       </ol>
-
       <p>
         A <dfn>PushSubscriptionJSON</dfn> dictionary represents the <a>JSON type</a> of a
         <a>PushSubscription</a>. In ECMAScript this can be converted into a JSON string through the
         <a>JSON.stringify</a> function.
       </p>
       <p>
-        The <dfn data-dfn-for="PushSubscriptionJSON">endpoint</dfn> contains the
-        <a data-lt="get the underlying value">underlying value</a> of the
-        <a data-link-for="PushSubscription">endpoint</a> attribute.
+        The <dfn data-dfn-for="PushSubscriptionJSON">endpoint</dfn> contains the <a data-lt=
+        "get the underlying value">underlying value</a> of the <a data-link-for=
+        "PushSubscription">endpoint</a> attribute.
       </p>
       <p>
-        The <dfn data-dfn-for="PushSubscriptionJSON">expirationTime</dfn> contains the
-        <a data-lt="get the underlying value">underlying value</a> of the
-        <a data-link-for="PushSubscription">expirationTime</a> attribute.
+        The <dfn data-dfn-for="PushSubscriptionJSON">expirationTime</dfn> contains the <a data-lt=
+        "get the underlying value">underlying value</a> of the <a data-link-for=
+        "PushSubscription">expirationTime</a> attribute.
       </p>
       <p>
         The <dfn data-dfn-for="PushSubscriptionJSON">keys</dfn> record contains an entry for each
         of the supported <a>PushEncryptionKeyName</a> entries to the URL-safe base64 encoded
         representation [[!RFC4648]] of its value.
       </p>
-
       <p>
         Note that the options to a <a>PushSubscription</a> are not serialized.
       </p>
-
       <section data-dfn-for="PushEncryptionKeyName">
         <h2>
           <dfn>PushEncryptionKeyName</dfn> enumeration
