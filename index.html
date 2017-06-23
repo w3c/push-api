@@ -741,7 +741,9 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </li>
         <li>Ask the user whether they allow the <a>webapp</a> to receive <a>push messages</a>,
         unless a prearranged trust relationship applies or the user has already granted or denied
-        permission explicitly for this <a>webapp</a>.
+        permission explicitly for this <a>webapp</a>. Note that a <a>user agent</a> that needs to
+        request permission might be unable to do so if <a data-link-for="PushManager">subscribe</a>
+        is invoked from a service worker, in which case permission will be denied automatically.
         </li>
         <li>If not granted, reject <var>promise</var> with a <a>DOMException</a> whose name is
         "<a>NotAllowedError</a>" and terminate these steps.
