@@ -306,6 +306,8 @@
         type</dfn></a></code>, <code><a href=
         "https://heycam.github.io/webidl/#notallowederror"><dfn>NotAllowedError</dfn></a></code>,
         <code><a href=
+        "https://heycam.github.io/webidl/#notsupportederror"><dfn>NotSupportedError</dfn></a></code>,
+        <code><a href=
         "https://heycam.github.io/webidl/#idl-USVString"><dfn>USVString</dfn></a></code> and
         <code><a href="https://heycam.github.io/webidl/#get-the-underlying-value"><dfn>get the
         underlying value</dfn></a></code> are defined in [[!WEBIDL]].
@@ -736,6 +738,12 @@ navigator.serviceWorker.register('serviceworker.js').then(
             </li>
           </ol>
         </li>
+        <li>If the <var>options</var> argument does not include a non-null value for the
+        <code><a data-link-for="PushSubscriptionOptions">applicationServerKey</a></code> attribute,
+        and the <a>push service</a> requires one to be given, reject <var>promise</var> with a
+        <a>DOMException</a> whose name is "<code><a>NotSupportedError</a></code>" and terminate
+        these steps.
+        </li>
         <li>Let <var>registration</var> be the <a>PushManager</a>'s associated <a>service worker
         registration</a>.
         </li>
@@ -884,6 +892,11 @@ navigator.serviceWorker.register('serviceworker.js').then(
           (that is, 65 octets, starting with an 0x04 octet). When provided as a
           <code><a>DOMString</a></code>, the value MUST be encoded using the base64url encoding
           [[!RFC7515]].
+        </p>
+        <p>
+          User agents MAY reject a subscription attempt when <a data-link-for=
+          "PushSubscriptionOptions">applicationServerKey</a> is not present and the <a>push
+          service</a> requires one for operational reasons.
         </p>
         <p>
           The <code><a data-link-for="PushSubscriptionOptions">applicationServerKey</a></code> MUST
