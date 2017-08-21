@@ -486,11 +486,11 @@
           the <a>push subscriptions</a> it serves.
         </p>
         <p>
-          There is only one <a>push service</a> per <a>user agent</a> and it cannot be changed
-          from the default value. This limitation is due to a variety of performance-related
-          concerns, including the complexity of running reliable <a>push services</a> and the
-          impact on battery lifetime if there were an unbounded set of <a>push services</a> to
-          which a device could connect.
+          There is only one <a>push service</a> per <a>user agent</a> and it cannot be changed from
+          the default value. This limitation is due to a variety of performance-related concerns,
+          including the complexity of running reliable <a>push services</a> and the impact on
+          battery lifetime if there were an unbounded set of <a>push services</a> to which a device
+          could connect.
         </p>
       </section>
       <section>
@@ -716,12 +716,9 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <var>promise</var> with a <a>DOMException</a> whose name is "<a>SecurityError</a>" and
         terminate these steps.
         </li>
-        <li>Let <var>allOptions</var> be the value of the <code>options</code> argument, if
-        provided, or a <a>PushSubscriptionOptions</a> dictionary with default values.
-        </li>
-        <li>If <var>allOptions</var> includes a non-null value for the <code><a data-link-for=
-        "PushSubscriptionOptions">applicationServerKey</a></code> attribute, run the following
-        substeps:
+        <li>If the <var>options</var> argument includes a non-null value for the
+        <code><a data-link-for="PushSubscriptionOptions">applicationServerKey</a></code> attribute,
+        run the following substeps:
           <ol>
             <li>Let <var>applicationServerKey</var> be the sequence of octets in
             <code><a data-link-for="PushSubscriptionOptions">applicationServerKey</a></code> when
@@ -764,8 +761,8 @@ navigator.serviceWorker.register('serviceworker.js').then(
             </li>
             <li>Let <var>subscription</var> be the retrieved subscription.
             </li>
-            <li>Compare <var>allOptions</var> with the <code>options</code> attribute of
-            <var>subscription</var>. If any attribute on <var>allOptions</var> contains a different
+            <li>Compare the <var>options</var> argument with the <code>options</code> attribute of
+            <var>subscription</var>. If any attribute on <var>options</var> contains a different
             value to that stored for <var>subscription</var>, then reject <var>promise</var> with
             an <a>InvalidStateError</a> and terminate these steps. The contents of
             <a>BufferSource</a> values are compared for equality rather than <a href=
@@ -777,7 +774,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
           </ol>
         </li>
         <li>Let <var>subscription</var> be the result of running the <a>create a push
-        subscription</a> steps given <var>allOptions</var>.
+        subscription</a> steps given <var>options</var>.
         </li>
         <li>If there is an error, reject <var>promise</var> with a <a>DOMException</a> whose name
         is "<a>AbortError</a>" and terminate these steps.
