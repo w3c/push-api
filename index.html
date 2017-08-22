@@ -667,6 +667,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
         [[!SERVICE-WORKERS]], which this specification extends.
       </p>
       <pre class="idl">
+        [SecureContext]
         partial interface ServiceWorkerRegistration {
           readonly attribute PushManager pushManager;
         };
@@ -685,7 +686,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
         The <a>PushManager</a> interface defines the operations to access <a>push services</a>.
       </p>
       <pre class="idl">
-        [Exposed=(Window,Worker)]
+        [Exposed=(Window,Worker), SecureContext]
         interface PushManager {
           [SameObject] static readonly attribute FrozenArray&lt;DOMString&gt; supportedContentEncodings;
 
@@ -864,7 +865,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
             (BufferSource or DOMString)? applicationServerKey = null;
           };
 
-          [Exposed=(Window,Worker)]
+          [Exposed=(Window,Worker), SecureContext]
           interface PushSubscriptionOptions {
             readonly attribute boolean userVisibleOnly;
             [SameObject] readonly attribute ArrayBuffer? applicationServerKey;
@@ -912,7 +913,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
         A <a>PushSubscription</a> object represents a <a>push subscription</a>.
       </p>
       <pre class="idl">
-        [Exposed=(Window,Worker)]
+        [Exposed=(Window,Worker), SecureContext]
         interface PushSubscription {
           readonly attribute USVString endpoint;
           readonly attribute DOMTimeStamp? expirationTime;
@@ -1104,7 +1105,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <dfn>PushMessageData</dfn> interface
       </h2>
       <pre class="idl">
-        [Exposed=ServiceWorker]
+        [Exposed=ServiceWorker, SecureContext]
         interface PushMessageData {
           ArrayBuffer arrayBuffer();
           Blob blob();
@@ -1174,7 +1175,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
           interface [[!SERVICE-WORKERS]], which this specification extends.
         </p>
         <pre class="idl">
-          [Exposed=(Window,Worker)]
+          [Exposed=ServiceWorker, SecureContext]
           partial interface ServiceWorkerGlobalScope {
             attribute EventHandler onpush;
             attribute EventHandler onpushsubscriptionchange;
@@ -1233,7 +1234,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
               PushMessageDataInit data;
             };
 
-            [Constructor(DOMString type, optional PushEventInit eventInitDict), Exposed=ServiceWorker]
+            [Constructor(DOMString type, optional PushEventInit eventInitDict), Exposed=ServiceWorker, SecureContext]
             interface PushEvent : ExtendableEvent {
               readonly attribute PushMessageData? data;
             };
@@ -1396,7 +1397,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
               PushSubscription oldSubscription = null;
             };
 
-            [Constructor(DOMString type, optional PushSubscriptionChangeInit eventInitDict), Exposed=ServiceWorker]
+            [Constructor(DOMString type, optional PushSubscriptionChangeInit eventInitDict), Exposed=ServiceWorker, SecureContext]
             interface PushSubscriptionChangeEvent : ExtendableEvent {
               readonly attribute PushSubscription? newSubscription;
               readonly attribute PushSubscription? oldSubscription;
