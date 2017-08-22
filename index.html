@@ -519,6 +519,12 @@
         revocable.
       </p>
       <p>
+        The Push API may have to wake up the Service Worker associated with the <a>service worker
+        registration</a> in order to run the developer-provided event handlers. This can cause
+        resource usage, such as network traffic, that the <a>user agent</a> SHOULD attribute to the
+        <a>webapp</a> that created the <a>push subscription</a>.
+      </p>
+      <p>
         The <a>user agent</a> MAY consider the <a>PushSubscriptionOptions</a> when acquiring
         permission or determining the permission status.
       </p>
