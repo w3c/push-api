@@ -695,6 +695,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
         [Exposed=(Window,Worker), SecureContext]
         interface PushManager {
           [SameObject] static readonly attribute FrozenArray&lt;DOMString&gt; supportedContentEncodings;
+          [SameObject] static readonly attribute FrozenArray&lt;DOMString&gt; supportedAuthenticationSchemes;
 
           Promise&lt;PushSubscription&gt; subscribe(optional PushSubscriptionOptionsInit options);
           Promise&lt;PushSubscription?&gt; getSubscription();
@@ -706,6 +707,11 @@ navigator.serviceWorker.register('serviceworker.js').then(
         sequence of supported content codings that can be used to encrypt the payload of a <a>push
         message</a>. A content coding is indicated using the <a>Content-Encoding</a> header field
         when requesting the sending of a <a>push message</a> from the <a>push service</a>.
+      </p>
+      <p>
+        The <dfn data-dfn-for="PushManager">supportedAuthenticationSchemes</dfn> attribute exposes
+        the sequence of supported authentication schemes that can be used by <a>applications
+        servers</a> to authenticate with the <a>push service</a>.
       </p>
       <p>
         <a>User agents</a> MUST support the <code>aes128gcm</code> content coding defined in
@@ -893,7 +899,11 @@ navigator.serviceWorker.register('serviceworker.js').then(
           key is used to generate an authentication token.
         </p>
         <p>
-          If present, the value of <a data-link-for=
+          If present, the value of the <code><a data-link-for=
+          "PushSubscriptionOptions">applicationServerKey</a></code> needs to be valid according to
+          one of the supported authentication schemes (see <code><a data-link-for=
+          "PushManager">supportedAuthenticationSchemes</a></code>). For the "vapid" scheme defined
+          in [[!WEBPUSH-VAPID]], the value of <a data-link-for=
           "PushSubscriptionOptions">applicationServerKey</a> MUST include a point on the P-256
           elliptic curve [[!DSS]], encoded in the uncompressed form described in [[!X9.62]] Annex A
           (that is, 65 octets, starting with an 0x04 octet). When provided as a
