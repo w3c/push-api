@@ -96,16 +96,6 @@
               status: "Living Standard",
               publisher: "WHATWG"
             },
-            "WEBPUSH-PROTOCOL": {
-              title: "The Web Push Protocol",
-              href: "https://tools.ietf.org/html/draft-ietf-webpush-protocol",
-              authors: [
-                "Martin Thomson",
-                "Brian Raymor",
-              ],
-              status: "Internet-Draft",
-              publisher: "IETF"
-            },
             "WEBPUSH-ENCRYPTION": {
               title: "Message Encryption for Web Push",
               href: "https://tools.ietf.org/html/draft-ietf-webpush-encryption",
@@ -313,7 +303,7 @@
         underlying value</dfn></a></code> are defined in [[!WEBIDL]].
       </p>
       <p>
-        The <dfn>web push protocol</dfn> [[!WEBPUSH-PROTOCOL]] describes a protocol that enables
+        The <dfn>web push protocol</dfn> [[!RFC8030]] describes a protocol that enables
         communication between a <a>user agent</a> or <a>application server</a> and a <a>push
         service</a>. Alternative protocols could be used in place of this protocol, but this
         specification assumes the use of this protocol; alternative protocols are expected to
@@ -541,6 +531,11 @@
         subscription</a> MUST be <a>deactivated</a>.
       </p>
       <p>
+        The <a>push endpoint</a> MUST NOT expose information about the user to be derived by actors
+        other than the <a>push service</a>, such as the user's device, identity or location. See
+        the Privacy Considerations in [[!RFC8030]] for the exact requirements.
+      </p>
+      <p>
         The <a>push endpoint</a> of a <a>deactivated</a> <a>push subscription</a> MUST NOT be
         reused for a new <a>push subscription</a>. This prevents the creation of a persistent
         identifier that the user cannot remove. This also prevents reuse of the details of one
@@ -555,7 +550,7 @@
       <p>
         There is no guarantee that a <a>push message</a> was sent by an <a>application server</a>
         having the same origin as the <a>webapp</a>. The <a>application server</a> is able to share
-        the details necessary to to use a <a>push subscription</a> with a third party at its own
+        the details necessary to use a <a>push subscription</a> with a third party at its own
         discretion.
       </p>
     </section>
@@ -569,7 +564,7 @@
       </p>
       <ul>
         <li>the <a>application server</a> requests that the <a>push service</a> deliver a <a>push
-        message</a> using the [[!WEBPUSH-PROTOCOL]]. This request uses the <a>push endpoint</a>
+        message</a> using the [[!RFC8030]]. This request uses the <a>push endpoint</a>
         included in the <a>push subscription</a>;
         </li>
         <li>the <a>push service</a> delivers the message to a specific <a>user agent</a>,
@@ -1297,7 +1292,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
                 following steps:
                   <ol>
                     <li>Acknowledge the receipt of the <a>push message</a> according to
-                    [[!WEBPUSH-PROTOCOL]]. Though the message was not successfully received and
+                    [[!RFC8030]]. Though the message was not successfully received and
                     processed, this prevents the push service from attempting to retransmit the
                     message; a badly encrypted message is not recoverable.
                     </li>
@@ -1324,13 +1319,13 @@ navigator.serviceWorker.register('serviceworker.js').then(
                 <var>event</var> to resolve.
                 </li>
                 <li>If all the promises resolve successfully, acknowledge the receipt of the
-                <a>push message</a> according to [[!WEBPUSH-PROTOCOL]] and abort these steps.
+                <a>push message</a> according to [[!RFC8030]] and abort these steps.
                 </li>
                 <li>
                   <p>
                     If the same <a>push message</a> has been delivered to a <a>service worker
                     registration</a> multiple times unsuccessfully, acknowledge the receipt of the
-                    <a>push message</a> according to [[!WEBPUSH-PROTOCOL]].
+                    <a>push message</a> according to [[!RFC8030]].
                   </p>
                   <p>
                     Acknowledging the <a>push message</a> causes the <a>push service</a> to stop
