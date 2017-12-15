@@ -564,8 +564,8 @@
       </p>
       <ul>
         <li>the <a>application server</a> requests that the <a>push service</a> deliver a <a>push
-        message</a> using the [[!RFC8030]]. This request uses the <a>push endpoint</a>
-        included in the <a>push subscription</a>;
+        message</a> using the [[!RFC8030]]. This request uses the <a>push endpoint</a> included in
+        the <a>push subscription</a>;
         </li>
         <li>the <a>push service</a> delivers the message to a specific <a>user agent</a>,
         identifying the <a>push endpoint</a> in the message;
@@ -724,13 +724,11 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <code><a data-link-for="PushSubscriptionOptions">applicationServerKey</a></code> attribute,
         run the following substeps:
           <ol>
-            <li>Let <var>applicationServerKey</var> be the sequence of octets in
-            <code><a data-link-for="PushSubscriptionOptions">applicationServerKey</a></code> when
-            provided as a <code><a>BufferSource</a></code>, or the sequence of octets that results
-            from decoding <code><a data-link-for=
-            "PushSubscriptionOptions">applicationServerKey</a></code> using the base64url encoding
-            [[!RFC7515]] when provided as a <code><a>DOMString</a></code>. If decoding fails,
-            reject <var>promise</var> with a <code><a>DOMException</a></code> whose name is
+            <li>If the <var>applicationServerKey</var> is provided as a
+            <code><a>DOMString</a></code>, set its value to a <code><a>BufferSource</a></code>
+            containing the sequence of octets that result from decoding
+            <var>applicationServerKey</var> using the base64url encoding [[!RFC7515]]. If decoding
+            fails, reject promise with a <code><a>DOMException</a></code> whose name is
             "<code><a>InvalidCharacterError</a></code>" and terminate these steps.
             </li>
             <li>Ensure that <var>applicationServerKey</var> describes a valid point on the P-256
@@ -742,9 +740,9 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </li>
         <li>If the <var>options</var> argument does not include a non-null value for the
         <code><a data-link-for="PushSubscriptionOptions">applicationServerKey</a></code> attribute,
-        and the <a>push service</a> requires one to be given, reject <var>promise</var> with a
-        <a>DOMException</a> whose name is "<code><a>NotSupportedError</a></code>" and terminate
-        these steps.
+        and the <a>push service</a> requires one to be given, reject <var>promise</var> with a <a>
+          DOMException</a> whose name is "<code><a>NotSupportedError</a></code>" and terminate
+          these steps.
         </li>
         <li>Let <var>registration</var> be the <a>PushManager</a>'s associated <a>service worker
         registration</a>.
@@ -1292,9 +1290,9 @@ navigator.serviceWorker.register('serviceworker.js').then(
                 following steps:
                   <ol>
                     <li>Acknowledge the receipt of the <a>push message</a> according to
-                    [[!RFC8030]]. Though the message was not successfully received and
-                    processed, this prevents the push service from attempting to retransmit the
-                    message; a badly encrypted message is not recoverable.
+                    [[!RFC8030]]. Though the message was not successfully received and processed,
+                    this prevents the push service from attempting to retransmit the message; a
+                    badly encrypted message is not recoverable.
                     </li>
                     <li>Discard the <a>push message</a>.
                     </li>
@@ -1473,10 +1471,10 @@ navigator.serviceWorker.register('serviceworker.js').then(
       <p>
         The editors would like to express their gratitude to the Mozilla and Telefónica Digital
         teams implementing the Firefox OS Push message solution, as well as to the following people
-        who provided significant technical input to this document: Antonio Amaya,
-        Miguel García Arribas, Ben Bangert, Kit Cambridge, José Manuel Cantera, JR Conlin,
-        Albert Crespell, Matt Gaunt, Phil Jenvey, Guillermo López, Nikhil Marathe, John Mellor,
-        Pınar Özlen, Fernando R. Sela, Shijun Sun and Doug Turner.
+        who provided significant technical input to this document: Antonio Amaya, Miguel García
+        Arribas, Ben Bangert, Kit Cambridge, José Manuel Cantera, JR Conlin, Albert Crespell, Matt
+        Gaunt, Phil Jenvey, Guillermo López, Nikhil Marathe, John Mellor, Pınar Özlen, Fernando R.
+        Sela, Shijun Sun and Doug Turner.
       </p>
     </section>
   </body>
