@@ -478,11 +478,19 @@
           the <a>push subscriptions</a> it serves.
         </p>
         <p>
-          There is only one <a>push service</a> per <a>user agent</a> and it cannot be changed from
-          the default value. This limitation is due to a variety of performance-related concerns,
-          including the complexity of running reliable <a>push services</a> and the impact on
-          battery lifetime if there were an unbounded set of <a>push services</a> to which a device
-          could connect.
+          The <a>user agent</a> is responsible for choosing the <a>push service</a> used for
+          creating <a>push subscriptions</a>. There usually is a pre-existing relationship between
+          the <a>user agent</a> and the <a>push service</a> due to a variety of performance-related
+          concerns, including the complexity of running reliable <a>push services</a> and the impact
+          on battery lifetime if there were an unbounded set of <a>push services</a> to which a
+          device could connect.
+        </p>
+        <p class="note">
+          Even though the contents of a <a>push message</a> are encrypted [[!WEBPUSH-ENCRYPTION]],
+          the <a>push service</a> is still exposed to the metadata of messages sent by an
+          <a>application server</a> to a <a>user agent</a> over a <a>push subscription</a>. This
+          includes the timing, frequency and size of messages. Only size can be mitigated by the
+          addition of padding.
         </p>
       </section>
       <section>
