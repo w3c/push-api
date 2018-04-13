@@ -480,15 +480,9 @@
         <p>
           The <a>user agent</a> connects to the <a>push service</a> used to create <a>push subscriptions</a>.
           <a>User agents</a> MAY limit the choice of <a>push services</a> available. Reasons for doing so
-          Include performance-related concerns such as service availability (including whether services are
+          include performance-related concerns such as service availability (including whether services are
           blocked by firewalls in specific countries, or networks at workplaces and the like), reliability,
-          the ability to control impact on battery lifetime, and agreements to steer metadata to, or away from,
-          specific <a>push services</a>.
-        </p>
-        <p class="note">
-          The contents of a <a>push message</a> are encrypted [[!WEBPUSH-ENCRYPTION]], but message metadata,
-          including the sender and receiver, the timing and frequency, and the size of messages, are all
-          exposed to the <a>push service</a>.
+          impact on battery lifetime, and agreements to steer metadata to, or away from, specific <a>push services</a>.
         </p>
       </section>
       <section>
@@ -506,7 +500,6 @@
       <h2>
         Security and privacy considerations
       </h2>
-      <div class="note">
         <p>
           The contents of a <a>push message</a> are encrypted [[!WEBPUSH-ENCRYPTION]]. However,
           the <a>push service</a> is still exposed to the metadata of messages sent by an
