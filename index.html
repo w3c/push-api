@@ -1211,31 +1211,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
           The <a>push</a> event indicates that a <a>push message</a> has been received for a
           <a>push subscription</a>.
         </p>
-        <p>
-          To <dfn>fire the push event</dfn> given a <a>service worker registration</a> of
-          <var>registration</var> and a <code>PushMessageData</code> of <var>data</var>, the
-          <a>user agent</a> must run the following steps:
-        </p>
-        <ol>
-          <li>Create a <a>trusted event</a>, <var>event</var>, that uses the <a>PushEvent</a>
-          interface, with the event type <code>pushevent</code>, which does not bubble, is not
-          cancelable, and has no default action.
-          </li>
-          <li>Set the <code>data</code> attribute of <var>event</var> to <var>data</var>.
-          </li>
-          <li>Invoke the <a>Handle Functional Event</a> algorithm with <var>event</var> and
-          <var>registration</var>, and <var>callbackSteps</var> set to the following steps:
-            <ol>
-              <li>Set <var>global</var> to the global object associated with the
-              <var>registration</var>.
-              </li>
-              <li>Dispatch <var>event</var> to <var>global</var>.
-              </li>
-            </ol>
-          </li>
-          <li>Return <var>event</var>.
-          </li>
-        </ol>
+
         <section data-dfn-for="PushEvent">
           <h2>
             <dfn>PushEvent</dfn> Interface
@@ -1322,13 +1298,16 @@ navigator.serviceWorker.register('serviceworker.js').then(
               </ol>
             </li>
             <li>
-              <a>Fire the push event</a> with <var>registration</var> and <var>data</var>, and set
-              <var>event</var> to the returned <a>trusted event</a>.
-            </li>
-            <li>Run the following steps in parallel:
+              <p><a>Fire Functional Event</a> "<code>push</code>" using <a>PushEvent</a> on
+              <var>registration</var> with the following properties:</p>
+              <dl>
+                <dt><code>data</code></dt>
+                <dd><var>data</var></dd>
+              </dl>
+              <p>Then run the following steps in parallel, with <var>dispatchedEvent</var>:</p>
               <ol>
                 <li>Wait for all of the promises in the <a>extend lifetime promises</a> of
-                <var>event</var> to resolve.
+                <var>dispatchedEvent</var> to resolve.
                 </li>
                 <li>If all the promises resolve successfully, acknowledge the receipt of the
                 <a>push message</a> according to [[!RFC8030]] and abort these steps.
@@ -1367,33 +1346,18 @@ navigator.serviceWorker.register('serviceworker.js').then(
           refreshed, revoked or lost.
         </p>
         <p>
-          To <dfn>fire the pushsubscriptionchange event</dfn> given a <a>service worker
-          registration</a> of <var>registration</var>, <var>newSubscription</var> and
-          <var>oldSubscription</var>, the <a>user agent</a> must run the following steps:
+          To <dfn>fire the pushsubscriptionchange event</dfn> given a
+          <a>service worker registration</a> of <var>registration</var>, <var>newSubscription</var>
+          and <var>oldSubscription</var>, the <a>user agent</a> must <a>Fire Functional Event</a>
+          "<code>pushsubscriptionchange</code>" using <a>PushSubscriptionChangeEvent</a> on
+          <var>registration</var> with the following properties:</p>
         </p>
-        <ol>
-          <li>Create a <a>trusted event</a>, <var>event</var>, that uses the
-          <a>PushSubscriptionChangeEvent</a> interface, with the event type
-          <code>pushsubscriptionchange</code>, which does not bubble, is not cancelable, and has no
-          default action.
-          </li>
-          <li>Set the <code>newSubscription</code> attribute of <var>event</var> to
-          <var>newSubscription</var>.
-          </li>
-          <li>Set the <code>oldSubscription</code> attribute of <var>event</var> to
-          <var>oldSubscription</var>.
-          </li>
-          <li>Invoke the <a>Handle Functional Event</a> algorithm with <var>event</var> and
-          <var>registration</var>, and <var>callbackSteps</var> set to the following steps:
-            <ol>
-              <li>Set <var>global</var> to the global object associated with the
-              <var>registration</var>.
-              </li>
-              <li>Dispatch <var>event</var> to <var>global</var>.
-              </li>
-            </ol>
-          </li>
-        </ol>
+        <dl>
+          <dt><code>newSubscription</code></dt>
+          <dd><var>newSubscription</var></dd>
+          <dt><code>oldSubscription</code></dt>
+          <dd><var>oldSubscription</var></dd>
+        </dl>
         <p class="note">
           Consider using a more reliable synchronization mechanism such as [[WEB-BACKGROUND-SYNC]]
           when sending the details of the new <a>push subscription</a> to your <a>application
