@@ -472,11 +472,12 @@
           the <a>push subscriptions</a> it serves.
         </p>
         <p>
-          The <a>user agent</a> connects to the <a>push service</a> used to create <a>push subscriptions</a>.
-          <a>User agents</a> MAY limit the choice of <a>push services</a> available. Reasons for doing so
-          include performance-related concerns such as service availability (including whether services are
-          blocked by firewalls in specific countries, or networks at workplaces and the like), reliability,
-          impact on battery lifetime, and agreements to steer metadata to, or away from, specific <a>push services</a>.
+          The <a>user agent</a> connects to the <a>push service</a> used to create <a>push
+          subscriptions</a>. <a>User agents</a> MAY limit the choice of <a>push services</a>
+          available. Reasons for doing so include performance-related concerns such as service
+          availability (including whether services are blocked by firewalls in specific countries,
+          or networks at workplaces and the like), reliability, impact on battery lifetime, and
+          agreements to steer metadata to, or away from, specific <a>push services</a>.
         </p>
       </section>
       <section>
@@ -494,24 +495,23 @@
       <h2>
         Security and privacy considerations
       </h2>
-        <p>
-          The contents of a <a>push message</a> are encrypted [[!WEBPUSH-ENCRYPTION]]. However,
-          the <a>push service</a> is still exposed to the metadata of messages sent by an
-          <a>application server</a> to a <a>user agent</a> over a <a>push subscription</a>. This
-          includes the timing, frequency and size of messages. Other than changing <a>push services</a>,
-          which user agents may disallow, the only known mitigation is to increase the apparent message
-          size by padding.
-        </p>
-        <p>
-          There is no guarantee that a <a>push message</a> was sent by an <a>application server</a>
-          having the same origin as the <a>webapp</a>. The <a>application server</a> is able to share
-          the details necessary to use a <a>push subscription</a> with a third party at its own
-          discretion.
-        </p>
-      </div>
       <p>
-        The following requirements are intended to protect the privacy and security of the user as far
-        as possible, and subject to meeting that goal, to protect the integrity of the
+        The contents of a <a>push message</a> are encrypted [[!WEBPUSH-ENCRYPTION]]. However, the
+        <a>push service</a> is still exposed to the metadata of messages sent by an <a>application
+        server</a> to a <a>user agent</a> over a <a>push subscription</a>. This includes the
+        timing, frequency and size of messages. Other than changing <a>push services</a>, which
+        user agents may disallow, the only known mitigation is to increase the apparent message
+        size by padding.
+      </p>
+      <p>
+        There is no guarantee that a <a>push message</a> was sent by an <a>application server</a>
+        having the same origin as the <a>webapp</a>. The <a>application server</a> is able to share
+        the details necessary to use a <a>push subscription</a> with a third party at its own
+        discretion.
+      </p>
+      <p>
+        The following requirements are intended to protect the privacy and security of the user as
+        far as possible, and subject to meeting that goal, to protect the integrity of the
         <a>application server</a>'s communication with the user.
       </p>
       <p>
@@ -1205,7 +1205,6 @@ navigator.serviceWorker.register('serviceworker.js').then(
           The <a>push</a> event indicates that a <a>push message</a> has been received for a
           <a>push subscription</a>.
         </p>
-
         <section data-dfn-for="PushEvent">
           <h2>
             <dfn>PushEvent</dfn> Interface
@@ -1292,13 +1291,21 @@ navigator.serviceWorker.register('serviceworker.js').then(
               </ol>
             </li>
             <li>
-              <p><a>Fire Functional Event</a> "<code>push</code>" using <a>PushEvent</a> on
-              <var>registration</var> with the following properties:</p>
+              <p>
+                <a>Fire Functional Event</a> "<code>push</code>" using <a>PushEvent</a> on
+                <var>registration</var> with the following properties:
+              </p>
               <dl>
-                <dt><code>data</code></dt>
-                <dd><var>data</var></dd>
+                <dt>
+                  <code>data</code>
+                </dt>
+                <dd>
+                  <var>data</var>
+                </dd>
               </dl>
-              <p>Then run the following steps in parallel, with <var>dispatchedEvent</var>:</p>
+              <p>
+                Then run the following steps in parallel, with <var>dispatchedEvent</var>:
+              </p>
               <ol>
                 <li>Wait for all of the promises in the <a>extend lifetime promises</a> of
                 <var>dispatchedEvent</var> to resolve.
@@ -1340,17 +1347,25 @@ navigator.serviceWorker.register('serviceworker.js').then(
           refreshed, revoked or lost.
         </p>
         <p>
-          To <dfn>fire the pushsubscriptionchange event</dfn> given a
-          <a>service worker registration</a> of <var>registration</var>, <var>newSubscription</var>
-          and <var>oldSubscription</var>, the <a>user agent</a> must <a>Fire Functional Event</a>
+          To <dfn>fire the pushsubscriptionchange event</dfn> given a <a>service worker
+          registration</a> of <var>registration</var>, <var>newSubscription</var> and
+          <var>oldSubscription</var>, the <a>user agent</a> must <a>Fire Functional Event</a>
           "<code>pushsubscriptionchange</code>" using <a>PushSubscriptionChangeEvent</a> on
-          <var>registration</var> with the following properties:</p>
+          <var>registration</var> with the following properties:
         </p>
         <dl>
-          <dt><code>newSubscription</code></dt>
-          <dd><var>newSubscription</var></dd>
-          <dt><code>oldSubscription</code></dt>
-          <dd><var>oldSubscription</var></dd>
+          <dt>
+            <code>newSubscription</code>
+          </dt>
+          <dd>
+            <var>newSubscription</var>
+          </dd>
+          <dt>
+            <code>oldSubscription</code>
+          </dt>
+          <dd>
+            <var>oldSubscription</var>
+          </dd>
         </dl>
         <p class="note">
           Consider using a more reliable synchronization mechanism such as [[WEB-BACKGROUND-SYNC]]
