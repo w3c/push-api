@@ -259,7 +259,9 @@
         <a href="http://www.w3.org/TR/service-workers/#dfn-extend-lifetime-promises"><dfn>extend
         lifetime promises</dfn></a>, the <a href=
         "http://www.w3.org/TR/service-workers/#clear-registration-algorithm"><dfn>Clear
-        Registration</dfn></a> algorithm, and the <a href=
+        Registration</dfn></a> algorithm, <a href=
+        "https://w3c.github.io/ServiceWorker/#fire-functional-event-algorithm"><dfn>Fire Functional
+        Event</dfn></a>, and the <a href=
         "http://www.w3.org/TR/service-workers/#handle-functional-event-algorithm"><dfn>Handle
         Functional Event</dfn></a> algorithm are defined in [[!SERVICE-WORKERS]].
       </p>
@@ -862,9 +864,8 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </p>
         <p>
           Once set, options for a <a>push subscription</a> cannot change. A pre-existing <a>push
-          subscription</a> can be <a href=
-          "#widl-PushSubscription-unsubscribe-Promise-boolean">unsubscribed</a> to create a <a>push
-          subscription</a> with new options.
+          subscription</a> can be <a href="#dom-pushsubscription-unsubscribe">unsubscribed</a> to
+          create a <a>push subscription</a> with new options.
         </p>
         <pre class="idl">
           dictionary PushSubscriptionOptionsInit {
@@ -989,7 +990,8 @@ navigator.serviceWorker.register('serviceworker.js').then(
         [[!WEBPUSH-ENCRYPTION]].
       </p>
       <p>
-        The <dfn>unsubscribe</dfn> method when invoked MUST run the following steps:
+        The <dfn data-lt="unsubscribed">unsubscribe</dfn> method when invoked MUST run the
+        following steps:
       </p>
       <ol>
         <li>Let <var>promise</var> be a new <a>Promise</a>.
