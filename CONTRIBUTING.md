@@ -1,19 +1,20 @@
-# Contributing 
+# Contributing
+
 Everyone is welcome to contribute to this specification.
 
 Any simple editorial contribution can simply be done with a pull request.
 You can even do an inline edit of the file on GitHub.
 
 For more substantial contributions that, please first start a thread in the
-[webapps mailing list](http://lists.w3.org/Archives/Public/public-webapps/)  at
+[webapps mailing list](http://lists.w3.org/Archives/Public/public-webapps/) at
 the W3C.
 
 Note: Contributions to this repository are intended to become part of Recommendation-track documents governed by the
-[W3C Patent Policy](http://www.w3.org/Consortium/Patent-Policy-20040205/) and
+[W3C Patent Policy](http://www.w3.org/Consortium/Patent-Policy/) and
 [Software and Document License](http://www.w3.org/Consortium/Legal/copyright-software). To make substantive contributions to specifications, you must either participate
 in the relevant W3C Working Group or make a non-member patent licensing commitment.
 
-If you are not the sole contributor to a contribution (pull request), please identify all 
+If you are not the sole contributor to a contribution (pull request), please identify all
 contributors in the pull request comment.
 
 To add a contributor (other than yourself, that's automatic), mark them one per line as follows:
@@ -28,29 +29,29 @@ If you added a contributor by mistake, you can remove them in a comment with:
 -@github_username
 ```
 
-If you are making a pull request on behalf of someone else but you had no part in designing the 
+If you are making a pull request on behalf of someone else but you had no part in designing the
 feature, you can remove yourself with the above syntax.
 
+## Style guide to contributors
 
-
-# Style guide to contributors 
-- the spec uses [ReSpec](http://dev.w3.org/2009/dap/ReSpec.js/documentation.html) 
+- the spec uses [ReSpec](https://github.com/w3c/respec/wiki)
 - the spec is tidied using [HTML5 Tidy](https://github.com/w3c/tidy-html5). For
-instructions on running HTML5 tidy, see below.  
+  instructions on running HTML5 tidy, see below.
 - put comments in front of sections, for better readability with
-  syntax coloring   editors
+  syntax coloring editors
 
+## Running HTML5 Tidy
 
-# Running HTML5 Tidy
 Please make sure you have HTML5 tidy installed, instead of
-the the one that  ships with *nix systems. You can comfirm this by running:
+the the one that ships with \*nix systems. You can comfirm this by running:
 
-```bash 
+```bash
 tidy --version  #HTML Tidy for HTML5 (experimental) for ...
 ```
+
 Once you have confirmed (make sure you have committed your changes before
 running tidy, as the changes are destructive ... in a good way:)):
 
-```bash 
+```bash
 tidy -config tidyconf.txt -o index.html index.html
 ```
