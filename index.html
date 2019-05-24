@@ -5,18 +5,15 @@
       Push API
     </title>
     <meta charset="utf-8">
-    <script src="https://www.w3.org/Tools/respec/respec-w3c-common" class="remove"></script>
+    <script src="https://www.w3.org/Tools/respec/respec-w3c" class="remove"></script>
     <script class="remove">
-    // (this is to make tidy happy)
       // See http://www.w3.org/respec/ for ReSpec documentation.
       var respecConfig = {
           specStatus: "ED",
           shortName: "push-api",
-
-    //          previousPublishDate: "2013-08-15",
-    //          previousMaturity: "WD",
+          // previousPublishDate: "2013-08-15",
+          // previousMaturity: "WD",
           edDraftURI: "https://w3c.github.io/push-api/",
-
           editors: [
             {
               name: "Peter Beverloo",
@@ -37,76 +34,29 @@
               company: "AT&T",
               companyURL: "http://www.att.com/",
               note: "until 01 May 2015",
-              w3cid: "41539"
             },
             {
               name: "Eduardo Fullea",
               company: "Telefonica",
               companyURL: "http://www.telefonica.com/",
               note: "until 01 May 2015",
-              w3cid: "53513"
             },
             {
               name: "Michaël van Ouwerkerk",
               company: "Google",
               companyURL: "https://www.google.com/",
               note: "until 08 November 2016",
-              w3cid: "67729"
             }
           ],
           wg: "Web Applications Working Group",
           wgURI: "https://www.w3.org/2019/webapps/",
-          wgPublicList: "public-webapps",
-          subjectPrefix: "[Push API]",
-
-          // This is important for Rec-track documents, do not copy a patent URI
-          // from a random document unless you know what you're doing. If in
-          // doubt ask your friendly neighbourhood Team Contact.
           wgPatentURI:  "https://www.w3.org/2004/01/pp-impl/114929/status",
-
-          noLegacyStyle: true,
-
           github: "w3c/push-api",
-
-          localBiblio: {
-            "NOTIFICATIONS": {
-              title: "Notifications API",
-              href: "https://notifications.spec.whatwg.org/",
-              authors: [
-                "Anne van Kesteren",
-              ],
-              status: "Living Standard",
-              publisher: "WHATWG"
-            },
-            "WEBPUSH-ENCRYPTION": {
-              title: "Message Encryption for Web Push",
-              href: "https://tools.ietf.org/html/draft-ietf-webpush-encryption",
-              authors: [
-                "Martin Thomson",
-              ],
-              status: "Internet-Draft",
-              publisher: "IETF"
-            },
-            "WEBPUSH-VAPID": {
-              title: "Voluntary Application Server Identification for Web Push",
-              href: "https://tools.ietf.org/html/draft-ietf-webpush-vapid",
-              authors: [
-                "Martin Thomson",
-                "Peter Beverloo",
-              ],
-              status: "Internet-Draft",
-              publisher: "IETF"
-            },
-            "X9.62": {
-              title: "Public Key Cryptography for the Financial Services Industry, The Elliptic Curve Digital Signature Algorithm (ECDSA)",
-              status: "ANS X9.62–2005",
-              publisher: "ANSI"
-            }
-          }
+          xref: "web-platform",
       };
     </script>
   </head>
-  <body>
+  <body data-cite="service-workers">
     <section id="abstract">
       <p>
         The <cite>Push API</cite> enables sending of a <a>push message</a> to a <a>webapp</a> via a
@@ -165,23 +115,10 @@
         Push messaging is best suited to occasions where there is not already an active
         communications channel established between <a>user agent</a> and <a>webapp</a>. Sending
         <a>push messages</a> requires considerably more resources when compared with more direct
-        methods of communication such as <a href="https://fetch.spec.whatwg.org/">fetch()</a> or
-        <a href="https://html.spec.whatwg.org/multipage/comms.html#network">websockets</a>. <a>Push
-        messages</a> usually have higher latency than direct communications and they can also be
-        subject to restrictions on use. Most <a>push services</a> limit the size and quantity of
-        <a>push messages</a> that can be sent.
-      </p>
-    </section>
-    <section id="conformance">
-      <p>
-        This specification defines conformance criteria that apply to a single product: the
-        <dfn data-lt="agents|user agents">user agent</dfn> that implements the interfaces that it
-        contains.
-      </p>
-      <p>
-        Implementations that use ECMAScript to implement the APIs defined in this specification
-        MUST implement them in a manner consistent with the ECMAScript Bindings defined in the Web
-        IDL specification [[!WEBIDL]].
+        methods of communication such as [[[fetch]]] or <a data-cite=
+        "html/comms.html#network">websockets</a>. <a>Push messages</a> usually have higher latency
+        than direct communications and they can also be subject to restrictions on use. Most
+        <a>push services</a> limit the size and quantity of <a>push messages</a> that can be sent.
       </p>
     </section>
     <section>
@@ -189,106 +126,20 @@
         Dependencies
       </h2>
       <p>
-        The terms <dfn><a href=
-        "http://www.w3.org/TR/html51/webappapis.html#current-settings-object">current settings
-        object</a></dfn>, <dfn><a href=
-        "http://www.w3.org/TR/html51/webappapis.html#event-handlers">event handler</a></dfn> and
-        <dfn><a href="http://www.w3.org/TR/html51/webappapis.html#event-handler-event-type">event
-        handler event type</a></dfn> are defined in [[!HTML51]].
+        <code><dfn data-cite="ECMASCRIPT#sec-promise-objects">Promise</dfn></code>,
+        <code><dfn data-cite="ECMASCRIPT#sec-json.parse">JSON.parse</dfn></code> and
+        <code><dfn data-cite="ECMASCRIPT#sec-json.stringify">JSON.stringify</dfn></code> are
+        defined in [[ECMASCRIPT]].
       </p>
       <p>
-        <code><a href=
-        "https://tc39.github.io/ecma262/#sec-promise-objects"><dfn>Promise</dfn></a></code>,
-        <code><a href=
-        "https://tc39.github.io/ecma262/#sec-json.parse"><dfn>JSON.parse</dfn></a></code> and
-        <code><a href=
-        "https://tc39.github.io/ecma262/#sec-json.stringify"><dfn>JSON.stringify</dfn></a></code>
-        are defined in [[!ECMASCRIPT]].
-      </p>
-      <p>
-        <code><a href="http://www.w3.org/TR/dom/#eventinit"><dfn>EventInit</dfn></a></code>,
-        <code><a href="http://www.w3.org/TR/dom/#domexception"><dfn>DOMException</dfn></a></code>,
-        <code><a href="http://www.w3.org/TR/dom/#aborterror"><dfn>AbortError</dfn></a></code>,
-        <code><a href=
-        "http://www.w3.org/TR/dom/#invalidstateerror"><dfn>InvalidStateError</dfn></a></code>,
-        <code><a href=
-        "http://www.w3.org/TR/dom/#invalidaccesserror"><dfn>InvalidAccessError</dfn></a></code>,
-        <code><a href=
-        "http://www.w3.org/TR/dom/#invalidcharactererror"><dfn>InvalidCharacterError</dfn></a></code>,
-        <code><a href=
-        "http://www.w3.org/TR/dom/#securityerror"><dfn>SecurityError</dfn></a></code>, <a href=
-        "http://www.w3.org/TR/dom/#concept-event-listener"><dfn>event listener</dfn></a>, and
-        <a href="http://www.w3.org/TR/dom/#concept-event-constructor"><dfn>steps for constructing
-        events</dfn></a> are defined in [[!DOM]].
-      </p>
-      <p>
-        The terms <a href="http://www.w3.org/TR/service-workers/#dfn-service-worker"><dfn>service
-        worker</dfn></a>, <a href=
-        "http://www.w3.org/TR/service-workers/#dfn-service-worker-registration"><dfn>service worker
-        registration</dfn></a>, <a href=
-        "http://www.w3.org/TR/service-workers/#dfn-installing-worker"><dfn>installing
-        worker</dfn></a>, <a href=
-        "http://www.w3.org/TR/service-workers/#dfn-waiting-worker"><dfn>waiting worker</dfn></a>,
-        and <a href="http://www.w3.org/TR/service-workers/#dfn-active-worker"><dfn>active
-        worker</dfn></a>, and the types <code><a href=
-        "http://www.w3.org/TR/service-workers/#service-worker-registration-interface"><dfn>ServiceWorkerRegistration</dfn></a></code>,
-        <code><a href=
-        "http://www.w3.org/TR/service-workers/#service-worker-global-scope-interface"><dfn>ServiceWorkerGlobalScope</dfn></a></code>,
-        <code><a href=
-        "http://www.w3.org/TR/service-workers/#extendable-event-interface"><dfn>ExtendableEvent</dfn></a></code>,
-        <code><a href=
-        "http://www.w3.org/TR/service-workers/#extendable-event-init-dictionary"><dfn>ExtendableEventInit</dfn></a></code>,
-        <a href="http://www.w3.org/TR/service-workers/#dfn-extend-lifetime-promises"><dfn>extend
-        lifetime promises</dfn></a>, the <a href=
-        "http://www.w3.org/TR/service-workers/#clear-registration-algorithm"><dfn>Clear
-        Registration</dfn></a> algorithm, <a href=
-        "https://w3c.github.io/ServiceWorker/#fire-functional-event-algorithm"><dfn>Fire Functional
-        Event</dfn></a>, and the <a href=
-        "http://www.w3.org/TR/service-workers/#handle-functional-event-algorithm"><dfn>Handle
-        Functional Event</dfn></a> algorithm are defined in [[!SERVICE-WORKERS]].
-      </p>
-      <p>
-        The term <a href="https://www.w3.org/TR/secure-contexts/#secure-context"><dfn>secure
-        context</dfn></a> is defined in [[!POWERFUL-FEATURES]].
-      </p>
-      <p>
-        The algorithms <a href="http://www.w3.org/TR/encoding/#utf-8-encode"><dfn>utf-8
-        encode</dfn></a>, and <a href="http://www.w3.org/TR/encoding/#utf-8-decode"><dfn>utf-8
-        decode</dfn></a> are defined in [[!ENCODING]].
-      </p>
-      <p>
-        <code><a href="http://www.w3.org/TR/FileAPI/#blob"><dfn>Blob</dfn></a></code> is defined in
-        [[!FILEAPI]].
-      </p>
-      <p>
-        <code><a href="https://www.w3.org/TR/WebIDL/#idl-any"><dfn>Any</dfn></a></code>,
-        <code><a href=
-        "https://heycam.github.io/webidl/#idl-ArrayBuffer"><dfn>ArrayBuffer</dfn></a></code>,
-        <code><a href=
-        "https://heycam.github.io/webidl/#common-BufferSource"><dfn>BufferSource</dfn></a></code>,
-        <code><a href=
-        "https://heycam.github.io/webidl/#idl-DOMString"><dfn>DOMString</dfn></a></code>,
-        <code><a href=
-        "https://heycam.github.io/webidl/#DOMTimeStamp"><dfn>DOMTimeStamp</dfn></a></code>,
-        <code><a href="https://heycam.github.io/webidl/#dfn-json-types"><dfn>JSON
-        type</dfn></a></code>, <code><a href=
-        "https://heycam.github.io/webidl/#notallowederror"><dfn>NotAllowedError</dfn></a></code>,
-        <code><a href=
-        "https://heycam.github.io/webidl/#notsupportederror"><dfn>NotSupportedError</dfn></a></code>,
-        <code><a href=
-        "https://heycam.github.io/webidl/#idl-USVString"><dfn>USVString</dfn></a></code> and
-        <code><a href="https://heycam.github.io/webidl/#get-the-underlying-value"><dfn>get the
-        underlying value</dfn></a></code> are defined in [[!WEBIDL]].
-      </p>
-      <p>
-        The <dfn>web push protocol</dfn> [[!RFC8030]] describes a protocol that enables
+        The <dfn>web push protocol</dfn> [[RFC8030]] describes a protocol that enables
         communication between a <a>user agent</a> or <a>application server</a> and a <a>push
         service</a>. Alternative protocols could be used in place of this protocol, but this
         specification assumes the use of this protocol; alternative protocols are expected to
         provide compatible semantics.
       </p>
       <p>
-        The <dfn>Content-Encoding</dfn> HTTP header, described in Section 3.1.2.2 of [[!RFC7231]],
+        The <dfn>Content-Encoding</dfn> HTTP header, described in Section 3.1.2.2 of [[RFC7231]],
         indicates the content coding applied to the payload of a <a>push message</a>.
       </p>
     </section>
@@ -301,13 +152,13 @@
           Webapp
         </h2>
         <p>
-          The term <dfn data-lt="webapps">webapp</dfn> refers to a Web application, i.e. an
-          application implemented using Web technologies, and executing within the context of a Web
-          <a>user agent</a>, e.g. a Web browser or other Web runtime environment.
+          The term <dfn>webapp</dfn> refers to a Web application, i.e. an application implemented
+          using Web technologies, and executing within the context of a Web <a>user agent</a>, e.g.
+          a Web browser or other Web runtime environment.
         </p>
         <p>
-          The term <dfn data-lt="application servers">application server</dfn> refers to
-          server-side components of a <a>webapp</a>.
+          The term <dfn>application server</dfn> refers to server-side components of a
+          <a>webapp</a>.
         </p>
       </section>
       <section>
@@ -315,8 +166,8 @@
           Push message
         </h2>
         <p>
-          A <dfn data-lt="push messages">push message</dfn> is data sent to a <a>webapp</a> from an
-          <a>application server</a>.
+          A <dfn>push message</dfn> is data sent to a <a>webapp</a> from an <a>application
+          server</a>.
         </p>
         <p>
           A <a>push message</a> is delivered to the <a>active worker</a> associated with the
@@ -329,17 +180,16 @@
           Push subscription
         </h2>
         <p>
-          A <dfn data-lt="push subscriptions">push subscription</dfn> is a message delivery context
-          established between the <a>user agent</a> and the <a>push service</a> on behalf of a
-          <a>webapp</a>. Each <a>push subscription</a> is associated with a <a>service worker
-          registration</a> and a <a>service worker registration</a> has at most one <a>push
-          subscription</a>.
+          A <dfn>push subscription</dfn> is a message delivery context established between the
+          <a>user agent</a> and the <a>push service</a> on behalf of a <a>webapp</a>. Each <a>push
+          subscription</a> is associated with a <a>service worker registration</a> and a <a>service
+          worker registration</a> has at most one <a>push subscription</a>.
         </p>
         <p>
-          A <a>push subscription</a> has an associated <dfn data-lt="push endpoints">push
-          endpoint</dfn>. It MUST be the absolute URL exposed by the <a>push service</a> where the
-          <a>application server</a> can send <a>push messages</a> to. A <a>push endpoint</a> MUST
-          uniquely identify the <a>push subscription</a>.
+          A <a>push subscription</a> has an associated <dfn>push endpoint</dfn>. It MUST be the
+          absolute URL exposed by the <a>push service</a> where the <a>application server</a> can
+          send <a>push messages</a> to. A <a>push endpoint</a> MUST uniquely identify the <a>push
+          subscription</a>.
         </p>
         <p>
           A <a>push subscription</a> MAY have an associated <dfn>subscription expiration
@@ -349,16 +199,16 @@
         </p>
         <p>
           A <a>push subscription</a> has internal slots for a P-256 <a>ECDH</a> key pair and an
-          authentication secret in accordance with [[!WEBPUSH-ENCRYPTION]]. These slots MUST be
-          populated when creating the <a>push subscription</a>.
+          authentication secret in accordance with [[RFC8291]]. These slots MUST be populated when
+          creating the <a>push subscription</a>.
         </p>
         <p>
           If the <a>user agent</a> has to change the keys for any reason, it MUST <a>fire the
-          pushsubscriptionchange event</a> with the <a>service worker registration</a> associated
-          with the <a>push subscription</a> as <var>registration</var>, a <a>PushSubscription</a>
-          instance representing the <a>push subscription</a> having the old keys as
-          <var>oldSubscription</var> and a <a>PushSubscription</a> instance representing the
-          <a>push subscription</a> having the new keys as <var>newSubscription</var>.
+          "`pushsubscriptionchange`" event</a> with the <a>service worker registration</a>
+          associated with the <a>push subscription</a> as <var>registration</var>, a
+          <a>PushSubscription</a> instance representing the <a>push subscription</a> having the old
+          keys as <var>oldSubscription</var> and a <a>PushSubscription</a> instance representing
+          the <a>push subscription</a> having the new keys as <var>newSubscription</var>.
         </p>
         <p>
           To <dfn>create a push subscription</dfn>, given an <a>PushSubscriptionOptions</a> object
@@ -367,20 +217,20 @@
         <ol>
           <li>Let <var>subscription</var> be a new <a>push subscription</a>.
           </li>
-          <li>Set the <code>options</code> attribute of <var>subscription</var> to be a copy of
+          <li>Set the `options` attribute of <var>subscription</var> to be a copy of
           <var>options</var>.
           </li>
-          <li>Generate a new P-256 <a>ECDH</a> key pair [[!X9.62]]. Store the private key in an
+          <li>Generate a new P-256 <a>ECDH</a> key pair [[ANSI-X9-62]]. Store the private key in an
           internal slot on <var>subscription</var>; this value MUST NOT be made available to
           applications. The public key is also stored in an internal slot and can be retrieved by
-          calling the <code>getKey</code> method of the <a>PushSubscription</a> with an argument of
+          calling the `getKey()` method of the <a>PushSubscription</a> with an argument of
           <a data-link-for="PushEncryptionKeyName">p256dh</a>.
           </li>
           <li>Generate a new authentication secret, which is a sequence of octets as defined in
-          [[!WEBPUSH-ENCRYPTION]]. Store the authentication secret in an internal slot on
-          <var>subscription</var>. This key can be retrieved by calling the <code>getKey</code>
-          method of the <a>PushSubscription</a> with an argument of <a data-link-for=
-          "PushEncryptionKeyName">auth</a>.
+          [[RFC8291]]. Store the authentication secret in an internal slot on
+          <var>subscription</var>. This key can be retrieved by calling the `getKey()` method of
+          the <a>PushSubscription</a> with an argument of <a data-link-for="PushEncryptionKeyName">
+            auth</a>.
           </li>
           <li>Make a request to the <a>push service</a> to create a new <a>push subscription</a>.
           Include the <a data-link-for="PushSubscriptionOptions">applicationServerKey</a> attribute
@@ -404,7 +254,7 @@
             have a key pair that's different from the original subscription.
           </p>
           <p>
-            When successful, <a>user agent</a> then MUST <a>fire the pushsubscriptionchange
+            When successful, <a>user agent</a> then MUST <a>fire the "`pushsubscriptionchange`"
             event</a> with the <a>service worker registration</a> associated with the <a>push
             subscription</a> as <var>registration</var>, a <a>PushSubscription</a> instance
             representing the initial <a>push subscription</a> as <var>oldSubscription</var> and a
@@ -421,10 +271,10 @@
             If the <a>user agent</a> is not able to refresh the <a>push subscription</a>, it SHOULD
             periodically retry the refresh. When the <a>push subscription</a> can no longer be
             used, for example because it has expired, the <a>user agent</a> MUST <a>fire the
-            pushsubscriptionchange event</a> with the <a>service worker registration</a> associated
-            with the <a>push subscription</a> as <var>registration</var>, a <a>PushSubscription</a>
-            instance representing the deactivating <a>push subscription</a> as
-            <var>oldSubscription</var> and <code>null</code> as the <var>newSubscription</var>.
+            "`pushsubscriptionchange`" event</a> with the <a>service worker registration</a>
+            associated with the <a>push subscription</a> as <var>registration</var>, a
+            <a>PushSubscription</a> instance representing the deactivating <a>push subscription</a>
+            as <var>oldSubscription</var> and `null` as the <var>newSubscription</var>.
           </p>
         </section>
         <section>
@@ -440,8 +290,9 @@
           <p>
             A <a>push subscription</a> is <a>deactivated</a> when its associated <a>service worker
             registration</a> is unregistered, though a <a>push subscription</a> MAY be
-            <a>deactivated</a> earlier. A <a>push subscription</a> is removed when the <a>clear
-            registration</a> algorithm is run for the <a>service worker registration</a>.
+            <a>deactivated</a> earlier. A <a>push subscription</a> is removed when the
+            <a data-cite="service-workers#clear-registration-algorithm">clear registration
+            algorithm</a> is run for the <a>service worker registration</a>.
           </p>
         </section>
       </section>
@@ -480,8 +331,8 @@
         Security and privacy considerations
       </h2>
       <p>
-        The contents of a <a>push message</a> are encrypted [[!WEBPUSH-ENCRYPTION]]. However, the
-        <a>push service</a> is still exposed to the metadata of messages sent by an <a>application
+        The contents of a <a>push message</a> are encrypted [[RFC8291]]. However, the <a>push
+        service</a> is still exposed to the metadata of messages sent by an <a>application
         server</a> to a <a>user agent</a> over a <a>push subscription</a>. This includes the
         timing, frequency and size of messages. Other than changing <a>push services</a>, which
         user agents may disallow, the only known mitigation is to increase the apparent message
@@ -501,10 +352,9 @@
       <p>
         <a>User agents</a> MUST NOT provide Push API access to <a>webapps</a> without the
         <a>express permission</a> of the user. <a>User agents</a> MUST acquire consent for
-        permission through a user interface for each call to the <code>subscribe()</code> method,
-        unless a previous permission grant has been persisted, or a prearranged trust relationship
-        applies. Permissions that are preserved beyond the current browsing session MUST be
-        revocable.
+        permission through a user interface for each call to the `subscribe()` method, unless a
+        previous permission grant has been persisted, or a prearranged trust relationship applies.
+        Permissions that are preserved beyond the current browsing session MUST be revocable.
       </p>
       <p>
         The Push API may have to wake up the Service Worker associated with the <a>service worker
@@ -517,12 +367,12 @@
         permission or determining the permission status.
       </p>
       <p>
-        When a permission is revoked, the <a>user agent</a> MAY <a>fire the pushsubscriptionchange
-        event</a> for subscriptions created with that permission, with the <a>service worker
-        registration</a> associated with the <a>push subscription</a> as <var>registration</var>, a
-        <a>PushSubscription</a> instance representing the <a>push subscription</a> as
-        <var>oldSubscription</var>, and <code>null</code> as <var>newSubscription</var>. The
-        <a>user agent</a> MUST <a>deactivate</a> the affected subscriptions in parallel.
+        When a permission is revoked, the <a>user agent</a> MAY <a>fire the
+        "`pushsubscriptionchange`" event</a> for subscriptions created with that permission, with
+        the <a>service worker registration</a> associated with the <a>push subscription</a> as
+        <var>registration</var>, a <a>PushSubscription</a> instance representing the <a>push
+        subscription</a> as <var>oldSubscription</var>, and `null` as <var>newSubscription</var>.
+        The <a>user agent</a> MUST <a>deactivate</a> the affected subscriptions in parallel.
       </p>
       <p>
         When a <a>service worker registration</a> is unregistered, any associated <a>push
@@ -531,7 +381,7 @@
       <p>
         The <a>push endpoint</a> MUST NOT expose information about the user to be derived by actors
         other than the <a>push service</a>, such as the user's device, identity or location. See
-        the Privacy Considerations in [[!RFC8030]] for the exact requirements.
+        the Privacy Considerations in [[RFC8030]] for the exact requirements.
       </p>
       <p>
         The <a>push endpoint</a> of a <a>deactivated</a> <a>push subscription</a> MUST NOT be
@@ -540,8 +390,8 @@
         <a>push subscription</a> to send <a>push messages</a> to another <a>push subscription</a>.
       </p>
       <p>
-        <a>User agents</a> MUST implement the Push API to only be available in <a data-lt=
-        "secure context">secure contexts</a>. This provides better protection for the user against
+        <a>User agents</a> MUST implement the Push API to only be available in <a data-cite=
+        "secure-contexts">secure contexts</a>. This provides better protection for the user against
         man-in-the-middle attacks intended to obtain push subscription data. Browsers may ignore
         this rule for development purposes only.
       </p>
@@ -556,7 +406,7 @@
       </p>
       <ul>
         <li>the <a>application server</a> requests that the <a>push service</a> deliver a <a>push
-        message</a> using the [[!RFC8030]]. This request uses the <a>push endpoint</a> included in
+        message</a> using the [[RFC8030]]. This request uses the <a>push endpoint</a> included in
         the <a>push subscription</a>;
         </li>
         <li>the <a>push service</a> delivers the message to a specific <a>user agent</a>,
@@ -579,34 +429,34 @@
         <h2>
           Example
         </h2>
-        <pre class="example highlight">// https://example.com/serviceworker.js
-this.onpush = function(event) {
-  console.log(event.data);
-  // From here we can write the data to IndexedDB, send it to any open
-  // windows, display a notification, etc.
-}
+        <pre class="example">
+          // https://example.com/serviceworker.js
+          this.onpush = event =&gt; {
+            console.log(event.data);
+            // From here we can write the data to IndexedDB, send it to any open
+            // windows, display a notification, etc.
+          }
 
-// https://example.com/webapp.js
-navigator.serviceWorker.register('serviceworker.js').then(
-  function(serviceWorkerRegistration) {
-    serviceWorkerRegistration.pushManager.subscribe().then(
-      function(pushSubscription) {
-        console.log(pushSubscription.endpoint);
-        console.log(pushSubscription.getKey('p256dh'));
-        console.log(pushSubscription.getKey('auth'));
-        // The push subscription details needed by the application
-        // server are now available, and can be sent to it using,
-        // for example, an XMLHttpRequest.
-      }, function(error) {
-        // During development it often helps to log errors to the
-        // console. In a production environment it might make sense to
-        // also report information about errors back to the
-        // application server.
-        console.log(error);
-      }
-    );
-  });
-</pre>
+          // https://example.com/webapp.js
+          // inside an async function...
+          try {
+            const serviceWorkerRegistration = await navigator.serviceWorker.register(
+              "serviceworker.js"
+            );
+            const pushSubscription = await serviceWorkerRegistration.pushManager.subscribe();
+            // The push subscription details needed by the application
+            // server are now available, and can be sent to it using,
+            // for example, an XMLHttpRequest.
+            console.log(pushSubscription.endpoint);
+            console.log(pushSubscription.getKey("p256dh"));
+            console.log(pushSubscription.getKey("auth"));
+          } catch (err) {
+            // In a production environment it might make sense to
+            // also report information about errors back to the
+            // application server.
+            console.log(error);
+          }
+      </pre>
       </section>
       <section class="informative">
         <h2>
@@ -626,38 +476,38 @@ navigator.serviceWorker.register('serviceworker.js').then(
           Push service use
         </h3>
         <p>
-          The fields included in the <code>PushSubscription</code> is all the information needed
-          for an <a>application server</a> to send a <a>push message</a>. Push services that are
+          The fields included in the <a>PushSubscription</a> is all the information needed for an
+          <a>application server</a> to send a <a>push message</a>. Push services that are
           compatible with the Push API provide a <a>push endpoint</a> that conforms to the <a>web
           push protocol</a>. These parameters and attributes include:
         </p>
         <ul>
           <li>The <a data-lt="PushSubscription.endpoint">push endpoint</a> of a
-          <code>PushSubscription</code> is a URL that allows an <a>application server</a> to
-          request delivery of a <a>push message</a> to a <a>webapp</a>.
+          <a>PushSubscription</a> is a URL that allows an <a>application server</a> to request
+          delivery of a <a>push message</a> to a <a>webapp</a>.
           </li>
-          <li>The <code><a data-link-for="PushSubscription">getKey</a></code> method on a
-          <code>PushSubscription</code> is used to retrieve keying material used to encrypt and
-          authenticate <a>push messages</a>. Each invocation of the function returns a new
-          <code>ArrayBuffer</code> that contains the value of the corresponding key, or
-          <code>null</code> if the identified key doesn't exist. Passing a value of
-          <a data-link-for="PushEncryptionKeyName">p256dh</a> retrieves a <dfn data-lt=
-          "ECDH">elliptic curve Diffie-Hellman (ECDH)</dfn> public key associated with the <a>push
-          subscription</a>. Passing a value of <code>auth</code> returns an authentication secret
+          <li data-link-for="PushSubscription">The {{getKey()}} method on a <a>PushSubscription</a>
+          is used to retrieve keying material used to encrypt and authenticate <a>push
+          messages</a>. Each invocation of the function returns a new {{ArrayBuffer}} that contains
+          the value of the corresponding key, or `null` if the identified key doesn't exist.
+          Passing a value of <a data-link-for="PushEncryptionKeyName">p256dh</a> retrieves a
+          <dfn data-lt="ECDH">elliptic curve Diffie-Hellman (ECDH)</dfn> public key associated with
+          the <a>push subscription</a>. Passing a value of `auth` returns an authentication secret
           that an application server uses in authentication of its messages. These keys are used by
           the <a>application server</a> to encrypt and authenticate messages for the <a>push
-          subscription</a>, as described in [[!WEBPUSH-ENCRYPTION]].
+          subscription</a>, as described in [[RFC8291]].
           </li>
         </ul>
       </section>
     </section>
     <section data-dfn-for="ServiceWorkerRegistration">
       <h2>
-        Extensions to the <a>ServiceWorkerRegistration</a> Interface
+        Extensions to the `ServiceWorkerRegistration` Interface
       </h2>
       <p>
-        The Service Worker specification defines a <a>ServiceWorkerRegistration</a> interface
-        [[!SERVICE-WORKERS]], which this specification extends.
+        The Service Worker specification defines a <code><dfn data-cite=
+        "service-workers#serviceworkerregistration">ServiceWorkerRegistration</dfn></code>
+        interface [[SERVICE-WORKERS]], which this specification extends.
       </p>
       <pre class="idl">
         [SecureContext]
@@ -695,9 +545,9 @@ navigator.serviceWorker.register('serviceworker.js').then(
         when requesting the sending of a <a>push message</a> from the <a>push service</a>.
       </p>
       <p>
-        <a>User agents</a> MUST support the <code>aes128gcm</code> content coding defined in
-        [[!WEBPUSH-ENCRYPTION]], and MAY support content codings defined in previous versions of
-        the draft for compatibility reasons.
+        <a>User agents</a> MUST support the `aes128gcm` content coding defined in [[RFC8291]], and
+        MAY support content codings defined in previous versions of the draft for compatibility
+        reasons.
       </p>
       <p>
         The <dfn data-dfn-for="PushManager">subscribe</dfn> method when invoked MUST run the
@@ -708,40 +558,37 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </li>
         <li>Return <var>promise</var> and continue the following steps asynchronously.
         </li>
-        <li>If the <a>current settings object</a> is not a <a>secure context</a>, reject
-        <var>promise</var> with a <a>DOMException</a> whose name is "<a>SecurityError</a>" and
-        terminate these steps.
+        <li>If the <a>current settings object</a> is not a <a data-cite="secure-contexts">secure
+        context</a>, reject <var>promise</var> with a {{DOMException}} whose name is
+        "{{SecurityError}}" and terminate these steps.
         </li>
         <li>If the <var>options</var> argument includes a non-null value for the
-        <code><a data-link-for="PushSubscriptionOptions">applicationServerKey</a></code> attribute,
-        run the following substeps:
+          `<a data-link-for="PushSubscriptionOptions">applicationServerKey</a>` attribute, run the
+          following substeps:
           <ol>
-            <li>If the <var>applicationServerKey</var> is provided as a
-            <code><a>DOMString</a></code>, set its value to a <code><a>BufferSource</a></code>
-            containing the sequence of octets that result from decoding
-            <var>applicationServerKey</var> using the base64url encoding [[!RFC7515]]. If decoding
-            fails, reject promise with a <code><a>DOMException</a></code> whose name is
-            "<code><a>InvalidCharacterError</a></code>" and terminate these steps.
+            <li>If the <var>applicationServerKey</var> is provided as a {{DOMString}}, set its
+            value to a {{BufferSource}} containing the sequence of octets that result from decoding
+            <var>applicationServerKey</var> using the base64url encoding [[RFC7515]]. If decoding
+            fails, reject promise with a {{DOMException}} whose name is "{{InvalidCharacterError}}"
+            and terminate these steps.
             </li>
             <li>Ensure that <var>applicationServerKey</var> describes a valid point on the P-256
             curve. If the <var>applicationServerKey</var> value is invalid, reject
-            <var>promise</var> with a <code><a>DOMException</a></code> whose name is
-            "<code><a>InvalidAccessError</a></code>" and terminate these steps.
+            <var>promise</var> with a {{DOMException}} whose name is "<a data-xref-type=
+            "exception">InvalidAccessError</a>" and terminate these steps.
             </li>
           </ol>
         </li>
         <li>If the <var>options</var> argument does not include a non-null value for the
-        <code><a data-link-for="PushSubscriptionOptions">applicationServerKey</a></code> attribute,
-        and the <a>push service</a> requires one to be given, reject <var>promise</var> with a <a>
-          DOMException</a> whose name is "<code><a>NotSupportedError</a></code>" and terminate
-          these steps.
+        `<a data-link-for="PushSubscriptionOptions">applicationServerKey</a>` attribute, and the
+        <a>push service</a> requires one to be given, reject <var>promise</var> with a
+        {{DOMException}} whose name is "{{NotSupportedError}}" and terminate these steps.
         </li>
         <li>Let <var>registration</var> be the <a>PushManager</a>'s associated <a>service worker
         registration</a>.
         </li>
         <li>If <var>registration</var>'s <a>active worker</a> is null, reject <var>promise</var>
-        with a <code><a>DOMException</a></code> whose name is
-        "<code><a>InvalidStateError</a></code>" and terminate these steps.
+        with a {{DOMException}} whose name is "{{InvalidStateError}}" and terminate these steps.
         </li>
         <li>Ask the user whether they allow the <a>webapp</a> to receive <a>push messages</a>,
         unless a prearranged trust relationship applies or the user has already granted or denied
@@ -749,23 +596,23 @@ navigator.serviceWorker.register('serviceworker.js').then(
         request permission might be unable to do so if <a data-link-for="PushManager">subscribe</a>
         is invoked from a service worker, in which case permission will be denied automatically.
         </li>
-        <li>If not granted, reject <var>promise</var> with a <a>DOMException</a> whose name is
-        "<a>NotAllowedError</a>" and terminate these steps.
+        <li>If not granted, reject <var>promise</var> with a {{DOMException}} whose name is
+        "{{NotAllowedError}}" and terminate these steps.
         </li>
         <li>If the <a>Service Worker</a> is already subscribed, run the following substeps:
           <ol>
             <li>Retrieve the <a>push subscription</a> associated with the <a>Service Worker</a>.
             </li>
-            <li>If there is an error, reject <var>promise</var> with a <a>DOMException</a> whose
-            name is "<a>AbortError</a>" and terminate these steps.
+            <li>If there is an error, reject <var>promise</var> with a {{DOMException}} whose name
+            is "{{AbortError}}" and terminate these steps.
             </li>
             <li>Let <var>subscription</var> be the retrieved subscription.
             </li>
-            <li>Compare the <var>options</var> argument with the <code>options</code> attribute of
+            <li>Compare the <var>options</var> argument with the `options` attribute of
             <var>subscription</var>. If any attribute on <var>options</var> contains a different
             value to that stored for <var>subscription</var>, then reject <var>promise</var> with
-            an <a>InvalidStateError</a> and terminate these steps. The contents of
-            <a>BufferSource</a> values are compared for equality rather than <a href=
+            an {{InvalidStateError}} and terminate these steps. The contents of {{BufferSource}}
+            values are compared for equality rather than <a href=
             "https://tc39.github.io/ecma262/#sec-reference-specification-type">references</a>.
             </li>
             <li>When the request has been completed, resolve <var>promise</var> with
@@ -776,8 +623,8 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <li>Let <var>subscription</var> be the result of running the <a>create a push
         subscription</a> steps given <var>options</var>.
         </li>
-        <li>If there is an error, reject <var>promise</var> with a <a>DOMException</a> whose name
-        is "<a>AbortError</a>" and terminate these steps.
+        <li>If there is an error, reject <var>promise</var> with a {{DOMException}} whose name is
+        "{{AbortError}}" and terminate these steps.
         </li>
         <li>Resolve <var>promise</var> with a <a>PushSubscription</a> providing the details of the
         new <var>subscription</var>.
@@ -796,8 +643,8 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </li>
         <li>Retrieve the <a>push subscription</a> associated with the <a>Service Worker</a>.
         </li>
-        <li>If there is an error, reject <var>promise</var> with a <a>DOMException</a> whose name
-        is "<a>AbortError</a>" and terminate these steps.
+        <li>If there is an error, reject <var>promise</var> with a {{DOMException}} whose name is
+        "{{AbortError}}" and terminate these steps.
         </li>
         <li>When the request has been completed, resolve <var>promise</var> with a
         <a>PushSubscription</a> providing the details of the retrieved <a>push subscription</a>.
@@ -830,10 +677,57 @@ navigator.serviceWorker.register('serviceworker.js').then(
         If there is a need to ask for permission, it needs to be done by invoking the <a data-lt=
         "PushManager.subscribe">subscribe</a> method.
       </p>
-      <section data-dfn-for="PushSubscriptionOptions">
+      <section data-dfn-for="PushSubscriptionOptions" data-link-for="PushSubscriptionOptions">
         <h2>
-          <dfn>PushSubscriptionOptions</dfn> Interface and Dictionary
+          <dfn>PushSubscriptionOptions</dfn> Interface
         </h2>
+        <pre class="idl">
+          [Exposed=(Window,Worker), SecureContext]
+          interface PushSubscriptionOptions {
+            readonly attribute boolean userVisibleOnly;
+            [SameObject] readonly attribute ArrayBuffer? applicationServerKey;
+          };
+        </pre>
+        <p>
+          The <dfn>userVisibleOnly</dfn> attribute, when getting, returns the value it was
+          initialized with.
+        </p>
+        <p>
+          The <dfn>applicationServerKey</dfn> attribute, when getting, returns the value it was
+          initialized with.
+        </p>
+        <p>
+          If present, the value of <a data-link-for=
+          "PushSubscriptionOptions">applicationServerKey</a> MUST include a point on the P-256
+          elliptic curve [[DSS]], encoded in the uncompressed form described in [[ANSI-X9-62]]
+          Annex A (that is, 65 octets, starting with an 0x04 octet). When provided as a
+          {{DOMString}}, the value MUST be encoded using the base64url encoding [[RFC7515]].
+        </p>
+        <p>
+          User agents MAY reject a subscription attempt when <a>applicationServerKey</a> is not
+          present and the <a>push service</a> requires one for operational reasons.
+        </p>
+        <p>
+          The `<a data-link-for="PushSubscriptionOptions">applicationServerKey</a>` MUST be a
+          different value to the one used for message encryption [[RFC8291]].
+        </p>
+      </section>
+      <section data-dfn-for="PushSubscriptionOptionsInit" data-link-for=
+      "PushSubscriptionOptionsInit">
+        <h3>
+          <dfn>PushSubscriptionOptionsInit</dfn> dictionary
+        </h3>
+        <pre class="idl">
+          dictionary PushSubscriptionOptionsInit {
+            boolean userVisibleOnly = false;
+            (BufferSource or DOMString)? applicationServerKey = null;
+          };
+        </pre>
+        <p>
+          The <dfn>userVisibleOnly</dfn> member, when set to `true`, indicates that the <a>push
+          subscription</a> will only be used for <a>push messages</a> whose effect is made visible
+          to the user, for example by displaying a Web Notification. [[NOTIFICATIONS]]
+        </p>
         <p>
           A <a>PushSubscriptionOptionsInit</a> represents additional options associated with a
           <a>push subscription</a>. The <a>user agent</a> MAY consider these options when
@@ -846,56 +740,22 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </p>
         <p>
           Once set, options for a <a>push subscription</a> cannot change. A pre-existing <a>push
-          subscription</a> can be <a href="#dom-pushsubscription-unsubscribe">unsubscribed</a> to
-          create a <a>push subscription</a> with new options.
-        </p>
-        <pre class="idl">
-          dictionary PushSubscriptionOptionsInit {
-            boolean userVisibleOnly = false;
-            (BufferSource or DOMString)? applicationServerKey = null;
-          };
-
-          [Exposed=(Window,Worker), SecureContext]
-          interface PushSubscriptionOptions {
-            readonly attribute boolean userVisibleOnly;
-            [SameObject] readonly attribute ArrayBuffer? applicationServerKey;
-          };
-        </pre>
-        <p>
-          The <dfn>userVisibleOnly</dfn> option, when set to <code>true</code>, indicates that the
-          <a>push subscription</a> will only be used for <a>push messages</a> whose effect is made
-          visible to the user, for example by displaying a Web Notification. [[NOTIFICATIONS]]
+          subscription</a> can be unsubscribed, via <a data-link-for=
+          "PushSubscription">unsubscribe()</a>, to create a <a>push subscription</a> with new
+          options.
         </p>
         <p>
-          The <dfn>applicationServerKey</dfn> option is used by the <a>user agent</a> when
+          The <dfn>applicationServerKey</dfn> member is used by the <a>user agent</a> when
           establishing a <a>push subscription</a> with a <a>push service</a>. The
-          <code><a data-link-for="PushSubscriptionOptions">applicationServerKey</a></code> option
-          includes an elliptic curve public key for an <a>application server</a>. This is the key
-          that the <a>application server</a> will use to authenticate itself when sending <a>push
-          messages</a> to this <a>push subscription</a> as defined in [[!WEBPUSH-VAPID]]; the
-          <a>push service</a> will reject any <a>push message</a> unless the corresponding private
-          key is used to generate an authentication token.
-        </p>
-        <p>
-          If present, the value of <a data-link-for=
-          "PushSubscriptionOptions">applicationServerKey</a> MUST include a point on the P-256
-          elliptic curve [[!DSS]], encoded in the uncompressed form described in [[!X9.62]] Annex A
-          (that is, 65 octets, starting with an 0x04 octet). When provided as a
-          <code><a>DOMString</a></code>, the value MUST be encoded using the base64url encoding
-          [[!RFC7515]].
-        </p>
-        <p>
-          User agents MAY reject a subscription attempt when <a data-link-for=
-          "PushSubscriptionOptions">applicationServerKey</a> is not present and the <a>push
-          service</a> requires one for operational reasons.
-        </p>
-        <p>
-          The <code><a data-link-for="PushSubscriptionOptions">applicationServerKey</a></code> MUST
-          be a different value to the one used for message encryption [[WEBPUSH-ENCRYPTION]].
+          <a>applicationServerKey</a> option includes an elliptic curve public key for an
+          <a>application server</a>. This is the key that the <a>application server</a> will use to
+          authenticate itself when sending <a>push messages</a> to this <a>push subscription</a> as
+          defined in [[RFC8292]]; the <a>push service</a> will reject any <a>push message</a>
+          unless the corresponding private key is used to generate an authentication token.
         </p>
       </section>
     </section>
-    <section data-dfn-for="PushSubscription">
+    <section data-dfn-for="PushSubscription" data-link-for="PushSubscription">
       <h2>
         <dfn>PushSubscription</dfn> interface
       </h2>
@@ -929,50 +789,48 @@ navigator.serviceWorker.register('serviceworker.js').then(
       <p>
         When getting the <dfn>expirationTime</dfn> attribute, the <a>user agent</a> MUST return the
         <a>subscription expiration time</a> associated with the <a>push subscription</a> if there
-        is one, or <code>null</code> otherwise.
+        is one, or `null` otherwise.
       </p>
       <p>
         When getting the <dfn>options</dfn> attribute, the <a>user agent</a> MUST return a
-        <code><a>PushSubscriptionOptions</a></code> object representing the options associated with
-        the <a>push subscription</a>.
+        `<a>PushSubscriptionOptions</a>` object representing the options associated with the
+        <a>push subscription</a>.
       </p>
       <p>
-        The <dfn>getKey</dfn> method retrieves keying material that can be used for encrypting and
-        authenticating messages. When <a data-link-for="PushSubscription">getKey</a> is invoked the
-        following process is followed:
+        The <dfn>getKey()</dfn> method retrieves keying material that can be used for encrypting
+        and authenticating messages. When <a>getKey()</a> is invoked the following process is
+        followed:
       </p>
-      <ol>
-        <li>Find the internal slot corresponding to the key named by the <code>name</code>
-        argument.
+      <ol data-link-for="PushEncryptionKeyName">
+        <li>Find the internal slot corresponding to the key named by the `name` argument.
         </li>
-        <li>If a slot was not found, return <code>null</code>.
+        <li>If a slot was not found, return `null`.
         </li>
-        <li>Initialize a variable <var>key</var> with a newly instantiated <code>ArrayBuffer</code>
+        <li>Initialize a variable <var>key</var> with a newly instantiated {{ArrayBuffer}}
         instance.
         </li>
         <li>If the internal slot contains an asymmetric key pair, set the contents of
         <var>key</var> to the serialized value of the public key from the key pair. This uses the
         serialization format described in the specification that defines the name. For example,
-        [[!WEBPUSH-ENCRYPTION]] specifies that the <a data-link-for=
-        "PushEncryptionKeyName">p256dh</a> public key is encoded using the uncompressed format
-        defined in [[X9.62]] Annex A (that is, a 65 octet sequence that starts with a 0x04 octet).
+        [[RFC8291]] specifies that the <a>p256dh</a> public key is encoded using the uncompressed
+        format defined in [[ANSI-X9-62]] Annex A (that is, a 65 octet sequence that starts with a
+        0x04 octet).
         </li>
         <li>Otherwise, if the internal slot contains a symmetric key, set the contents of
-        <var>key</var> to a copy of the value from the internal slot. For example, the
-        <code>auth</code> parameter contains an octet sequence used by the <a>user agent</a> to
-        authenticate messages sent by an <a>application server</a>.
+        <var>key</var> to a copy of the value from the internal slot. For example, the `auth`
+        parameter contains an octet sequence used by the <a>user agent</a> to authenticate messages
+        sent by an <a>application server</a>.
         </li>
         <li>Return <var>key</var>.
         </li>
       </ol>
-      <p>
-        Keys named <a data-link-for="PushEncryptionKeyName">p256dh</a> and <a data-link-for=
-        "PushEncryptionKeyName">auth</a> MUST be supported, and their values MUST correspond to
-        those necessary for the user agent to decrypt received push messages in accordance with
-        [[!WEBPUSH-ENCRYPTION]].
+      <p data-link-for="PushEncryptionKeyName">
+        Keys named <a>p256dh</a> and <a>auth</a> MUST be supported, and their values MUST
+        correspond to those necessary for the user agent to decrypt received push messages in
+        accordance with [[RFC8291]].
       </p>
       <p>
-        The <dfn data-lt="unsubscribed">unsubscribe</dfn> method when invoked MUST run the
+        The <dfn data-lt="unsubscribed">unsubscribe()</dfn> method when invoked MUST run the
         following steps:
       </p>
       <ol>
@@ -981,7 +839,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <li>Return <var>promise</var> and continue the following steps asynchronously.
         </li>
         <li>If the <a>push subscription</a> has already been <a>deactivated</a>, resolve
-        <var>promise</var> with <code>false</code> and terminate these steps.
+        <var>promise</var> with `false` and terminate these steps.
         </li>
         <li>Run the following step in parallel:
           <ol>
@@ -997,26 +855,24 @@ navigator.serviceWorker.register('serviceworker.js').then(
             </li>
           </ol>
         </li>
-        <li>Resolve <var>promise</var> with <code>true</code>.
+        <li>Resolve <var>promise</var> with `true`.
         </li>
       </ol>
       <p>
-        The <dfn>toJSON</dfn> method when invoked MUST run the following steps:
+        The <dfn>toJSON()</dfn> method when invoked MUST run the following steps:
       </p>
       <ol>
-        <li>Let <var>json</var> be a new <code>PushSubscriptionJSON</code> dictionary.
+        <li>Let <var>json</var> be a new `PushSubscriptionJSON` dictionary.
         </li>
         <li>Set <var>json</var>["endpoint"] to the result of <a data-lt="get the underlying value">
           getting the underlying value</a> of the <a data-link-for="PushSubscription">endpoint</a>
-          attribute given this <code>PushSubscription</code> object.
+          attribute given this <a>PushSubscription</a> object.
         </li>
         <li>Set <var>json</var>["expirationTime"] to the result of <a data-lt=
         "get the underlying value">getting the underlying value</a> of the <a data-link-for=
-        "PushSubscription">expirationTime</a> attribute given this <code>PushSubscription</code>
-        object.
+        "PushSubscription">expirationTime</a> attribute given this <a>PushSubscription</a> object.
         </li>
-        <li>Let <var>keys</var> be a new empty instance of <code>record&lt;DOMString,
-        USVString&gt;</code> .
+        <li>Let <var>keys</var> be a new empty instance of `record&lt;DOMString, USVString&gt;` .
         </li>
         <li>For each identifier <var>i</var> corresponding to keys in internal slots on the
         <a>PushSubscription</a>, ordered by the name of the key:
@@ -1029,9 +885,9 @@ navigator.serviceWorker.register('serviceworker.js').then(
             <li>Otherwise, let <var>b</var> be the value as returned by <a data-lt=
             "PushSubscription.getKey">getKey</a>.
             </li>
-            <li>Let <var>s</var> be the URL-safe base64 encoding without padding [[!RFC4648]] of
-            <var>b</var> as a <a>USVString</a>. The <a>user agent</a> MUST use a serialization
-            method that does not branch based on the value of <var>b</var>.
+            <li>Let <var>s</var> be the URL-safe base64 encoding without padding [[RFC4648]] of
+            <var>b</var> as a <a data-xref-type="_IDL_">USVString</a>. The <a>user agent</a> MUST
+            use a serialization method that does not branch based on the value of <var>b</var>.
             </li>
             <li>Set <var>keys</var>[<var>i</var>] to <var>s</var>.
             </li>
@@ -1060,7 +916,7 @@ navigator.serviceWorker.register('serviceworker.js').then(
       <p>
         The <dfn data-dfn-for="PushSubscriptionJSON">keys</dfn> record contains an entry for each
         of the supported <a>PushEncryptionKeyName</a> entries to the URL-safe base64 encoded
-        representation [[!RFC4648]] of its value.
+        representation [[RFC4648]] of its value.
       </p>
       <p>
         Note that the options to a <a>PushSubscription</a> are not serialized.
@@ -1083,11 +939,11 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </pre>
         <p>
           The <dfn>p256dh</dfn> value is used to retrieve the P-256 ECDH Diffie-Hellman public key
-          described in [[!WEBPUSH-ENCRYPTION]].
+          described in [[RFC8291]].
         </p>
         <p>
           The <dfn>auth</dfn> value is used to retrieve the authentication secret described in
-          [[!WEBPUSH-ENCRYPTION]].
+          [[RFC8291]].
         </p>
       </section>
     </section>
@@ -1106,23 +962,23 @@ navigator.serviceWorker.register('serviceworker.js').then(
       </pre>
       <p>
         <a>PushMessageData</a> objects have an associated <dfn>bytes</dfn> (a byte sequence) set on
-        creation, which is <code>null</code> if there was no data in the <a>push message</a>.
+        creation, which is `null` if there was no data in the <a>push message</a>.
       </p>
       <p>
-        The <dfn>arrayBuffer</dfn> method, when invoked, MUST return an <a>ArrayBuffer</a> whose
-        contents are <var>bytes</var>. Exceptions thrown during the creation of the
-        <a>ArrayBuffer</a> object are re-thrown.
+        The <dfn>arrayBuffer()</dfn> method, when invoked, MUST return an {{ArrayBuffer}} whose
+        contents are <var>bytes</var>. Exceptions thrown during the creation of the {{ArrayBuffer}}
+        object are re-thrown.
       </p>
-      <p>
-        The <dfn>blob</dfn> method, when invoked, MUST return a <a>Blob</a> whose contents are
+      <p data-cite="FILEAPI">
+        The <dfn>blob()</dfn> method, when invoked, MUST return a {{Blob}} whose contents are
         <var>bytes</var> and <var>type</var> is not provided.
       </p>
-      <p>
-        The <dfn>json</dfn> method, when invoked, MUST return the result of invoking the initial
+      <p data-cite="encoding">
+        The <dfn>json()</dfn> method, when invoked, MUST return the result of invoking the initial
         value of <a>JSON.parse</a> with the result of running <a>utf-8 decode</a> on
         <var>bytes</var> as argument. Re-throw any exceptions thrown by <a>JSON.parse</a>.
       </p>
-      <p>
+      <p data-cite="encoding">
         The <dfn>text</dfn> method, when invoked, MUST return the result of running <a>utf-8
         decode</a> on <var>bytes</var>.
       </p>
@@ -1133,17 +989,17 @@ navigator.serviceWorker.register('serviceworker.js').then(
         <li>Let <var>bytes</var> be an empty byte sequence.
         </li>
         <li>Switch on <var>object</var>'s type:
-          <dl>
+          <dl data-cite="WebIDL">
             <dt>
-              <a>BufferSource</a>
+              {{BufferSource}}
             </dt>
             <dd>
               Set <var>bytes</var> to a copy of <var>object</var>'s contents.
             </dd>
             <dt>
-              <a>USVString</a>
+              {{USVString}}
             </dt>
-            <dd>
+            <dd data-cite="encoding">
               Set <var>bytes</var> to the result of running <a>utf-8 encode</a> on
               <var>object</var>.
             </dd>
@@ -1159,11 +1015,12 @@ navigator.serviceWorker.register('serviceworker.js').then(
       </h2>
       <section data-dfn-for="ServiceWorkerGlobalScope">
         <h2>
-          Extensions to the <a>ServiceWorkerGlobalScope</a> interface
+          Extensions to the `ServiceWorkerGlobalScope` interface
         </h2>
         <p>
-          The Service Worker specification defines a <code>ServiceWorkerGlobalScope</code>
-          interface [[!SERVICE-WORKERS]], which this specification extends.
+          The Service Worker specification defines a <dfn data-cite=
+          "service-workers#serviceworkerglobalscope">ServiceWorkerGlobalScope</dfn> interface
+          [[SERVICE-WORKERS]], which this specification extends.
         </p>
         <pre class="idl">
           [Exposed=ServiceWorker, SecureContext]
@@ -1173,153 +1030,154 @@ navigator.serviceWorker.register('serviceworker.js').then(
           };
         </pre>
         <p>
-          The <dfn>onpush</dfn> attribute is an <a>event handler</a> whose corresponding <a>event
-          handler event type</a> is <code>push</code>.
+          The <dfn>onpush</dfn> attribute is an <a>event handler IDL attribute</a> whose
+          corresponding <a>event handler event type</a> is "`push`". The "`push`" event indicates
+          that a <a>push message</a> has been received for a <a>push subscription</a>.
         </p>
         <p>
-          The <dfn>onpushsubscriptionchange</dfn> attribute is an <a>event handler</a> whose
-          corresponding <a>event handler event type</a> is <code>pushsubscriptionchange</code>.
+          The <dfn>onpushsubscriptionchange</dfn> attribute is an <a>event handler IDL
+          attribute</a> whose corresponding <a>event handler event type</a> is
+          "`pushsubscriptionchange`".
         </p>
       </section>
-      <section>
+      <section data-dfn-for="PushEvent">
         <h2>
-          The <dfn>push</dfn> Event
+          <dfn>PushEvent</dfn> Interface
         </h2>
-        <p>
-          The <a>push</a> event indicates that a <a>push message</a> has been received for a
-          <a>push subscription</a>.
-        </p>
-        <section data-dfn-for="PushEvent">
-          <h2>
-            <dfn>PushEvent</dfn> Interface
-          </h2>
-          <pre class="idl">
-            typedef (BufferSource or USVString) PushMessageDataInit;
-
-            dictionary PushEventInit : ExtendableEventInit {
-              PushMessageDataInit data;
-            };
-
+        <pre class="idl">
             [Constructor(DOMString type, optional PushEventInit eventInitDict), Exposed=ServiceWorker, SecureContext]
             interface PushEvent : ExtendableEvent {
               readonly attribute PushMessageData? data;
             };
           </pre>
-          <p>
-            When a constructor of the <a>PushEvent</a> interface, or of an interface that inherits
-            from the <a>PushEvent</a> interface, is invoked, the usual <a>steps for constructing
-            events</a> are extended to include the following steps:
-          </p>
-          <ol>
-            <li>If <var>eventInitDict</var>'s <code>data</code> member is not present, set the
-            <code>data</code> attribute of the event to <code>null</code> and terminate these
-            steps.
-            </li>
-            <li>Set <var>b</var> to the result of <a data-lt="extract a byte sequence">extracting a
-            byte sequence</a> from the "<code>data</code>" member of <var>eventInitDict</var>.
-            </li>
-            <li>Set the <code>data</code> attribute of the event to a new <a>PushMessageData</a>
-            instance with <code>bytes</code> set to <var>b</var>.
-            </li>
-          </ol>
-          <p>
-            The <dfn>data</dfn> attribute contains the data included in the <a>push message</a>
-            when included and the <a>user agent</a> verified its authenticity. The value will be
-            set to <code>null</code> in all other cases.
-          </p>
-        </section>
-        <section>
-          <h2>
-            Receiving a <a>Push Message</a>
-          </h2>
-          <p>
-            When the <a>user agent</a> receives a <a>push message</a> from the <a>push service</a>,
-            it MUST run the following steps.
-          </p>
-          <ol>
-            <li>Let <var>registration</var> be the <a>service worker registration</a> corresponding
-            to the <a>push message</a>.
-            </li>
-            <li>If <var>registration</var> is not found, abort these steps.
-            </li>
-            <li>Let <var>subscription</var> be the active <a>push subscription</a> for
-            <var>registration</var>.
-            </li>
-            <li>Initialize <var>data</var> to a value of <code>null</code>.
-            </li>
-            <li>If the <a>push message</a> contains a payload, perform the following steps:
-              <ol>
-                <li>Decrypt the <a>push message</a> using the private key from the key pair
-                associated with <var>subscription</var> and the process described in
-                [[!WEBPUSH-ENCRYPTION]]. This produces the plain text of the message.
-                </li>
-                <li>If the <a>push message</a> could not be decrypted for any reason, perform the
-                following steps:
-                  <ol>
-                    <li>Acknowledge the receipt of the <a>push message</a> according to
-                    [[!RFC8030]]. Though the message was not successfully received and processed,
-                    this prevents the push service from attempting to retransmit the message; a
-                    badly encrypted message is not recoverable.
-                    </li>
-                    <li>Discard the <a>push message</a>.
-                    </li>
-                    <li>Terminate this process.
-                    </li>
-                  </ol>A <code>push</code> event MUST NOT be fired for a <a>push message</a> that
-                  was not successfully decrypted using the key pair associated with the <a>push
-                  subscription</a>.
-                </li>
-                <li>Let <var>data</var> be a new <a>PushMessageData</a> instance with the decrypted
-                plain text of the <a>push message</a>.
-                </li>
-              </ol>
-            </li>
-            <li>
-              <p>
-                <a>Fire Functional Event</a> "<code>push</code>" using <a>PushEvent</a> on
-                <var>registration</var> with the following properties:
-              </p>
-              <dl>
-                <dt>
-                  <code>data</code>
-                </dt>
-                <dd>
-                  <var>data</var>
-                </dd>
-              </dl>
-              <p>
-                Then run the following steps in parallel, with <var>dispatchedEvent</var>:
-              </p>
-              <ol>
-                <li>Wait for all of the promises in the <a>extend lifetime promises</a> of
-                <var>dispatchedEvent</var> to resolve.
-                </li>
-                <li>If all the promises resolve successfully, acknowledge the receipt of the
-                <a>push message</a> according to [[!RFC8030]] and abort these steps.
-                </li>
-                <li>
-                  <p>
-                    If the same <a>push message</a> has been delivered to a <a>service worker
-                    registration</a> multiple times unsuccessfully, acknowledge the receipt of the
-                    <a>push message</a> according to [[!RFC8030]].
-                  </p>
-                  <p>
-                    Acknowledging the <a>push message</a> causes the <a>push service</a> to stop
-                    delivering the message and to report success to the <a>application server</a>.
-                    This prevents the same <a>push message</a> from being retried by the <a>push
-                    service</a> indefinitely.
-                  </p>
-                  <p>
-                    Acknowledging also means that an <a>application server</a> could incorrectly
-                    receive a delivery receipt indicating successful delivery of the <a>push
-                    message</a>. Therefore, multiple rejections SHOULD be permitted before
-                    acknowledging; allowing at least three attempts is recommended.
-                  </p>
-                </li>
-              </ol>
-            </li>
-          </ol>
-        </section>
+        <p>
+          When a constructor of the <a>PushEvent</a> interface, or of an interface that inherits
+          from the <a>PushEvent</a> interface, is invoked, the usual <a>event constructing
+          steps</a> are extended to include the following steps:
+        </p>
+        <ol>
+          <li>If <var>eventInitDict</var>'s `data` member is not present, set the `data` attribute
+          of the event to `null` and terminate these steps.
+          </li>
+          <li>Set <var>b</var> to the result of <a data-lt="extract a byte sequence">extracting a
+          byte sequence</a> from the "`data`" member of <var>eventInitDict</var>.
+          </li>
+          <li>Set the `data` attribute of the event to a new <a>PushMessageData</a> instance with
+          `bytes` set to <var>b</var>.
+          </li>
+        </ol>
+        <p>
+          The <dfn>data</dfn>, when getting, returns the value it was initialized with.
+        </p>
+      </section>
+      <section data-dfn-for="PushEventInit" data-link-for="PushEventInit">
+        <h2>
+          <dfn>PushEventInit</dfn>
+        </h2>
+        <pre class="idl">
+            typedef (BufferSource or USVString) PushMessageDataInit;
+
+            dictionary PushEventInit : ExtendableEventInit {
+              PushMessageDataInit data;
+            };
+          </pre>
+        <p>
+          The <dfn>data</dfn> member contains the data included in the <a>push message</a> when
+          included and the <a>user agent</a> verified its authenticity. The value will be set to
+          `null` in all other cases.
+        </p>
+      </section>
+      <section>
+        <h2>
+          Receiving a <a>Push Message</a>
+        </h2>
+        <p>
+          When the <a>user agent</a> receives a <a>push message</a> from the <a>push service</a>,
+          it MUST run the following steps.
+        </p>
+        <ol>
+          <li>Let <var>registration</var> be the <a>service worker registration</a> corresponding
+          to the <a>push message</a>.
+          </li>
+          <li>If <var>registration</var> is not found, abort these steps.
+          </li>
+          <li>Let <var>subscription</var> be the active <a>push subscription</a> for
+          <var>registration</var>.
+          </li>
+          <li>Initialize <var>data</var> to a value of `null`.
+          </li>
+          <li>If the <a>push message</a> contains a payload, perform the following steps:
+            <ol>
+              <li>Decrypt the <a>push message</a> using the private key from the key pair
+              associated with <var>subscription</var> and the process described in [[RFC8291]].
+              This produces the plain text of the message.
+              </li>
+              <li>If the <a>push message</a> could not be decrypted for any reason, perform the
+              following steps:
+                <ol>
+                  <li>Acknowledge the receipt of the <a>push message</a> according to [[RFC8030]].
+                  Though the message was not successfully received and processed, this prevents the
+                  push service from attempting to retransmit the message; a badly encrypted message
+                  is not recoverable.
+                  </li>
+                  <li>Discard the <a>push message</a>.
+                  </li>
+                  <li>Terminate this process.
+                  </li>
+                </ol>A `push` event MUST NOT be fired for a <a>push message</a> that was not
+                successfully decrypted using the key pair associated with the <a>push
+                subscription</a>.
+              </li>
+              <li>Let <var>data</var> be a new <a>PushMessageData</a> instance with the decrypted
+              plain text of the <a>push message</a>.
+              </li>
+            </ol>
+          </li>
+          <li>
+            <p>
+              <a>Fire Functional Event</a> "`push`" using <a>PushEvent</a> on
+              <var>registration</var> with the following properties:
+            </p>
+            <dl>
+              <dt>
+                `data`
+              </dt>
+              <dd>
+                <var>data</var>
+              </dd>
+            </dl>
+            <p>
+              Then run the following steps in parallel, with <var>dispatchedEvent</var>:
+            </p>
+            <ol>
+              <li>Wait for all of the promises in the <a>extend lifetime promises</a> of
+              <var>dispatchedEvent</var> to resolve.
+              </li>
+              <li>If all the promises resolve successfully, acknowledge the receipt of the <a>push
+              message</a> according to [[RFC8030]] and abort these steps.
+              </li>
+              <li>
+                <p>
+                  If the same <a>push message</a> has been delivered to a <a>service worker
+                  registration</a> multiple times unsuccessfully, acknowledge the receipt of the
+                  <a>push message</a> according to [[RFC8030]].
+                </p>
+                <p>
+                  Acknowledging the <a>push message</a> causes the <a>push service</a> to stop
+                  delivering the message and to report success to the <a>application server</a>.
+                  This prevents the same <a>push message</a> from being retried by the <a>push
+                  service</a> indefinitely.
+                </p>
+                <p>
+                  Acknowledging also means that an <a>application server</a> could incorrectly
+                  receive a delivery receipt indicating successful delivery of the <a>push
+                  message</a>. Therefore, multiple rejections SHOULD be permitted before
+                  acknowledging; allowing at least three attempts is recommended.
+                </p>
+              </li>
+            </ol>
+          </li>
+        </ol>
       </section>
       <section>
         <h2>
@@ -1331,21 +1189,21 @@ navigator.serviceWorker.register('serviceworker.js').then(
           refreshed, revoked or lost.
         </p>
         <p>
-          To <dfn>fire the pushsubscriptionchange event</dfn> given a <a>service worker
+          To <dfn>fire the "`pushsubscriptionchange`" event</dfn> given a <a>service worker
           registration</a> of <var>registration</var>, <var>newSubscription</var> and
           <var>oldSubscription</var>, the <a>user agent</a> must <a>Fire Functional Event</a>
-          "<code>pushsubscriptionchange</code>" using <a>PushSubscriptionChangeEvent</a> on
+          "`pushsubscriptionchange`" using <a>PushSubscriptionChangeEvent</a> on
           <var>registration</var> with the following properties:
         </p>
         <dl>
           <dt>
-            <code>newSubscription</code>
+            `newSubscription`
           </dt>
           <dd>
             <var>newSubscription</var>
           </dd>
           <dt>
-            <code>oldSubscription</code>
+            `oldSubscription`
           </dt>
           <dd>
             <var>oldSubscription</var>
@@ -1362,11 +1220,6 @@ navigator.serviceWorker.register('serviceworker.js').then(
             <dfn>PushSubscriptionChangeEvent</dfn> Interface
           </h2>
           <pre class="idl">
-            dictionary PushSubscriptionChangeInit : ExtendableEventInit {
-              PushSubscription newSubscription = null;
-              PushSubscription oldSubscription = null;
-            };
-
             [Constructor(DOMString type, optional PushSubscriptionChangeInit eventInitDict), Exposed=ServiceWorker, SecureContext]
             interface PushSubscriptionChangeEvent : ExtendableEvent {
               readonly attribute PushSubscription? newSubscription;
@@ -1374,17 +1227,34 @@ navigator.serviceWorker.register('serviceworker.js').then(
             };
           </pre>
           <p>
-            The <dfn>newSubscription</dfn> attribute contains the details of the <a>push
-            subscription</a> that is valid per invocation of the <a>pushsubscriptionchange</a>
-            event. The value will be <code>null</code> when no new <a>push subscription</a> could
-            be established, for example because the <a>webapp</a> has lost <a>express
-            permission</a>.
+            The <dfn>newSubscription</dfn> attribute, when getting, returns the value it was
+            initialized to.
           </p>
           <p>
-            The <dfn>oldSubscription</dfn> attribute contains the details of the <a>push
-            subscription</a> that SHOULD NOT be used anymore. The value will be <code>null</code>
-            when the <a>user agent</a> is not able to provide the full set of details, for example
-            because of partial database corruption.
+            The <dfn>oldSubscription</dfn> attribute, when getting, returns the value it was
+            initialized to.
+          </p>
+        </section>
+        <section data-dfn-for="PushSubscriptionChangeInit">
+          <h2>
+            <dfn>PushSubscriptionChangeInit</dfn> Interface
+          </h2>
+          <pre class="idl">
+              dictionary PushSubscriptionChangeInit : ExtendableEventInit {
+                PushSubscription newSubscription = null;
+                PushSubscription oldSubscription = null;
+              };
+            </pre>
+          <p>
+            The <dfn>newSubscription</dfn> member details the <a>push subscription</a> that is
+            valid per invocation of the <a>pushsubscriptionchange</a> event. The value will be
+            `null` when no new <a>push subscription</a> could be established, for example because
+            the <a>webapp</a> has lost <a>express permission</a>.
+          </p>
+          <p>
+            The <dfn>oldSubscription</dfn> member details the <a>push subscription</a> that SHOULD
+            NOT be used anymore. The value will be `null` when the <a>user agent</a> is not able to
+            provide the full set of details, for example because of partial database corruption.
           </p>
         </section>
       </section>
@@ -1435,6 +1305,13 @@ navigator.serviceWorker.register('serviceworker.js').then(
         </tr>
       </table>
     </section>
+    <section id="conformance">
+      <p>
+        This specification defines conformance criteria that apply to a single product: the
+        <dfn data-lt="agents">user agent</dfn> that implements the interfaces that it contains.
+      </p>
+    </section>
+    <section class="appendix" id="idl-index"></section>
     <section class="appendix">
       <h2>
         Acknowledgements
