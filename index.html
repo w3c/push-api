@@ -56,7 +56,7 @@
       };
     </script>
   </head>
-  <body data-cite="service-workers">
+  <body data-cite="service-workers FILEAPI">
     <section id="abstract">
       <p>
         The <cite>Push API</cite> enables sending of a <a>push message</a> to a <a>webapp</a> via a
@@ -510,7 +510,7 @@
         "service-workers#serviceworkerregistration">ServiceWorkerRegistration</dfn></code>
         interface [[SERVICE-WORKERS]], which this specification extends.
       </p>
-      <pre class="idl">
+      <pre class="idl" data-cite="service-workers">
         [SecureContext]
         partial interface ServiceWorkerRegistration {
           readonly attribute PushManager pushManager;
@@ -564,7 +564,7 @@
         {{DOMException}} whose name is "{{SecurityError}}" and terminate these steps.
         </li>
         <li>If the <var>options</var> argument includes a non-null value for the
-          `<a data-link-for="PushSubscriptionOptions">applicationServerKey</a>` attribute, run the
+          <a data-link-for="PushSubscriptionOptions">applicationServerKey</a> attribute, run the
           following substeps:
           <ol>
             <li>If the <var>applicationServerKey</var> is provided as a {{DOMString}}, set its
@@ -581,9 +581,9 @@
           </ol>
         </li>
         <li>If the <var>options</var> argument does not include a non-null value for the
-        `<a data-link-for="PushSubscriptionOptions">applicationServerKey</a>` attribute, and the
-        <a>push service</a> requires one to be given, reject <var>promise</var> with a
-        {{DOMException}} whose name is "{{NotSupportedError}}" and terminate these steps.
+        <a data-link-for="PushSubscriptionOptions">applicationServerKey</a> attribute, and the <a>
+          push service</a> requires one to be given, reject <var>promise</var> with a
+          {{DOMException}} whose name is "{{NotSupportedError}}" and terminate these steps.
         </li>
         <li>Let <var>registration</var> be the <a>PushManager</a>'s associated <a>service worker
         registration</a>.
@@ -709,7 +709,7 @@
           present and the <a>push service</a> requires one for operational reasons.
         </p>
         <p>
-          The `<a data-link-for="PushSubscriptionOptions">applicationServerKey</a>` MUST be a
+          The <a data-link-for="PushSubscriptionOptions">applicationServerKey</a> MUST be a
           different value to the one used for message encryption [[RFC8291]].
         </p>
       </section>
@@ -794,8 +794,8 @@
       </p>
       <p>
         When getting the <dfn>options</dfn> attribute, the <a>user agent</a> MUST return a
-        `<a>PushSubscriptionOptions</a>` object representing the options associated with the
-        <a>push subscription</a>.
+        <a>PushSubscriptionOptions</a> object representing the options associated with the <a>push
+        subscription</a>.
       </p>
       <p>
         The <dfn>getKey()</dfn> method retrieves keying material that can be used for encrypting
@@ -952,7 +952,7 @@
       <h2>
         <dfn>PushMessageData</dfn> interface
       </h2>
-      <pre class="idl">
+      <pre class="idl" data-cite="FILEAPI">
         [Exposed=ServiceWorker, SecureContext]
         interface PushMessageData {
           ArrayBuffer arrayBuffer();
@@ -970,7 +970,7 @@
         contents are <var>bytes</var>. Exceptions thrown during the creation of the {{ArrayBuffer}}
         object are re-thrown.
       </p>
-      <p data-cite="FILEAPI">
+      <p>
         The <dfn>blob()</dfn> method, when invoked, MUST return a {{Blob}} whose contents are
         <var>bytes</var> and <var>type</var> is not provided.
       </p>
@@ -1023,7 +1023,7 @@
           "service-workers#serviceworkerglobalscope">ServiceWorkerGlobalScope</dfn> interface
           [[SERVICE-WORKERS]], which this specification extends.
         </p>
-        <pre class="idl">
+        <pre class="idl" data-cite="HTML">
           [Exposed=ServiceWorker, SecureContext]
           partial interface ServiceWorkerGlobalScope {
             attribute EventHandler onpush;
@@ -1040,12 +1040,12 @@
           attribute</a> whose corresponding <a>event handler event type</a> is
           "`pushsubscriptionchange`".
         </p>
-      </section>
+      </section>f
       <section data-dfn-for="PushEvent">
         <h2>
           <dfn>PushEvent</dfn> Interface
         </h2>
-        <pre class="idl">
+        <pre class="idl" data-cite="service-workers">
             [Constructor(DOMString type, optional PushEventInit eventInitDict), Exposed=ServiceWorker, SecureContext]
             interface PushEvent : ExtendableEvent {
               readonly attribute PushMessageData? data;
@@ -1075,7 +1075,7 @@
         <h2>
           <dfn>PushEventInit</dfn>
         </h2>
-        <pre class="idl">
+        <pre class="idl" data-cite="service-workers">
             typedef (BufferSource or USVString) PushMessageDataInit;
 
             dictionary PushEventInit : ExtendableEventInit {
@@ -1220,7 +1220,7 @@
           <h2>
             <dfn>PushSubscriptionChangeEvent</dfn> Interface
           </h2>
-          <pre class="idl">
+          <pre class="idl" data-cite="service-workers">
             [Constructor(DOMString type, optional PushSubscriptionChangeInit eventInitDict), Exposed=ServiceWorker, SecureContext]
             interface PushSubscriptionChangeEvent : ExtendableEvent {
               readonly attribute PushSubscription? newSubscription;
@@ -1240,7 +1240,7 @@
           <h2>
             <dfn>PushSubscriptionChangeInit</dfn> Interface
           </h2>
-          <pre class="idl">
+          <pre class="idl" data-cite="service-workers">
               dictionary PushSubscriptionChangeInit : ExtendableEventInit {
                 PushSubscription newSubscription = null;
                 PushSubscription oldSubscription = null;
