@@ -15,7 +15,7 @@ install:
   - npm install respec-validator
 
 script:
-  - npx respec-validator --check-links-using-get --gh-user=$GH_USER --gh-token=$GH_TOKEN index.html
+  - npx respec-validator --manifest=ECHIDNA --check-links-using-get --gh-user=$GH_USER --gh-token=$GH_TOKEN index.html
 
 cache:
   directories:
