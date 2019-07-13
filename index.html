@@ -534,9 +534,9 @@
         interface PushManager {
           [SameObject] static readonly attribute FrozenArray&lt;DOMString&gt; supportedContentEncodings;
 
-          Promise&lt;PushSubscription&gt; subscribe(optional PushSubscriptionOptionsInit options);
+          Promise&lt;PushSubscription&gt; subscribe(optional PushSubscriptionOptionsInit options = {});
           Promise&lt;PushSubscription?&gt; getSubscription();
-          Promise&lt;PushPermissionState&gt; permissionState(optional PushSubscriptionOptionsInit options);
+          Promise&lt;PushPermissionState&gt; permissionState(optional PushSubscriptionOptionsInit options = {});
         };
       </pre>
       <p>
@@ -1046,7 +1046,7 @@
           <dfn>PushEvent</dfn> Interface
         </h2>
         <pre class="idl" data-cite="service-workers">
-            [Constructor(DOMString type, optional PushEventInit eventInitDict), Exposed=ServiceWorker, SecureContext]
+            [Constructor(DOMString type, optional PushEventInit eventInitDict = {}), Exposed=ServiceWorker, SecureContext]
             interface PushEvent : ExtendableEvent {
               readonly attribute PushMessageData? data;
             };
@@ -1221,7 +1221,7 @@
             <dfn>PushSubscriptionChangeEvent</dfn> Interface
           </h2>
           <pre class="idl" data-cite="service-workers">
-            [Constructor(DOMString type, optional PushSubscriptionChangeInit eventInitDict), Exposed=ServiceWorker, SecureContext]
+            [Constructor(DOMString type, optional PushSubscriptionChangeInit eventInitDict = {}), Exposed=ServiceWorker, SecureContext]
             interface PushSubscriptionChangeEvent : ExtendableEvent {
               readonly attribute PushSubscription? newSubscription;
               readonly attribute PushSubscription? oldSubscription;
