@@ -8,7 +8,7 @@ branches:
 
 env:
   global:
-    - URL="http://w3c.github.io/push-api/echidna-manifest.txt"
+    - URL="https://w3c.github.io/push-api/echidna-manifest.txt"
     - DECISION="https://github.com/w3c/push-api/issues/241"
     - secure: "I4v5gVO1ONjLjyFZQe7b0NCbmXIMOgd/+0jqLeFrkp4cKLXhfkphbqIBDvb6tmxa90dfCYKswM4L0EiMlBu8EYtKwvmSQXoeOLpBoyZDy2BsgQcrb7L/FKMr/AHDId/D6GZVxOhkoT5d129nN4Cf66cRWEFZtR3RJE2Xq13HrT4="
 install:
