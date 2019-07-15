@@ -568,7 +568,7 @@
           following substeps:
           <ol>
             <li>If the <var>applicationServerKey</var> is provided as a {{DOMString}}, set its
-            value to a {{BufferSource}} containing the sequence of octets that result from decoding
+            value to an {{ArrayBuffer}} containing the sequence of octets that result from decoding
             <var>applicationServerKey</var> using the base64url encoding [[RFC7515]]. If decoding
             fails, reject promise with a {{DOMException}} whose name is "{{InvalidCharacterError}}"
             and terminate these steps.
