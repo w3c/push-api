@@ -346,7 +346,7 @@
         <a>application server</a>'s communication with the user.
       </p>
       <p>
-        <a>User agents</a> MUST NOT provide Push API access to <a>webapps</a> without the
+        <a>User agents</a> MUST NOT provide Push API access to web applications without the
         <a>express permission</a> of the user. <a>User agents</a> MUST acquire consent for
         permission through a user interface for each call to the `subscribe()` method, unless a
         previous permission grant has been persisted, or a prearranged trust relationship applies.
@@ -656,8 +656,8 @@
         </li>
         <li>Return <var>promise</var> and continue the following steps asynchronously.
         </li>
-        <li>Retrieve the push permission status (<a>PushPermissionState</a>) of the requesting <a>
-          webapp</a>.
+        <li>Retrieve the push permission status (<a>PushPermissionState</a>) of the requesting web
+        application.
         </li>
         <li>If there is an error, reject <var>promise</var> with no arguments and terminate these
         steps.
