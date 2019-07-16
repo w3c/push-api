@@ -1220,7 +1220,7 @@
             <dfn>PushSubscriptionChangeEvent</dfn> Interface
           </h2>
           <pre class="idl" data-cite="service-workers">
-            [Constructor(DOMString type, optional PushSubscriptionChangeInit eventInitDict = {}), Exposed=ServiceWorker, SecureContext]
+            [Constructor(DOMString type, optional PushSubscriptionChangeEventInit eventInitDict = {}), Exposed=ServiceWorker, SecureContext]
             interface PushSubscriptionChangeEvent : ExtendableEvent {
               readonly attribute PushSubscription? newSubscription;
               readonly attribute PushSubscription? oldSubscription;
@@ -1235,12 +1235,12 @@
             initialized to.
           </p>
         </section>
-        <section data-dfn-for="PushSubscriptionChangeInit">
+        <section data-dfn-for="PushSubscriptionChangeEventInit">
           <h2>
-            <dfn>PushSubscriptionChangeInit</dfn> Interface
+            <dfn>PushSubscriptionChangeEventInit</dfn> Interface
           </h2>
           <pre class="idl" data-cite="service-workers">
-              dictionary PushSubscriptionChangeInit : ExtendableEventInit {
+              dictionary PushSubscriptionChangeEventInit : ExtendableEventInit {
                 PushSubscription newSubscription = null;
                 PushSubscription oldSubscription = null;
               };
