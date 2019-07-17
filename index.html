@@ -59,11 +59,11 @@
   <body data-cite="service-workers FILEAPI promises-guide">
     <section id="abstract">
       <p>
-        The <cite>Push API</cite> enables sending of a <a>push message</a> to a <a>webapp</a> via a
-        <a>push service</a>. An <a>application server</a> can send a <a>push message</a> at any
-        time, even when a <a>webapp</a> or <a>user agent</a> is inactive. The <a>push service</a>
+        The <cite>Push API</cite> enables sending of a <a>push message</a> to a web application via
+        a <a>push service</a>. An <a>application server</a> can send a <a>push message</a> at any
+        time, even when a web application or <a>user agent</a> is inactive. The <a>push service</a>
         ensures reliable and efficient delivery to the <a>user agent</a>. <a>Push messages</a> are
-        delivered to a <a>Service Worker</a> that runs in the origin of the <a>webapp</a>, which
+        delivered to a <a>Service Worker</a> that runs in the origin of the web application, which
         can use the information in the message to update local state or display a notification to
         the user.
       </p>
@@ -78,25 +78,25 @@
         Introduction
       </h2>
       <p>
-        The Push API allows a <a>webapp</a> to communicate with a <a>user agent</a> asynchronously.
-        This allows an <a>application server</a> to provide the <a>user agent</a> with
-        time-sensitive information whenever that information becomes known, rather than waiting for
-        a user to open the <a>webapp</a>.
+        The Push API allows a web application to communicate with a <a>user agent</a>
+        asynchronously. This allows an <a>application server</a> to provide the <a>user agent</a>
+        with time-sensitive information whenever that information becomes known, rather than
+        waiting for a user to open the web application.
       </p>
       <p>
         As defined here, <a>push services</a> support delivery of <a>push messages</a> at any time.
       </p>
       <p>
-        In particular, a <a>push message</a> will be delivered to the <a>webapp</a> even if that
-        <a>webapp</a> is not currently active in a browser window: this relates to use cases in
-        which the user may close the <a>webapp</a>, but still benefits from the <a>webapp</a> being
-        able to be restarted when a <a>push message</a> is received. For example, a <a>push
+        In particular, a <a>push message</a> will be delivered to the web application even if that
+        web application is not currently active in a browser window: this relates to use cases in
+        which the user may close the web application, but still benefits from the web application
+        being able to be restarted when a <a>push message</a> is received. For example, a <a>push
         message</a> might be used to inform the user of an incoming WebRTC call.
       </p>
       <p>
         A <a>push message</a> can also be sent when the <a>user agent</a> is temporarily offline.
         In support of this, the <a>push service</a> stores messages for the <a>user agent</a> until
-        the <a>user agent</a> becomes available. This supports use cases where a <a>webapp</a>
+        the <a>user agent</a> becomes available. This supports use cases where a web application
         learns of changes that occur while a user is offline and ensures that the <a>user agent</a>
         can be provided with relevant information in a timely fashion. <a>Push messages</a> are
         stored by the <a>push service</a> until the <a>user agent</a> becomes reachable and the
@@ -104,16 +104,16 @@
       </p>
       <p>
         The Push API will also ensure reliable delivery of push messages while a <a>user agent</a>
-        is actively using a <a>webapp</a>, for instance if a user is actively using the
-        <a>webapp</a> or the <a>webapp</a> is in active communication with an <a>application
+        is actively using a web application, for instance if a user is actively using the web
+        application or the web application is in active communication with an <a>application
         server</a> through an active worker, frame, or background window. This is not the primary
-        use case for the Push API. A <a>webapp</a> might choose to use the Push API for infrequent
-        messages to avoid having to maintain constant communications with the <a>application
-        server</a>.
+        use case for the Push API. A web application might choose to use the Push API for
+        infrequent messages to avoid having to maintain constant communications with the
+        <a>application server</a>.
       </p>
       <p>
         Push messaging is best suited to occasions where there is not already an active
-        communications channel established between <a>user agent</a> and <a>webapp</a>. Sending
+        communications channel established between <a>user agent</a> and web application. Sending
         <a>push messages</a> requires considerably more resources when compared with more direct
         methods of communication such as [[[fetch]]] or <a data-cite=
         "html/web-sockets.html#network">websockets</a>. <a>Push messages</a> usually have higher
@@ -149,16 +149,11 @@
       </h2>
       <section>
         <h2>
-          Webapp
+          Application server
         </h2>
         <p>
-          The term <dfn>webapp</dfn> refers to a Web application, i.e. an application implemented
-          using Web technologies, and executing within the context of a Web <a>user agent</a>, e.g.
-          a Web browser or other Web runtime environment.
-        </p>
-        <p>
-          The term <dfn>application server</dfn> refers to server-side components of a
-          <a>webapp</a>.
+          The term <dfn>application server</dfn> refers to server-side components of a web
+          application.
         </p>
       </section>
       <section>
@@ -166,7 +161,7 @@
           Push message
         </h2>
         <p>
-          A <dfn>push message</dfn> is data sent to a <a>webapp</a> from an <a>application
+          A <dfn>push message</dfn> is data sent to a web application from an <a>application
           server</a>.
         </p>
         <p>
@@ -181,9 +176,9 @@
         </h2>
         <p>
           A <dfn>push subscription</dfn> is a message delivery context established between the
-          <a>user agent</a> and the <a>push service</a> on behalf of a <a>webapp</a>. Each <a>push
-          subscription</a> is associated with a <a>service worker registration</a> and a <a>service
-          worker registration</a> has at most one <a>push subscription</a>.
+          <a>user agent</a> and the <a>push service</a> on behalf of a web application. Each
+          <a>push subscription</a> is associated with a <a>service worker registration</a> and a
+          <a>service worker registration</a> has at most one <a>push subscription</a>.
         </p>
         <p>
           A <a>push subscription</a> has an associated <dfn>push endpoint</dfn>. It MUST be the
@@ -302,7 +297,7 @@
         </h2>
         <p>
           The term <dfn data-lt="push services">push service</dfn> refers to a system that allows
-          <a>application servers</a> to send <a>push messages</a> to a <a>webapp</a>. A push
+          <a>application servers</a> to send <a>push messages</a> to a web application. A push
           service serves the <a>push endpoint</a> or <a data-lt="push endpoints">endpoints</a> for
           the <a>push subscriptions</a> it serves.
         </p>
@@ -322,7 +317,7 @@
         <p>
           The term <dfn>express permission</dfn> refers to an act by the user, e.g. via user
           interface or host device platform features, via which the user approves the use of the
-          Push API by the <a>webapp</a>.
+          Push API by the web application.
         </p>
       </section>
     </section>
@@ -340,8 +335,8 @@
       </p>
       <p>
         There is no guarantee that a <a>push message</a> was sent by an <a>application server</a>
-        having the same origin as the <a>webapp</a>. The <a>application server</a> is able to share
-        the details necessary to use a <a>push subscription</a> with a third party at its own
+        having the same origin as the web application. The <a>application server</a> is able to
+        share the details necessary to use a <a>push subscription</a> with a third party at its own
         discretion.
       </p>
       <p>
@@ -350,7 +345,7 @@
         <a>application server</a>'s communication with the user.
       </p>
       <p>
-        <a>User agents</a> MUST NOT provide Push API access to <a>webapps</a> without the
+        <a>User agents</a> MUST NOT provide Push API access to web applications without the
         <a>express permission</a> of the user. <a>User agents</a> MUST acquire consent for
         permission through a user interface for each call to the `subscribe()` method, unless a
         previous permission grant has been persisted, or a prearranged trust relationship applies.
@@ -360,7 +355,7 @@
         The Push API may have to wake up the Service Worker associated with the <a>service worker
         registration</a> in order to run the developer-provided event handlers. This can cause
         resource usage, such as network traffic, that the <a>user agent</a> SHOULD attribute to the
-        <a>webapp</a> that created the <a>push subscription</a>.
+        web application that created the <a>push subscription</a>.
       </p>
       <p>
         The <a>user agent</a> MAY consider the <a>PushSubscriptionOptions</a> when acquiring
@@ -401,7 +396,7 @@
         Push Framework
       </h2>
       <p>
-        A <a>push message</a> is sent from an <a>application server</a> to a <a>webapp</a> as
+        A <a>push message</a> is sent from an <a>application server</a> to a web application as
         follows:
       </p>
       <ul>
@@ -419,8 +414,9 @@
       <p>
         This overall framework allows <a>application servers</a> to activate a <a>Service
         Worker</a> in response to events at the <a>application server</a>. Information about those
-        events can be included in the <a>push message</a>, which allows the <a>webapp</a> to react
-        appropriately to those events, potentially without needing to initiate network requests.
+        events can be included in the <a>push message</a>, which allows the web application to
+        react appropriately to those events, potentially without needing to initiate network
+        requests.
       </p>
       <p>
         The following code and diagram illustrate a hypothetical use of the push API.
@@ -484,7 +480,7 @@
         <ul>
           <li>The <a data-lt="PushSubscription.endpoint">push endpoint</a> of a
           <a>PushSubscription</a> is a URL that allows an <a>application server</a> to request
-          delivery of a <a>push message</a> to a <a>webapp</a>.
+          delivery of a <a>push message</a> to a web application.
           </li>
           <li data-link-for="PushSubscription">The {{getKey()}} method on a <a>PushSubscription</a>
           is used to retrieve keying material used to encrypt and authenticate <a>push
@@ -590,9 +586,9 @@
         <li>If <var>registration</var>'s <a>active worker</a> is null, reject <var>promise</var>
         with a {{DOMException}} whose name is "{{InvalidStateError}}" and terminate these steps.
         </li>
-        <li>Ask the user whether they allow the <a>webapp</a> to receive <a>push messages</a>,
+        <li>Ask the user whether they allow the web application to receive <a>push messages</a>,
         unless a prearranged trust relationship applies or the user has already granted or denied
-        permission explicitly for this <a>webapp</a>. Note that a <a>user agent</a> that needs to
+        permission explicitly for this web application. Note that a <a>user agent</a> that needs to
         request permission might be unable to do so if <a data-link-for="PushManager">subscribe</a>
         is invoked from a service worker, in which case permission will be denied automatically.
         </li>
@@ -659,8 +655,8 @@
         </li>
         <li>Return <var>promise</var> and continue the following steps asynchronously.
         </li>
-        <li>Retrieve the push permission status (<a>PushPermissionState</a>) of the requesting <a>
-          webapp</a>.
+        <li>Retrieve the push permission status (<a>PushPermissionState</a>) of the requesting web
+        application.
         </li>
         <li>If there is an error, reject <var>promise</var> with no arguments and terminate these
         steps.
@@ -926,7 +922,7 @@
           <dfn>PushEncryptionKeyName</dfn> enumeration
         </h2>
         <p>
-          Encryption keys used for <a>push message</a> encryption are provided to a <a>webapp</a>
+          Encryption keys used for <a>push message</a> encryption are provided to a web application
           through the <a data-link-for="PushSubscription">getKey</a> method or the serializer of
           <a>PushSubscription</a>. Each key is named using a value from the
           <a>PushEncryptionKeyName</a> enumeration.
@@ -1249,7 +1245,7 @@
             The <dfn>newSubscription</dfn> member details the <a>push subscription</a> that is
             valid per invocation of the <a>pushsubscriptionchange</a> event. The value will be
             `null` when no new <a>push subscription</a> could be established, for example because
-            the <a>webapp</a> has lost <a>express permission</a>.
+            the web application has lost <a>express permission</a>.
           </p>
           <p>
             The <dfn>oldSubscription</dfn> member details the <a>push subscription</a> that SHOULD
@@ -1284,7 +1280,7 @@
             <dfn>granted</dfn>
           </td>
           <td>
-            The <a>webapp</a> has permission to use the Push API.
+            The web application has permission to use the Push API.
           </td>
         </tr>
         <tr>
@@ -1292,7 +1288,7 @@
             <dfn>denied</dfn>
           </td>
           <td>
-            The <a>webapp</a> has been denied permission to use the Push API.
+            The web application has been denied permission to use the Push API.
           </td>
         </tr>
         <tr>
@@ -1300,7 +1296,7 @@
             <dfn>prompt</dfn>
           </td>
           <td>
-            The <a>webapp</a> needs to ask for permission in order to use the Push API.
+            The web application needs to ask for permission in order to use the Push API.
           </td>
         </tr>
       </table>
