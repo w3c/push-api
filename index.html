@@ -165,7 +165,7 @@
           server</a>.
         </p>
         <p>
-          A <a>push message</a> is delivered to the [= service worker registration/active worker =]
+          A <a>push message</a> is delivered to the [=service worker registration/active worker=]
           associated with the <a>push subscription</a> to which the message was submitted. If the
           service worker is not currently running, the worker is started to enable delivery.
         </p>
@@ -583,7 +583,7 @@
         <li>Let <var>registration</var> be the <a>PushManager</a>'s associated <a>service worker
         registration</a>.
         </li>
-        <li>If <var>registration</var>'s [= service worker registration/active worker =] is null,
+        <li>If <var>registration</var>'s [=service worker registration/active worker=] is null,
         reject <var>promise</var> with a {{DOMException}} whose name is "{{InvalidStateError}}" and
         terminate these steps.
         </li>
@@ -1147,8 +1147,8 @@
               Then run the following steps in parallel, with <var>dispatchedEvent</var>:
             </p>
             <ol>
-              <li>Wait for all of the promises in the [= ExtendableEvent/extend lifetime promises
-              =] of <var>dispatchedEvent</var> to resolve.
+              <li>Wait for all of the promises in the [=ExtendableEvent/extend lifetime promises=]
+              of <var>dispatchedEvent</var> to resolve.
               </li>
               <li>If all the promises resolve successfully, acknowledge the receipt of the <a>push
               message</a> according to [[RFC8030]] and abort these steps.
