@@ -53,7 +53,7 @@
       };
     </script>
   </head>
-  <body data-cite="service-workers FILEAPI promises-guide">
+  <body data-cite="service-workers FILEAPI">
     <section id="abstract">
       <p>
         The <cite>Push API</cite> enables sending of a <a>push message</a> to a web application via
@@ -1039,14 +1039,15 @@
           <dfn>PushEvent</dfn> Interface
         </h2>
         <pre class="idl" data-cite="service-workers">
-            [Constructor(DOMString type, optional PushEventInit eventInitDict = {}), Exposed=ServiceWorker, SecureContext]
+            [Exposed=ServiceWorker, SecureContext]
             interface PushEvent : ExtendableEvent {
+              constructor(DOMString type, optional PushEventInit eventInitDict = {});
               readonly attribute PushMessageData? data;
             };
           </pre>
         <p>
-          When a constructor of the <a>PushEvent</a> interface, or of an interface that inherits
-          from the <a>PushEvent</a> interface, is invoked, the usual <a>event constructing
+          When a <dfn>constructor</dfn> of the <a>PushEvent</a> interface, or of an interface that
+          inherits from the <a>PushEvent</a> interface, is invoked, the usual <a>event constructing
           steps</a> are extended to include the following steps:
         </p>
         <ol>
@@ -1214,8 +1215,9 @@
             <dfn>PushSubscriptionChangeEvent</dfn> Interface
           </h2>
           <pre class="idl" data-cite="service-workers">
-            [Constructor(DOMString type, optional PushSubscriptionChangeEventInit eventInitDict = {}), Exposed=ServiceWorker, SecureContext]
+            [Exposed=ServiceWorker, SecureContext]
             interface PushSubscriptionChangeEvent : ExtendableEvent {
+              constructor(DOMString type, optional PushSubscriptionChangeEventInit eventInitDict = {});
               readonly attribute PushSubscription? newSubscription;
               readonly attribute PushSubscription? oldSubscription;
             };
