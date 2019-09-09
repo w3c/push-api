@@ -282,9 +282,11 @@
           <p>
             A <a>push subscription</a> is <a>deactivated</a> when its associated <a>service worker
             registration</a> is unregistered, though a <a>push subscription</a> MAY be
-            <a>deactivated</a> earlier. A <a>push subscription</a> is removed when the
-            <a data-cite="service-workers#clear-registration-algorithm">clear registration
-            algorithm</a> is run for the <a>service worker registration</a>.
+            <a>deactivated</a> earlier.
+          </p>
+          <p class="note">
+            A <a>push subscription</a> is removed when <a>service worker registration</a> is
+            cleared.
           </p>
         </section>
       </section>
