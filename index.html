@@ -292,10 +292,10 @@
           Push service
         </h2>
         <p>
-          The term <dfn data-lt="push services">push service</dfn> refers to a system that allows
-          <a>application servers</a> to send <a>push messages</a> to a web application. A push
-          service serves the <a>push endpoint</a> or <a data-lt="push endpoints">endpoints</a> for
-          the <a>push subscriptions</a> it serves.
+          The term <dfn>push service</dfn> refers to a system that allows <a>application
+          servers</a> to send <a>push messages</a> to a web application. A push service serves the
+          <a>push endpoint</a> or <a data-lt="push endpoints">endpoints</a> for the <a>push
+          subscriptions</a> it serves.
         </p>
         <p>
           The <a>user agent</a> connects to the <a>push service</a> used to create <a>push
@@ -474,9 +474,9 @@
           push protocol</a>. These parameters and attributes include:
         </p>
         <ul>
-          <li>The <a data-lt="PushSubscription.endpoint">push endpoint</a> of a
-          {{PushSubscription}} is a URL that allows an <a>application server</a> to request
-          delivery of a <a>push message</a> to a web application.
+          <li>The <a>push endpoint</a> of a {{PushSubscription}} is a URL that allows an
+          <a>application server</a> to request delivery of a <a>push message</a> to a web
+          application.
           </li>
           <li>The {{PushSubscription/getKey()}} method on a {{PushSubscription}} is used to
           retrieve keying material used to encrypt and authenticate <a>push messages</a>. Each
@@ -661,8 +661,8 @@
         reconfirmed for subsequent subscriptions if a valid permission exists.
       </p>
       <p>
-        If there is a need to ask for permission, it needs to be done by invoking the <a data-lt=
-        "PushManager.subscribe">subscribe</a> method.
+        If there is a need to ask for permission, it needs to be done by invoking the
+        {{PushManager/subscribe()}} method.
       </p>
       <section data-dfn-for="PushSubscriptionOptions">
         <h2>
@@ -769,8 +769,8 @@
       <p>
         When getting the <dfn>endpoint</dfn> attribute, the <a>user agent</a> MUST return the
         <a>push endpoint</a> associated with the <a>push subscription</a>. The <a>user agent</a>
-        MUST use a serialization method that does not contain input-dependent branchs (that is, one
-        that is constant time).
+        MUST use a serialization method that does not contain input-dependent branches (that is,
+        one that is constant time).
       </p>
       <p>
         When getting the <dfn>expirationTime</dfn> attribute, the <a>user agent</a> MUST return the
@@ -864,14 +864,13 @@
           <ol>
             <li>If the internal slot corresponds to an asymmetric key pair, let |b| be the encoded
             value of the public key corresponding to the key name |i|, using the encoding defined
-            for the key name (see <a data-lt="PushSubscription.getKey">getKey</a>).
+            for the key name (see {{PushSubscription/getKey()}}).
             </li>
-            <li>Otherwise, let |b| be the value as returned by <a data-lt=
-            "PushSubscription.getKey">getKey</a>.
+            <li>Otherwise, let |b| be the value as returned by {{PushSubscription/getKey}}.
             </li>
             <li>Let |s| be the URL-safe base64 encoding without padding [[RFC4648]] of |b| as a
-            <a data-xref-type="_IDL_">USVString</a>. The <a>user agent</a> MUST use a serialization
-            method that does not branch based on the value of |b|.
+            {{USVString}}. The <a>user agent</a> MUST use a serialization method that does not
+            branch based on the value of |b|.
             </li>
             <li>Set |keys|[|i|] to |s|.
             </li>
@@ -1291,7 +1290,7 @@
     <section id="conformance">
       <p>
         This specification defines conformance criteria that apply to a single product: the
-        <dfn data-lt="agents">user agent</dfn> that implements the interfaces that it contains.
+        <dfn>user agent</dfn> that implements the interfaces that it contains.
       </p>
     </section>
     <section class="appendix" id="idl-index"></section>
