@@ -381,8 +381,8 @@
         <a>push subscription</a> to send <a>push messages</a> to another <a>push subscription</a>.
       </p>
       <p>
-        <a>User agents</a> MUST implement the Push API to only be available in <a data-cite=
-        "secure-contexts#secure-context">secure contexts</a>. This provides better protection for
+        <a>User agents</a> MUST implement the Push API to only be available in a <a data-cite=
+        "secure-contexts#secure-context">secure context</a>. This provides better protection for
         the user against man-in-the-middle attacks intended to obtain push subscription data.
         Browsers may ignore this rule for development purposes only.
       </p>
@@ -549,8 +549,9 @@
         </li>
         <li>Return |promise| and continue the following steps asynchronously.
         </li>
-        <li>If the <a>current settings object</a> is not a <a>secure context</a>, reject |promise|
-        with a {{DOMException}} whose name is {{"SecurityError"}} and terminate these steps.
+        <li>If the <a>current settings object</a> is not a <a data-cite=
+        "secure-contexts#secure-context">secure context</a>, reject |promise| with a
+        {{DOMException}} whose name is {{"SecurityError"}} and terminate these steps.
         </li>
         <li>If the |options| argument includes a non-null value for the
         {{PushSubscriptionOptions/applicationServerKey}} attribute, run the following sub-steps:
