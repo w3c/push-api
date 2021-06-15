@@ -11,8 +11,7 @@
       var respecConfig = {
           specStatus: "ED",
           shortName: "push-api",
-          // previousPublishDate: "2013-08-15",
-          // previousMaturity: "WD",
+          previousMaturity: "WD",
           editors: [
             {
               name: "Peter Beverloo",
@@ -45,9 +44,7 @@
               retiredDate: "2016-11-08",
             }
           ],
-          wg: "Web Applications Working Group",
-          wgURI: "https://www.w3.org/2019/webapps/",
-          wgPatentURI:  "https://www.w3.org/2004/01/pp-impl/114929/status",
+          group: "webapps",
           github: "w3c/push-api",
           xref: "web-platform",
       };
@@ -124,8 +121,8 @@
         Dependencies
       </h2>
       <p>
-        <code><dfn data-cite="ECMASCRIPT#sec-json.parse">JSON.parse</dfn></code> and
-        <code><dfn data-cite="ECMASCRIPT#sec-json.stringify">JSON.stringify</dfn></code> are
+        <code><dfn data-cite="ECMASCRIPT#sec-json.parse">JSON.parse()</dfn></code> and
+        <code><dfn data-cite="ECMASCRIPT#sec-json.stringify()">JSON.stringify()</dfn></code> are
         defined in [[ECMASCRIPT]].
       </p>
       <p>
@@ -136,8 +133,8 @@
         provide compatible semantics.
       </p>
       <p>
-        The <dfn>Content-Encoding</dfn> HTTP header, described in Section 3.1.2.2 of [[RFC7231]],
-        indicates the content coding applied to the payload of a <a>push message</a>.
+        The <code><dfn>Content-Encoding</dfn></code> HTTP header, described in Section 3.1.2.2 of
+        [[RFC7231]], indicates the content coding applied to the payload of a <a>push message</a>.
       </p>
     </section>
     <section>
@@ -768,15 +765,15 @@
         };
       </pre>
       <p>
-        When getting the <dfn>endpoint</dfn> attribute, the <a>user agent</a> MUST return the
+        When <dfn>getting the `endpoint` attribute</dfn>, the <a>user agent</a> MUST return the
         <a>push endpoint</a> associated with the <a>push subscription</a>. The <a>user agent</a>
         MUST use a serialization method that does not contain input-dependent branches (that is,
         one that is constant time).
       </p>
       <p>
-        When getting the <dfn>expirationTime</dfn> attribute, the <a>user agent</a> MUST return the
-        <a>subscription expiration time</a> associated with the <a>push subscription</a> if there
-        is one, or `null` otherwise.
+        When <dfn>getting the `expirationTime` attribute</dfn>, the <a>user agent</a> MUST return
+        the <a>subscription expiration time</a> associated with the <a>push subscription</a> if
+        there is one, or `null` otherwise.
       </p>
       <p>
         When getting the <dfn>options</dfn> attribute, the <a>user agent</a> MUST return a
@@ -850,13 +847,9 @@
       <ol>
         <li>Let |json:PushSubscriptionJSON| be a new {{PushSubscriptionJSON}} dictionary.
         </li>
-        <li>Set |json|["endpoint"] to the result of <a data-lt="get the underlying value">getting
-        the underlying value</a> of the {{PushSubscription/endpoint}} attribute given this
-        {{PushSubscription}} object.
+        <li>Set |json|["endpoint"] to [=getting the `endpoint` attribute=] of [=this=].
         </li>
-        <li>Set |json|["expirationTime"] to the result of <a data-lt=
-        "get the underlying value">getting the underlying value</a> of the
-        {{PushSubscription/expirationTime}} attribute given this {{PushSubscription}} object.
+        <li>Set |json|["expirationTime"] to [=getting the `expirationTime` attribute=] of [=this=].
         </li>
         <li>Let |keys| be a new empty instance of `record&lt;DOMString, USVString&gt;` .
         </li>
@@ -885,17 +878,7 @@
       <p>
         A <dfn>PushSubscriptionJSON</dfn> dictionary represents the <a>JSON type</a> of a
         {{PushSubscription}}. In ECMAScript this can be converted into a JSON string through the
-        <a>JSON.stringify</a> function.
-      </p>
-      <p>
-        The <dfn data-dfn-for="PushSubscriptionJSON">endpoint</dfn> contains the <a data-lt=
-        "get the underlying value">underlying value</a> of the {{PushSubscription/endpoint}}
-        attribute.
-      </p>
-      <p>
-        The <dfn data-dfn-for="PushSubscriptionJSON">expirationTime</dfn> contains the <a data-lt=
-        "get the underlying value">underlying value</a> of the {{PushSubscription/expirationTime}}
-        attribute.
+        <a>JSON.stringify()</a> function.
       </p>
       <p>
         The <dfn data-dfn-for="PushSubscriptionJSON">keys</dfn> record contains an entry for each
@@ -959,8 +942,8 @@
       </p>
       <p data-cite="encoding">
         The <dfn>json()</dfn> method, when invoked, MUST return the result of invoking the initial
-        value of <a>JSON.parse</a> with the result of running <a>utf-8 decode</a> on |bytes| as
-        argument. Re-throw any exceptions thrown by <a>JSON.parse</a>.
+        value of <a>JSON.parse()</a> with the result of running <a>utf-8 decode</a> on |bytes| as
+        argument. Re-throw any exceptions thrown by <a>JSON.parse()</a>.
       </p>
       <p data-cite="encoding">
         The <dfn>text</dfn> method, when invoked, MUST return the result of running <a>utf-8
