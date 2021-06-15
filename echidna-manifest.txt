@@ -1,2 +1,0 @@
-index.html?specStatus=WD&shortName=push-api respec
-sequence_diagram.png
