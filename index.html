@@ -847,9 +847,11 @@
       <ol>
         <li>Let |json:PushSubscriptionJSON| be a new {{PushSubscriptionJSON}} dictionary.
         </li>
-        <li>Set |json|["endpoint"] to [=getting the `endpoint` attribute=] of [=this=].
+        <li>Set |json|["endpoint"] to the result of [=getting the `endpoint` attribute=] of
+        [=this=].
         </li>
-        <li>Set |json|["expirationTime"] to [=getting the `expirationTime` attribute=] of [=this=].
+        <li>Set |json|["expirationTime"] to the result of [=getting the `expirationTime`
+        attribute=] of [=this=].
         </li>
         <li>Let |keys| be a new empty instance of `record&lt;DOMString, USVString&gt;` .
         </li>
