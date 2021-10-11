@@ -750,7 +750,7 @@
         [Exposed=(Window,Worker), SecureContext]
         interface PushSubscription {
           readonly attribute USVString endpoint;
-          readonly attribute LegacyTimeStamp? expirationTime;
+          readonly attribute EpochTimeStamp? expirationTime;
           [SameObject] readonly attribute PushSubscriptionOptions options;
           ArrayBuffer? getKey(PushEncryptionKeyName name);
           Promise&lt;boolean&gt; unsubscribe();
@@ -760,7 +760,7 @@
 
         dictionary PushSubscriptionJSON {
           USVString endpoint;
-          LegacyTimeStamp? expirationTime;
+          EpochTimeStamp? expirationTime;
           record&lt;DOMString, USVString&gt; keys;
         };
       </pre>
