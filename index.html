@@ -50,7 +50,7 @@
       };
     </script>
   </head>
-  <body data-cite="service-workers FILEAPI secure-contexts hr-time">
+  <body data-cite="service-workers FILEAPI secure-contexts hr-time permissions">
     <section id="abstract">
       <p>
         The <cite>Push API</cite> enables sending of a <a>push message</a> to a web application via
@@ -308,9 +308,24 @@
           Permission
         </h2>
         <p>
-          The term <dfn>express permission</dfn> refers to an act by the user, e.g. via user
-          interface or host device platform features, via which the user approves the use of the
-          Push API by the web application.
+          The Push API is a [=powerful feature=], requiring [=express permission=] to be used.
+        </p>
+        <p>
+          For integration with the [[[Permissions]]] specification, this specification defines the
+          {{PushPermissionDescriptor}} [=powerful feature/permission descriptor type=].
+        </p>
+        <pre class="idl">
+          dictionary PushPermissionDescriptor : PermissionDescriptor {
+            boolean userVisibleOnly = false;
+          };
+        </pre>
+        <p data-dfn-for="PushPermissionDescriptor">
+          The <dfn>userVisibleOnly</dfn> has the same semantics as
+          {{PushSubscriptionOptionsInit/userVisibleOnly}}.
+        </p>
+        <p>
+          `{name: "push", userVisibleOnly: false}` is [=PermissionDescriptor/stronger than=]
+          `{name: "push", userVisibleOnly: true}`.
         </p>
       </section>
     </section>
@@ -524,7 +539,7 @@
 
           Promise&lt;PushSubscription&gt; subscribe(optional PushSubscriptionOptionsInit options = {});
           Promise&lt;PushSubscription?&gt; getSubscription();
-          Promise&lt;PushPermissionState&gt; permissionState(optional PushSubscriptionOptionsInit options = {});
+          Promise&lt;PermissionState&gt; permissionState(optional PushSubscriptionOptionsInit options = {});
         };
       </pre>
       <p>
@@ -577,13 +592,9 @@
         |promise| with a {{DOMException}} whose name is {{"InvalidStateError"}} and terminate these
         steps.
         </li>
-        <li>Ask the user whether they allow the web application to receive <a>push messages</a>,
-        unless a prearranged trust relationship applies or the user has already granted or denied
-        permission explicitly for this web application. Note that a <a>user agent</a> that needs to
-        request permission might be unable to do so if {{PushManager/subscribe}} is invoked from a
-        service worker, in which case permission will be denied automatically.
+        <li>Let |permission| be [=request permission to use=] "push".
         </li>
-        <li>If not granted, reject |promise| with a {{DOMException}} whose name is
+        <li>If |permission| is "denied", reject |promise| with a {{DOMException}} whose name is
         {{"NotAllowedError"}} and terminate these steps.
         </li>
         <li>If the <a>Service Worker</a> is already subscribed, run the following substeps:
@@ -637,21 +648,20 @@
         </li>
       </ol>
       <p>
-        The <dfn data-dfn-for="PushManager">permissionState</dfn> method when invoked MUST run the
-        following steps:
+        The <dfn data-dfn-for="PushManager">permissionState()</dfn> method when invoked MUST run
+        the following steps:
       </p>
       <ol>
         <li>Let |promise| be <a>a new promise</a>.
         </li>
         <li>Return |promise| and continue the following steps asynchronously.
         </li>
-        <li>Retrieve the push permission status (<a>PushPermissionState</a>) of the requesting web
-        application.
+        <li>Let |descriptor| be a new {{PermissionDescriptor}} with the
+        {{PermissionDescriptor/name}}} initialized to "push".
         </li>
-        <li>If there is an error, reject |promise| with no arguments and terminate these steps.
+        <li>let |state| be the [=permission state=] of |descriptor| and the result.
         </li>
-        <li>When the request has been completed, resolve |promise| with <a>PushPermissionState</a>
-        providing the push permission status.
+        <li>Resolve |promise| with |state|.
         </li>
       </ol>
       <p>
@@ -1226,52 +1236,6 @@
           </p>
         </section>
       </section>
-    </section>
-    <section data-dfn-for="PushPermissionState">
-      <h2>
-        <dfn>PushPermissionState</dfn> Enumeration
-      </h2>
-      <pre class="idl">
-        enum PushPermissionState {
-          "denied",
-          "granted",
-          "prompt",
-        };
-      </pre>
-      <table class="simple">
-        <tr>
-          <th>
-            Enumeration
-          </th>
-          <th>
-            Description
-          </th>
-        </tr>
-        <tr>
-          <td>
-            <dfn>granted</dfn>
-          </td>
-          <td>
-            The web application has permission to use the Push API.
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <dfn>denied</dfn>
-          </td>
-          <td>
-            The web application has been denied permission to use the Push API.
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <dfn>prompt</dfn>
-          </td>
-          <td>
-            The web application needs to ask for permission in order to use the Push API.
-          </td>
-        </tr>
-      </table>
     </section>
     <section id="conformance">
       <p>
