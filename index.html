@@ -50,7 +50,7 @@
       };
     </script>
   </head>
-  <body data-cite="service-workers FILEAPI secure-contexts hr-time">
+  <body data-cite="service-workers FILEAPI secure-contexts hr-time ECMASCRIPT">
     <section id="abstract">
       <p>
         The <cite>Push API</cite> enables sending of a <a>push message</a> to a web application via
@@ -120,11 +120,6 @@
       <h2>
         Dependencies
       </h2>
-      <p>
-        <code><dfn data-cite="ECMASCRIPT#sec-json.parse">JSON.parse()</dfn></code> and
-        <code><dfn data-cite="ECMASCRIPT#sec-json.stringify">JSON.stringify()</dfn></code> are
-        defined in [[ECMASCRIPT]].
-      </p>
       <p>
         The <dfn>web push protocol</dfn> [[RFC8030]] describes a protocol that enables
         communication between a <a>user agent</a> or <a>application server</a> and a <a>push
@@ -378,10 +373,10 @@
         <a>push subscription</a> to send <a>push messages</a> to another <a>push subscription</a>.
       </p>
       <p>
-        <a>User agents</a> MUST implement the Push API to only be available in a <a data-cite=
-        "secure-contexts#secure-context">secure context</a>. This provides better protection for
-        the user against man-in-the-middle attacks intended to obtain push subscription data.
-        Browsers may ignore this rule for development purposes only.
+        <a>User agents</a> MUST implement the Push API to only be available in a [=secure
+        context=]. This provides better protection for the user against man-in-the-middle attacks
+        intended to obtain push subscription data. Browsers may ignore this rule for development
+        purposes only.
       </p>
     </section>
     <section class="informative" id="pushframework">
@@ -494,9 +489,8 @@
         Extensions to the `ServiceWorkerRegistration` Interface
       </h2>
       <p>
-        The Service Worker specification defines a <code><dfn data-cite=
-        "service-workers#serviceworkerregistration">ServiceWorkerRegistration</dfn></code>
-        interface [[SERVICE-WORKERS]], which this specification extends.
+        The Service Worker specification defines a {{ServiceWorkerRegistration}} interface
+        [[SERVICE-WORKERS]], which this specification extends.
       </p>
       <pre class="idl" data-cite="service-workers">
         [SecureContext]
@@ -506,7 +500,7 @@
       </pre>
       <p>
         The <dfn>pushManager</dfn> attribute exposes a {{PushManager}}, which has an associated
-        <a>service worker registration</a> represented by the <a>ServiceWorkerRegistration</a> on
+        <a>service worker registration</a> represented by the {{ServiceWorkerRegistration}} on
         which the attribute is exposed.
       </p>
     </section>
@@ -546,9 +540,8 @@
         </li>
         <li>Return |promise| and continue the following steps asynchronously.
         </li>
-        <li>If the <a>current settings object</a> is not a <a data-cite=
-        "secure-contexts#secure-context">secure context</a>, reject |promise| with a
-        {{DOMException}} whose name is {{"SecurityError"}} and terminate these steps.
+        <li>If the <a>current settings object</a> is not a [=secure context=], reject |promise|
+        with a {{DOMException}} whose name is {{"SecurityError"}} and terminate these steps.
         </li>
         <li>If the |options| argument includes a non-null value for the
         {{PushSubscriptionOptions/applicationServerKey}} attribute, run the following sub-steps:
@@ -880,7 +873,7 @@
       <p>
         A <dfn>PushSubscriptionJSON</dfn> dictionary represents the <a>JSON type</a> of a
         {{PushSubscription}}. In ECMAScript this can be converted into a JSON string through the
-        <a>JSON.stringify()</a> function.
+        `JSON`.{{JSON/stringify()}} function.
       </p>
       <p>
         The <dfn data-dfn-for="PushSubscriptionJSON">keys</dfn> record contains an entry for each
@@ -944,8 +937,8 @@
       </p>
       <p data-cite="encoding">
         The <dfn>json()</dfn> method, when invoked, MUST return the result of invoking the initial
-        value of <a>JSON.parse()</a> with the result of running <a>utf-8 decode</a> on |bytes| as
-        argument. Re-throw any exceptions thrown by <a>JSON.parse()</a>.
+        value of `JSON`.{{JSON/parse()}} with the result of running <a>utf-8 decode</a> on |bytes|
+        as argument. Re-throw any exceptions thrown by `JSON`.{{JSON/parse()}}.
       </p>
       <p data-cite="encoding">
         The <dfn>text</dfn> method, when invoked, MUST return the result of running <a>utf-8
@@ -986,8 +979,7 @@
           Extensions to the `ServiceWorkerGlobalScope` interface
         </h2>
         <p>
-          The Service Worker specification defines a <dfn data-cite=
-          "service-workers#serviceworkerglobalscope">ServiceWorkerGlobalScope</dfn> interface
+          The Service Worker specification defines a {{ServiceWorkerGlobalScope}} interface
           [[SERVICE-WORKERS]], which this specification extends.
         </p>
         <pre class="idl" data-cite="HTML">
