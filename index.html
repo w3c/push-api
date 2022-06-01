@@ -556,9 +556,6 @@
         </li>
         <li>Return |promise| and continue the following steps asynchronously.
         </li>
-        <li>If the <a>current settings object</a> is not a [=secure context=], reject |promise|
-        with a {{DOMException}} whose name is {{"SecurityError"}} and terminate these steps.
-        </li>
         <li>If the |options| argument includes a non-null value for the
         {{PushSubscriptionOptions/applicationServerKey}} attribute, run the following sub-steps:
           <ol>
