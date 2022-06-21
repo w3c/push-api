@@ -558,8 +558,8 @@
         The <dfn>subscribe()</dfn> method when invoked MUST run the following steps:
       </p>
       <ol class="algorithm">
-        <li>If the user agent requires |options|'s {{PushSubscriptionOptionsInit/userVisibleOnly}}
-        member to be `true`, return [=a promise rejected with=] an {{"NotAllowedError"}}
+        <li>If the |options| argument has a {{PushSubscriptionOptionsInit/userVisibleOnly}} value set to `false` and 
+        the user agent requires it to be `true`, return [=a promise rejected with=] an {{"NotAllowedError"}}
         {{DOMException}}.
         </li>
         <li>If the |options| argument does not include a non-null value for the
