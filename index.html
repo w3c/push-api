@@ -26,6 +26,12 @@
               w3cid: "68503"
             },
             {
+              name: "Marcos Caceres",
+              company: "Apple Inc.",
+              companyURL: "https://www.apple.com/",
+              w3cid: "39125"
+            },
+            {
               name: "Bryan Sullivan",
               company: "AT&T",
               companyURL: "http://www.att.com/",
@@ -195,13 +201,17 @@
           subscription</a> having the new keys as |newSubscription|.
         </p>
         <p>
-          To <dfn>create a push subscription</dfn>, given an <a>PushSubscriptionOptions</a> object
-          of |options|, the <a>user agent</a> must run the following steps:
+          To <dfn>create a push subscription</dfn>, given an {{PushSubscriptionOptionsInit}}
+          |optionsDictionary:PushSubscriptionOptionsInit|:
         </p>
-        <ol>
-          <li>Let |subscription| be a new <a>push subscription</a>.
+        <ol class="algorithm">
+          <li>Let |subscription:PushSubscription| be a new {{PushSubscription}}.
           </li>
-          <li>Set the `options` attribute of |subscription| to be a copy of |options|.
+          <li>Let |options:PushSubscriptionOptions| be a newly created {{PushSubscriptionOptions}}
+          object, initializing its attributes with the corresponding members and values of
+          |optionsDictionary|.
+          </li>
+          <li>Set |subscription|'s {{PushSubscription/options}} attribute to |options|.
           </li>
           <li>Generate a new P-256 <a>ECDH</a> key pair [[ANSI-X9-62]]. Store the private key in an
           internal slot on |subscription|; this value MUST NOT be made available to applications.
@@ -214,11 +224,21 @@
           key can be retrieved by calling the {{PushSubscription/getKey()}} method of the
           {{PushSubscription}} with an argument of {{PushEncryptionKeyName/"auth"}}.
           </li>
-          <li>Make a request to the <a>push service</a> to create a new <a>push subscription</a>.
-          Include the {{PushSubscriptionOptions/applicationServerKey}} attribute of |options| when
-          it has been set.
+          <li>Request a new <a>push subscription</a>. Include the
+          {{PushSubscriptionOptions/applicationServerKey}} attribute of |options| when it has been
+          set. Rethrow any [=exceptions=].
           </li>
-          <li>When the request has completed, return |subscription|.
+          <li>When the <a>push subscription</a> request has completed successfully:
+            <ol>
+              <li>Set |subscription|'s {{PushSubscription/endpoint}} attribute to the [=URL=]
+              provided by the <a>push subscription</a>.
+              </li>
+              <li>If provided by the <a>push subscription</a>, set |subscription|'s
+              {{PushSubscription/expirationTime}}.
+              </li>
+            </ol>
+          </li>
+          <li>Return |subscription|.
           </li>
         </ol>
         <section>
@@ -548,73 +568,104 @@
         MAY support content codings defined in previous versions of the draft for compatibility
         reasons.
       </p>
+      <h3>
+        `subscribe()` method
+      </h3>
       <p>
-        The <dfn>subscribe</dfn> method when invoked MUST run the following steps:
+        The <dfn>subscribe()</dfn> method when invoked MUST run the following steps:
       </p>
-      <ol>
-        <li>Let |promise| be <a>a new promise</a>.
+      <ol class="algorithm">
+        <li>Let |promise| be [=a new promise=].
         </li>
-        <li>Return |promise| and continue the following steps asynchronously.
+        <li>Let |global| be [=this=]' [=relevant global object=].
+        </li>
+        <li>Return |promise| and continue [=in parallel=].
+          <aside class="note" title="Validation order can vary across user agents">
+            <p>
+              Because of implementation-specific reasons, user agents are known to do some of the
+              following checks in different order (e.g., some check if
+              {{PushSubscriptionOptionsInit/userVisibleOnly}} is allowed after validating the
+              {{PushSubscriptionOptionsInit/applicationServerKey}}, and vice versa). However, we
+              don't believe this affects interoperability of implementations or web applications.
+            </p>
+          </aside>
+        </li>
+        <li>If the |options| argument has a {{PushSubscriptionOptionsInit/userVisibleOnly}} value
+        set to `false` and the user agent requires it to be `true`, [=queue a global task=] on the
+        [=networking task source=] using |global| to [=reject=] |promise| {{"NotAllowedError"}}
+        {{DOMException}}
+        </li>
+        <li>If the |options| argument does not include a non-null value for the
+        {{PushSubscriptionOptionsInit/applicationServerKey}} member, and the <a>push service</a>
+        requires one to be given, [=queue a global task=] on the [=networking task source=] using
+        |global| to [=reject=] |promise| with a {{"NotSupportedError"}} {{DOMException}}.
         </li>
         <li>If the |options| argument includes a non-null value for the
         {{PushSubscriptionOptions/applicationServerKey}} attribute, run the following sub-steps:
           <ol>
-            <li>If the |applicationServerKey| is provided as a {{DOMString}}, set its value to an
-            {{ArrayBuffer}} containing the sequence of octets that result from decoding
-            |applicationServerKey| using the base64url encoding [[RFC7515]]. If decoding fails,
-            reject promise with a {{DOMException}} whose name is {{"InvalidCharacterError"}} and
-            terminate these steps.
+            <li>If |options|'s {{PushSubscriptionOptionsInit/applicationServerKey}} is a
+            {{DOMString}}, set its value to an {{ArrayBuffer}} containing the sequence of octets
+            that result from decoding |options|'s
+            {{PushSubscriptionOptionsInit/applicationServerKey}} using the base64url encoding
+            [[RFC7515]].
             </li>
-            <li>Ensure that |applicationServerKey| describes a valid point on the P-256 curve. If
-            the |applicationServerKey| value is invalid, reject |promise| with a {{DOMException}}
-            whose name is {{"InvalidAccessError"}} and terminate these steps.
+            <li>If decoding fails, [=queue a global task=] on the [=networking task source=] using
+            |global| to [=reject=] |promise| with an {{"InvalidCharacterError"}} {{DOMException}}
+            and terminate these steps.
+            </li>
+            <li>Ensure that |options|'s {{PushSubscriptionOptionsInit/applicationServerKey}}
+            describes a valid point on the P-256 curve. If its value is invalid, [=queue a global
+            task=] on the [=networking task source=] using |global| to [=reject=] |promise| with an
+            {{"InvalidAccessError"}} {{DOMException}} and terminate these steps.
             </li>
           </ol>
         </li>
-        <li>If the |options| argument does not include a non-null value for the
-        {{PushSubscriptionOptions/applicationServerKey}} attribute, and the <a>push service</a>
-        requires one to be given, reject |promise| with a {{DOMException}} whose name is
-        {{"NotSupportedError"}} and terminate these steps.
-        </li>
-        <li>Let |registration| be the {{PushManager}}'s associated <a>service worker
+        <li>Let |registration:ServiceWorkerRegistration| be [=this=]'s associated <a>service worker
         registration</a>.
         </li>
-        <li>If |registration|'s [=service worker registration/active worker=] is null, reject
-        |promise| with a {{DOMException}} whose name is {{"InvalidStateError"}} and terminate these
-        steps.
+        <li>If |registration|'s [=service worker registration/active worker=] is null, [=queue a
+        global task=] on the [=networking task source=] using |global| to [=reject=] |promise| with
+        an {{"InvalidStateError"}} {{DOMException}} and terminate these steps.
+        </li>
+        <li>Let |sw| be |registration|'s [=service worker registration/active worker=].
         </li>
         <li>Let |permission| be [=request permission to use=] "push".
         </li>
-        <li>If |permission| is "denied", reject |promise| with a {{DOMException}} whose name is
-        {{"NotAllowedError"}} and terminate these steps.
+        <li>If |permission| is {{PermissionState/"denied"}}, [=queue a global task=] on the [=user
+        interaction task source=] using |global| to [=reject=] |promise| with a
+        {{"NotAllowedError"}} {{DOMException}} and terminate these steps.
         </li>
-        <li>If the <a>Service Worker</a> is already subscribed, run the following substeps:
+        <li>If |sw| is already subscribed, run the following sub-steps:
           <ol>
-            <li>Retrieve the <a>push subscription</a> associated with the <a>Service Worker</a>.
+            <li>Try to retrieve the <a>push subscription</a> associated with the |sw|. If there is
+            an error, [=queue a global task=] on the [=networking task source=] using |global| to
+            [=reject=] |promise| with an {{"AbortError"}} {{DOMException}} and terminate these
+            steps.
             </li>
-            <li>If there is an error, reject |promise| with a {{DOMException}} whose name is
-            {{"AbortError"}} and terminate these steps.
+            <li>Let |subscription| be the <a>push subscription</a> associated with |sw|.
             </li>
-            <li>Let |subscription| be the retrieved subscription.
+            <li>Compare the |options| argument with the `options` attribute of |subscription|. The
+            contents of {{BufferSource}} values are compared for equality rather than
+            [=ECMAScript/reference record|reference=].
             </li>
-            <li>Compare the |options| argument with the `options` attribute of |subscription|. If
-            any attribute on |options| contains a different value to that stored for
-            |subscription|, then reject |promise| with an {{InvalidStateError}} and terminate these
-            steps. The contents of {{BufferSource}} values are compared for equality rather than
-            <a href=
-            "https://tc39.github.io/ecma262/#sec-reference-specification-type">references</a>.
+            <li>If any attribute on |options| contains a different value to that stored for
+            |subscription|, then [=queue a global task=] on the [=networking task source=] using
+            |global| to [=reject=] |promise| with an {{"InvalidStateError"}} {{DOMException}} and
+            terminate these steps.
             </li>
-            <li>When the request has been completed, resolve |promise| with |subscription|.
+            <li>When the request has been completed, [=queue a global task=] on the [=networking
+            task source=] using |global| to [=resolve=] |promise| with |subscription| and terminate
+            these steps.
             </li>
           </ol>
         </li>
-        <li>Let |subscription| be the result of running the <a>create a push subscription</a> steps
-        given |options|.
+        <li>Let |subscription| be the result of trying to [=create a push subscription=] with
+        |options|. If creating the subscription [=exception/throws=] an [=exception=], [=queue a
+        global task=] on the [=networking task source=] using |global| to [=reject=] |promise| with
+        a that [=exception=] and terminate these these steps.
         </li>
-        <li>If there is an error, reject |promise| with a {{DOMException}} whose name is
-        {{"AbortError"}} and terminate these steps.
-        </li>
-        <li>Resolve |promise| with a {{PushSubscription}} providing the details of the new
+        <li>Otherwise, [=queue a global task=] on the [=networking task source=] using |global| to
+        [=resolve=] |promise| with a {{PushSubscription}} providing the details of the new
         |subscription|.
         </li>
       </ol>
