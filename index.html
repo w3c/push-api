@@ -386,13 +386,20 @@
         permission or determining the permission status.
       </p>
       <p>
-        When a permission is revoked, the <a>user agent</a> MAY <a>fire the
-        "`pushsubscriptionchange`" event</a> for subscriptions created with that permission, with
-        the <a>service worker registration</a> associated with the <a>push subscription</a> as
-        |registration|, a {{PushSubscription}} instance representing the <a>push subscription</a>
-        as |oldSubscription|, and `null` as |newSubscription|. The <a>user agent</a> MUST
-        <a>deactivate</a> the affected subscriptions in parallel.
+        When a permission is revoked:
       </p>
+      <ul>
+        <li>The <a>user agent</a> MUST <a>deactivate</a> all affected subscriptions.</li>
+        <li>The <a>user agent</a> MAY <a>fire the "`pushsubscriptionchange`" event </a>
+          <ul>
+            <li>for subscriptions created with that permission,</li>
+            <li>with the <a>service worker registration</a> associated with the
+              <a>push subscription</a> as |registration|,</li>
+            <li>a {{PushSubscription}} instance representing the <a>push subscription</a>
+              as |oldSubscription|, and `null` as |newSubscription|.</li>
+          </ul>
+        </li>
+      </ul>
       <p>
         When a <a>service worker registration</a> is unregistered, any associated <a>push
         subscription</a> MUST be <a>deactivated</a>.
