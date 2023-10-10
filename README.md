@@ -18,3 +18,4 @@ Implementations
 * [Shipped in Chrome 42](https://groups.google.com/a/chromium.org/forum/#!msg/blink-dev/UdGlL9PtBLo/HOZZ4sjV-QkJ)
 * [Mozilla issue tracker](https://bugzilla.mozilla.org/buglist.cgi?quicksearch=push+api+component%3A%22Push+Notifications%22)
 * [Shipped in Edge 17063+](https://developer.microsoft.com/en-us/microsoft-edge/platform/status/pushapi/)
+* [Shipped in Safari 16.4 for iOS](https://webkit.org/blog/13878/web-push-for-web-apps-on-ios-and-ipados/)
