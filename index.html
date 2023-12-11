@@ -63,9 +63,9 @@
         a <a>push service</a>. An <a>application server</a> can send a <a>push message</a> at any
         time, even when a web application or <a>user agent</a> is inactive. The <a>push service</a>
         ensures reliable and efficient delivery to the <a>user agent</a>. <a>Push messages</a> are
-        delivered to a <a>Service Worker</a> that runs in the origin of the web application, which
-        can use the information in the message to update local state or display a notification to
-        the user.
+        delivered to a [=push subscription owner=] that runs in the origin of the web application,
+        which can use the information in the message to update local state or display a
+        notification to the user.
       </p>
       <p>
         This specification is designed for use with the <a>web push protocol</a>, which describes
@@ -172,8 +172,15 @@
         <p>
           A <dfn>push subscription</dfn> is a message delivery context established between the
           <a>user agent</a> and the <a>push service</a> on behalf of a web application. Each
-          <a>push subscription</a> is associated with a <a>service worker registration</a> and a
+          <a>push subscription</a> is associated with a [=push subscription owner=].
+        </p>
+        <p>
+          A <dfn>push subscription owner</dfn> refers to a <a>service worker registration</a>. A
           <a>service worker registration</a> has at most one <a>push subscription</a>.
+        </p>
+        <p class="note">
+          Future updates to this specification could expand the definition of a [=push subscription
+          owner=] to include other types, broadening the range of possible implementations.
         </p>
         <p>
           A <a>push subscription</a> has an associated <dfn>push endpoint</dfn>. It MUST be the
@@ -431,13 +438,13 @@
         <li>the <a>push service</a> delivers the message to a specific <a>user agent</a>,
         identifying the <a>push endpoint</a> in the message;
         </li>
-        <li>the <a>user agent</a> identifies the intended <a>Service Worker</a> and activates it as
-        necessary, and delivers the <a>push message</a> to the <a>Service Worker</a>.
+        <li>the <a>user agent</a> identifies the intended [=push subscription owner=] and activates
+        it as necessary, and delivers the <a>push message</a> to the [=push subscription owner=].
         </li>
       </ul>
       <p>
-        This overall framework allows <a>application servers</a> to activate a <a>Service
-        Worker</a> in response to events at the <a>application server</a>. Information about those
+        This overall framework allows <a>application servers</a> to activate a [=push subscription
+        owner=] in response to events at the <a>application server</a>. Information about those
         events can be included in the <a>push message</a>, which allows the web application to
         react appropriately to those events, potentially without needing to initiate network
         requests.
