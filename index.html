@@ -574,9 +574,18 @@
         The <dfn>subscribe()</dfn> method when invoked MUST run the following steps:
       </p>
       <ol class="algorithm">
-        <li>Let |promise| be [=a new promise=].
+        <li>Let |global| be the [=relevant global object=] of [=this=].
         </li>
-        <li>Let |global| be [=this=]' [=relevant global object=].
+        <li>If |global| is a {{Window}} object:
+          <ol>
+            <li>If |global| does not have [=transient activation=], return [=a promise rejected
+            with=] with a {{"NotAllowedError"}} {{DOMException}}.
+            </li>
+            <li>[=Consume user activation=] of |global|.
+            </li>
+          </ol>
+        </li>
+        <li>Let |promise| be <a>a new promise</a>.
         </li>
         <li>Return |promise| and continue [=in parallel=].
           <aside class="note" title="Validation order can vary across user agents">
