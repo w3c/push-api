@@ -63,9 +63,9 @@
         a <a>push service</a>. An <a>application server</a> can send a <a>push message</a> at any
         time, even when a web application or <a>user agent</a> is inactive. The <a>push service</a>
         ensures reliable and efficient delivery to the <a>user agent</a>. <a>Push messages</a> are
-        delivered to a <a>Service Worker</a> that runs in the origin of the web application, which
-        can use the information in the message to update local state or display a notification to
-        the user.
+        delivered to a [=push subscription owner=] that runs in the origin of the web application,
+        which can use the information in the message to update local state or display a
+        notification to the user.
       </p>
       <p>
         This specification is designed for use with the <a>web push protocol</a>, which describes
@@ -171,8 +171,32 @@
         <p>
           A <dfn>push subscription</dfn> is a message delivery context established between the
           <a>user agent</a> and the <a>push service</a> on behalf of a web application. Each
-          <a>push subscription</a> is associated with a <a>service worker registration</a> and a
-          <a>service worker registration</a> has at most one <a>push subscription</a>.
+          <a>push subscription</a> is associated with a [=push subscription owner=].
+        </p>
+        <p>
+          A <dfn>push subscription owner</dfn> can be one of the following:
+        </p>
+        <dl>
+          <dt>
+            [=Service worker registration=]
+          </dt>
+          <dd>
+            A [=service worker registration=] has at most one [=push subscription=] associated with
+            it.
+          </dd>
+          <dt>
+            [=Environment settings object=]
+          </dt>
+          <dd>
+            This represents the security origin for the [=push subscription=]. An [=environment
+            settings object=] has at most one [=push subscription=] associated with it.
+          </dd>
+        </dl>
+        <p class="note">
+          This specification currently details handling of push subscriptions in the context of
+          both [=service worker registrations=] and an [=environment settings object=]. Future
+          updates could further expand the definition of a [=push subscription owner=] to encompass
+          additional types, further broadening the range of possible implementations.
         </p>
         <p>
           A <a>push subscription</a> has an associated <dfn>push endpoint</dfn>. It MUST be the
@@ -201,7 +225,8 @@
         </p>
         <p>
           To <dfn>create a push subscription</dfn>, given an {{PushSubscriptionOptionsInit}}
-          |optionsDictionary:PushSubscriptionOptionsInit|:
+          |optionsDictionary:PushSubscriptionOptionsInit| and a [=environment settings object=]
+          |environment|:
         </p>
         <ol class="algorithm">
           <li>Let |subscription:PushSubscription| be a new {{PushSubscription}}.
@@ -223,9 +248,9 @@
           key can be retrieved by calling the {{PushSubscription/getKey()}} method of the
           {{PushSubscription}} with an argument of {{PushEncryptionKeyName/"auth"}}.
           </li>
-          <li>Request a new <a>push subscription</a>. Include the
+          <li data-cite="WebIDL">Request a new <a>push subscription</a>. Include the
           {{PushSubscriptionOptions/applicationServerKey}} attribute of |options| when it has been
-          set. Rethrow any [=exceptions=].
+          set. [=Exception/Throws|Rethrow=] any [=exceptions=].
           </li>
           <li>When the <a>push subscription</a> request has completed successfully:
             <ol>
@@ -236,6 +261,8 @@
               {{PushSubscription/expirationTime}}.
               </li>
             </ol>
+          </li>
+          <li>Associate |subscription| with the |environment|.
           </li>
           <li>Return |subscription|.
           </li>
@@ -430,13 +457,13 @@
         <li>the <a>push service</a> delivers the message to a specific <a>user agent</a>,
         identifying the <a>push endpoint</a> in the message;
         </li>
-        <li>the <a>user agent</a> identifies the intended <a>Service Worker</a> and activates it as
-        necessary, and delivers the <a>push message</a> to the <a>Service Worker</a>.
+        <li>the <a>user agent</a> identifies the intended [=push subscription owner=] and activates
+        it as necessary, and delivers the <a>push message</a> to the [=push subscription owner=].
         </li>
       </ul>
       <p>
-        This overall framework allows <a>application servers</a> to activate a <a>Service
-        Worker</a> in response to events at the <a>application server</a>. Information about those
+        This overall framework allows <a>application servers</a> to activate a [=push subscription
+        owner=] in response to events at the <a>application server</a>. Information about those
         events can be included in the <a>push message</a>, which allows the web application to
         react appropriately to those events, potentially without needing to initiate network
         requests.
@@ -519,6 +546,17 @@
         </ul>
       </section>
     </section>
+    <section data-dfn-for="Navigator">
+      <h2>
+        Extensions to the `Navigator` interface
+      </h2>
+      <pre class="idl">
+        [SecureContext]
+        partial interface Navigator {
+          [SameObject] readonly attribute PushManager pushManager;
+        };
+      </pre>
+    </section>
     <section data-dfn-for="ServiceWorkerRegistration">
       <h2>
         Extensions to the `ServiceWorkerRegistration` Interface
@@ -576,7 +614,7 @@
       <ol class="algorithm">
         <li>Let |promise| be [=a new promise=].
         </li>
-        <li>Let |global| be [=this=]' [=relevant global object=].
+        <li>Let |global| be the [=relevant global object=] for [=this=].
         </li>
         <li>Return |promise| and continue [=in parallel=].
           <aside class="note" title="Validation order can vary across user agents">
@@ -619,14 +657,13 @@
             </li>
           </ol>
         </li>
-        <li>Let |registration:ServiceWorkerRegistration| be [=this=]'s associated <a>service worker
-        registration</a>.
+        <li>Let |environment| be the [=relevant settings object=] for |global|.
         </li>
-        <li>If |registration|'s [=service worker registration/active worker=] is null, [=queue a
-        global task=] on the [=networking task source=] using |global| to [=reject=] |promise| with
-        an {{"InvalidStateError"}} {{DOMException}} and terminate these steps.
+        <li>Let |sw| be the |environment|'s [=environment/active service worker=].
         </li>
-        <li>Let |sw| be |registration|'s [=service worker registration/active worker=].
+        <li>If |sw| is null and |global| is a {{ServiceWorkerRegistration}}, [=queue a global
+        task=] on the [=networking task source=] using |global| to [=reject=] |promise| with an
+        {{"InvalidStateError"}} {{DOMException}} and terminate these steps.
         </li>
         <li>Let |permission| be [=request permission to use=] "push".
         </li>
@@ -634,18 +671,16 @@
         interaction task source=] using |global| to [=reject=] |promise| with a
         {{"NotAllowedError"}} {{DOMException}} and terminate these steps.
         </li>
-        <li>If |sw| is already subscribed, run the following sub-steps:
+        <li>Let |subscription:PushSubscription| be the result of attempting to retrieve the <a>push
+        subscription</a> associated with the |environment|. If there is an error, [=queue a global
+        task=] on the [=networking task source=] using |global| to [=reject=] |promise| with an
+        {{"AbortError"}} {{DOMException}} and terminate these steps.
+        </li>
+        <li>If |subscription| is not null, run the following sub-steps:
           <ol>
-            <li>Try to retrieve the <a>push subscription</a> associated with the |sw|. If there is
-            an error, [=queue a global task=] on the [=networking task source=] using |global| to
-            [=reject=] |promise| with an {{"AbortError"}} {{DOMException}} and terminate these
-            steps.
-            </li>
-            <li>Let |subscription| be the <a>push subscription</a> associated with |sw|.
-            </li>
-            <li>Compare the |options| argument with the `options` attribute of |subscription|. The
-            contents of {{BufferSource}} values are compared for equality rather than
-            [=ECMAScript/reference record|reference=].
+            <li>Compare the |options| argument with |subscription|'s {PushSubscription/options}
+            attribute. The contents of {{BufferSource}} values are compared for equality rather
+            than [=ECMAScript/reference record|reference=].
             </li>
             <li>If any attribute on |options| contains a different value to that stored for
             |subscription|, then [=queue a global task=] on the [=networking task source=] using
@@ -658,34 +693,45 @@
             </li>
           </ol>
         </li>
-        <li>Let |subscription| be the result of trying to [=create a push subscription=] with
-        |options|. If creating the subscription [=exception/throws=] an [=exception=], [=queue a
-        global task=] on the [=networking task source=] using |global| to [=reject=] |promise| with
-        a that [=exception=] and terminate these these steps.
+        <li>Otherwise, let |newSubscription| be the result of trying to [=create a push
+        subscription=] with |options| and |environment|. If creating the subscription
+        [=exception/throws=] an [=exception=], [=queue a global task=] on the [=networking task
+        source=] using |global| to [=reject=] |promise| with that [=exception=] and terminate these
+        steps.
         </li>
         <li>Otherwise, [=queue a global task=] on the [=networking task source=] using |global| to
-        [=resolve=] |promise| with a {{PushSubscription}} providing the details of the new
-        |subscription|.
+        [=resolve=] |promise| with |newSubscription|.
         </li>
       </ol>
       <p>
-        The <dfn data-dfn-for="PushManager">getSubscription</dfn> method when invoked MUST run the
-        following steps:
+        The <dfn data-dfn-for="PushManager">getSubscription()</dfn> method when invoked MUST run
+        the following steps:
       </p>
       <ol>
         <li>Let |promise| be <a>a new promise</a>.
         </li>
-        <li>Return |promise| and continue the following steps asynchronously.
+        <li>Let |global| be the [=relevant global object=] for [=this=].
         </li>
-        <li>If the <a>Service Worker</a> is not subscribed, resolve |promise| with null.
+        <li>Let |environment| be the [=relevant settings object=] for |global|.
         </li>
-        <li>Retrieve the <a>push subscription</a> associated with the <a>Service Worker</a>.
+        <li>Return |promise| and continue the following steps [=in parallel=].
         </li>
-        <li>If there is an error, reject |promise| with a {{DOMException}} whose name is
-        {{"AbortError"}} and terminate these steps.
+        <li>If |global| is a {{ServiceWorkerGlobalScope}}, let |owner| be |global|'s associated
+        [=service worker registration=]. Otherwise, let |owner| be the [=relevant settings object=]
+        for |global|.
         </li>
-        <li>When the request has been completed, resolve |promise| with a {{PushSubscription}}
-        providing the details of the retrieved <a>push subscription</a>.
+        <li>If the |owner| is not subscribed, [=queue a global task=] on the [=networking task
+        source=] using |global| to [=resolve=] |promise| with null and terminate these steps.
+        </li>
+        <li>let |subscription:PushSubscription| be the result of attempting to retrieve the [=push
+        subscription=] associated with the |owner|.
+        </li>
+        <li>If there is an error, [=queue a global task=] on the [=networking task source=] using
+        |global| to [=reject=] |promise| with a {{"AbortError"}} {{DOMException}} and terminate
+        these steps.
+        </li>
+        <li>Otherwise, when the retrieve request has been completed, [=queue a global task=] on the
+        [=networking task source=] using |global| to [=resolve=] |promise| with the |subscription|.
         </li>
       </ol>
       <p>
@@ -695,14 +741,17 @@
       <ol>
         <li>Let |promise| be <a>a new promise</a>.
         </li>
-        <li>Return |promise| and continue the following steps asynchronously.
+        <li>Let |global| be [=this=]' [=relevant global object=].
+        </li>
+        <li>Return |promise| and continue the following [=in parallel=].
         </li>
         <li>Let |descriptor| be a new {{PermissionDescriptor}} with the
-        {{PermissionDescriptor/name}}} initialized to "push".
+        {{PermissionDescriptor/name}} initialized to <a>"push"</a>.
         </li>
-        <li>let |state| be the [=permission state=] of |descriptor| and the result.
+        <li>Let |state| be the [=permission state=] of |descriptor|.
         </li>
-        <li>Resolve |promise| with |state|.
+        <li>[=Queue a global task=] on the [=DOM manipulation task source=] given |global| to
+        [=resolve=] |promise| with |state|.
         </li>
       </ol>
       <p>
