@@ -976,6 +976,7 @@
         interface PushMessageData {
           ArrayBuffer arrayBuffer();
           Blob blob();
+          Uint8Array bytes();
           any json();
           USVString text();
         };
@@ -992,6 +993,11 @@
       <p>
         The <dfn>blob()</dfn> method, when invoked, MUST return a {{Blob}} whose contents are
         |bytes| and |type| is not provided.
+      </p>
+      <p>
+        The <dfn>bytes()</dfn> method, when invoked, MUST return a {{Uint8Array}} backed by a
+        {{ArrayBuffer}} whose contents are |bytes|. Exceptions thrown during the creation of the
+        {{ArrayBuffer}} object are re-thrown.
       </p>
       <p data-cite="encoding">
         The <dfn>json()</dfn> method, when invoked, MUST return the result of invoking the initial
