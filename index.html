@@ -113,9 +113,9 @@
       </p>
       <p>
         Push messaging is best suited to occasions where there is not already an active
-        communications channel established between <a>user agent</a> and web application. Sending
-        <a>push messages</a> requires considerably more resources when compared with more direct
-        methods of communication such as the [[Fetch|Fetch API]] or [[Websockets|Web Sockets]].
+        communications channel established between the <a>user agent</a> and the web application.
+        Sending <a>push messages</a> requires considerably more resources when compared with more
+        direct methods of communication such as the [[Fetch|Fetch API]] or [[WebSockets]].
         <a>Push messages</a> usually have higher latency than direct communications and they can
         also be subject to restrictions on use. Most <a>push services</a> limit the size and
         quantity of <a>push messages</a> that can be sent.
@@ -698,7 +698,7 @@
         <li>Return |promise| and continue the following steps asynchronously.
         </li>
         <li>Let |descriptor| be a new {{PermissionDescriptor}} with the
-        {{PermissionDescriptor/name}}} initialized to "push".
+        {{PermissionDescriptor/name}} initialized to "push".
         </li>
         <li>let |state| be the [=permission state=] of |descriptor| and the result.
         </li>
