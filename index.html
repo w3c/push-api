@@ -1004,8 +1004,8 @@
         <a>parsing JSON bytes to a JavaScript value</a> given <a>this</a>'s <a for=PushMessageData>bytes</a>.
       </p>
       <p data-cite="encoding">
-        The <dfn>text</dfn> method, when invoked, MUST return the result of running <a>UTF-8
-        decode</a> on |bytes|.
+        The <dfn>text()</dfn> method steps are to return the result of running <a>UTF-8 decode</a>
+        on <a>this</a>'s <a for=PushMessageData>bytes</a>.
       </p>
       <p>
         To <dfn>extract a byte sequence</dfn> from |object|, run these steps:
