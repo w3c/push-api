@@ -982,30 +982,30 @@
         };
       </pre>
       <p>
-        <a>PushMessageData</a> objects have an associated <dfn data-dfn-for=PushMessageData>bytes</dfn> (a
+        <a>PushMessageData</a> objects have an associated <dfn>bytes</dfn> (a
         [=byte sequence=]), which is set on creation.
       </p>
       <p>
         The <dfn>arrayBuffer()</dfn> method steps are to return an {{ArrayBuffer}} whose contents
-        are <a>this</a>'s <a data-dfn-for=PushMessageData>bytes</a>. Exceptions thrown during the creation of
+        are [=this=]'s [=bytes=]. Exceptions thrown during the creation of
         the {{ArrayBuffer}} object are re-thrown.
       </p>
       <p>
         The <dfn>blob()</dfn> method steps are to return a new {{Blob}} object whose contents are
-        <a>this</a>'s <a data-dfn-for=PushMessageData>bytes</a>.
+        [=this=]'s [=bytes=].
       </p>
       <p>
         The <dfn>bytes()</dfn> method steps are to return a new {{Uint8Array}} backed by a
-        {{ArrayBuffer}} whose contents are <a>this</a>'s <a data-dfn-for=PushMessageData>bytes</a>. Exceptions thrown during the creation of the
+        {{ArrayBuffer}} whose contents are [=this=]'s [=bytes=]. Exceptions thrown during the creation of the
         {{ArrayBuffer}} object are re-thrown.
       </p>
       <p data-cite="encoding">
         The <dfn>json()</dfn> method steps are to return the result of
-        <a>parsing JSON bytes to a JavaScript value</a> given <a>this</a>'s <a data-dfn-for=PushMessageData>bytes</a>.
+        <a>parsing JSON bytes to a JavaScript value</a> given [=this=]'s [=bytes=].
       </p>
       <p data-cite="encoding">
         The <dfn>text()</dfn> method steps are to return the result of running <a>UTF-8 decode</a>
-        on <a>this</a>'s <a data-dfn-for=PushMessageData>bytes</a>.
+        on [=this=]'s [=bytes=].
       </p>
       <p>
         To <dfn>extract a byte sequence</dfn> from |object|, run these steps:
