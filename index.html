@@ -982,31 +982,30 @@
         };
       </pre>
       <p>
-        <a>PushMessageData</a> objects have an associated [=byte sequence=] set on creation, which
-        is `null` if there was no data in the <a>push message</a>.
+        <a>PushMessageData</a> objects have an associated <dfn>bytes</dfn> (a
+        [=byte sequence=]), which is set on creation.
       </p>
       <p>
-        The <dfn>arrayBuffer()</dfn> method, when invoked, MUST return an {{ArrayBuffer}} whose
-        contents are |bytes|. Exceptions thrown during the creation of the {{ArrayBuffer}} object
-        are re-thrown.
+        The <dfn>arrayBuffer()</dfn> method steps are to return an {{ArrayBuffer}} whose contents
+        are [=this=]'s [=bytes=]. Exceptions thrown during the creation of
+        the {{ArrayBuffer}} object are re-thrown.
       </p>
       <p>
-        The <dfn>blob()</dfn> method, when invoked, MUST return a {{Blob}} whose contents are
-        |bytes| and |type| is not provided.
+        The <dfn>blob()</dfn> method steps are to return a new {{Blob}} object whose contents are
+        [=this=]'s [=bytes=].
       </p>
       <p>
-        The <dfn>bytes()</dfn> method, when invoked, MUST return a {{Uint8Array}} backed by a
-        {{ArrayBuffer}} whose contents are |bytes|. Exceptions thrown during the creation of the
+        The <dfn>bytes()</dfn> method steps are to return a new {{Uint8Array}} backed by a
+        {{ArrayBuffer}} whose contents are [=this=]'s [=bytes=]. Exceptions thrown during the creation of the
         {{ArrayBuffer}} object are re-thrown.
       </p>
       <p data-cite="encoding">
-        The <dfn>json()</dfn> method, when invoked, MUST return the result of invoking the initial
-        value of `JSON`.{{JSON/parse()}} with the result of running <a>utf-8 decode</a> on |bytes|
-        as argument. Re-throw any exceptions thrown by `JSON`.{{JSON/parse()}}.
+        The <dfn>json()</dfn> method steps are to return the result of
+        <a>parsing JSON bytes to a JavaScript value</a> given [=this=]'s [=bytes=].
       </p>
       <p data-cite="encoding">
-        The <dfn>text</dfn> method, when invoked, MUST return the result of running <a>utf-8
-        decode</a> on |bytes|.
+        The <dfn>text()</dfn> method steps are to return the result of running <a>UTF-8 decode</a>
+        on [=this=]'s [=bytes=].
       </p>
       <p>
         To <dfn>extract a byte sequence</dfn> from |object|, run these steps:
