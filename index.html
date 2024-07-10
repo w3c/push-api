@@ -982,13 +982,13 @@
         };
       </pre>
       <p>
-        <a>PushMessageData</a> objects have an associated <dfn>bytes</dfn> (a
-        [=byte sequence=]), which is set on creation.
+        <a>PushMessageData</a> objects have an associated <dfn>bytes</dfn> (a [=byte sequence=]),
+        which is set on creation.
       </p>
       <p>
         The <dfn>arrayBuffer()</dfn> method steps are to return an {{ArrayBuffer}} whose contents
-        are [=this=]'s [=bytes=]. Exceptions thrown during the creation of
-        the {{ArrayBuffer}} object are re-thrown.
+        are [=this=]'s [=bytes=]. Exceptions thrown during the creation of the {{ArrayBuffer}}
+        object are re-thrown.
       </p>
       <p>
         The <dfn>blob()</dfn> method steps are to return a new {{Blob}} object whose contents are
@@ -996,12 +996,12 @@
       </p>
       <p>
         The <dfn>bytes()</dfn> method steps are to return a new {{Uint8Array}} backed by a
-        {{ArrayBuffer}} whose contents are [=this=]'s [=bytes=]. Exceptions thrown during the creation of the
-        {{ArrayBuffer}} object are re-thrown.
+        {{ArrayBuffer}} whose contents are [=this=]'s [=bytes=]. Exceptions thrown during the
+        creation of the {{ArrayBuffer}} object are re-thrown.
       </p>
       <p data-cite="encoding">
-        The <dfn>json()</dfn> method steps are to return the result of
-        <a>parsing JSON bytes to a JavaScript value</a> given [=this=]'s [=bytes=].
+        The <dfn>json()</dfn> method steps are to return the result of <a>parsing JSON bytes to a
+        JavaScript value</a> given [=this=]'s [=bytes=].
       </p>
       <p data-cite="encoding">
         The <dfn>text()</dfn> method steps are to return the result of running <a>UTF-8 decode</a>
