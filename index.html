@@ -56,7 +56,8 @@
       };
     </script>
   </head>
-  <body data-cite="service-workers FILEAPI secure-contexts hr-time permissions ECMASCRIPT">
+  <body data-cite=
+  "SERVICE-WORKERS FILEAPI SECURE-CONTEXTS HR-TIME PERMISSIONS ECMASCRIPT NOTIFICATIONS BADGING">
     <section id="abstract">
       <p>
         The <cite>Push API</cite> enables sending of a <a>push message</a> to a web application via
@@ -163,6 +164,559 @@
           associated with the <a>push subscription</a> to which the message was submitted. If the
           service worker is not currently running, the worker is started to enable delivery.
         </p>
+      </section>
+      <section>
+        <h2>
+          Declarative push message
+        </h2>
+        <p>
+          A <dfn>declarative push message</dfn> is a [=push message=] whose data is a JSON document
+          that is understood by the user agent. A user agent opportunistically parses each incoming
+          [=push message=] to determine if it is a [=declarative push message=] using the
+          [=declarative push message parser=].
+        </p>
+        <p>
+          A [=declarative push message=] allows for the creation and display of a notification
+          without the involvement of a service worker. Nevertheless, a service worker can still be
+          involved if desired by the [=application server=]. In such a scenario the declarative
+          nature of the [=push message=] serves as a backup in case the service worker was evicted
+          due to storage pressure, for instance. And also provides a more object-oriented approach
+          to transmitting notification data.
+        </p>
+        <pre class="example">
+          {
+            "web_push": 8030,
+            "notification": {
+              "title": "Ada emailed ‘London’",
+              "lang": "en-US",
+              "dir": "ltr",
+              "body": "Did you hear about the tube strikes?",
+              "navigate": "https://email.example/message/12"
+            }
+          }
+        </pre>
+        <section>
+          <h3>
+            Members
+          </h3>
+          <p>
+            A [=declarative push message=] has the following members:
+          </p>
+          <dl>
+            <dt>
+              <code>web_push</code> (required)
+            </dt>
+            <dd>
+              <p>
+                An integer that must be 8030. Used to disambiguate a [=declarative push message=]
+                from other JSON documents.
+              </p>
+            </dd>
+            <dt>
+              <code>notification</code> (required)
+            </dt>
+            <dd>
+              <p>
+                A JSON object consisting of the following members, all analogous to Notifications
+                API features, though sometimes with a slightly stricter type. Apart from
+                <code>title</code> all members are derived from the {{NotificationOptions}}
+                dictionary and to be maintained in tandem. [[NOTIFICATIONS]]
+              </p>
+              <dl>
+                <dt>
+                  <code>title</code> (required)
+                </dt>
+                <dd>
+                  <p>
+                    A string.
+                  </p>
+                </dd>
+                <dt>
+                  <code>dir</code>
+                </dt>
+                <dd>
+                  <p>
+                    "<code>auto</code>", "<code>ltr</code>", or "<code>rtl</code>".
+                  </p>
+                </dd>
+                <dt>
+                  <code>lang</code>
+                </dt>
+                <dd>
+                  <p>
+                    A string that holds a language tag.
+                  </p>
+                </dd>
+                <dt>
+                  <code>body</code>
+                </dt>
+                <dd>
+                  <p>
+                    A string.
+                  </p>
+                </dd>
+                <dt>
+                  <code>navigate</code> (required)
+                </dt>
+                <dd>
+                  <p>
+                    A string that holds a URL.
+                  </p>
+                </dd>
+                <dt>
+                  <code>tag</code>
+                </dt>
+                <dd>
+                  <p>
+                    A string.
+                  </p>
+                </dd>
+                <dt>
+                  <code>image</code>
+                </dt>
+                <dd>
+                  <p>
+                    A string that holds a URL.
+                  </p>
+                </dd>
+                <dt>
+                  <code>icon</code>
+                </dt>
+                <dd>
+                  <p>
+                    A string that holds a URL.
+                  </p>
+                </dd>
+                <dt>
+                  <code>badge</code>
+                </dt>
+                <dd>
+                  <p>
+                    A string that holds a URL.
+                  </p>
+                </dd>
+                <dt>
+                  <code>vibrate</code>
+                </dt>
+                <dd>
+                  <p>
+                    An array of [=/32-bit unsigned integers=].
+                  </p>
+                </dd>
+                <dt>
+                  <code>timestamp</code>
+                </dt>
+                <dd>
+                  <p>
+                    A [=/64-bit unsigned integer=].
+                  </p>
+                </dd>
+                <dt>
+                  <code>renotify</code>
+                </dt>
+                <dd>
+                  <p>
+                    A boolean.
+                  </p>
+                </dd>
+                <dt>
+                  <code>silent</code>
+                </dt>
+                <dd>
+                  <p>
+                    A boolean.
+                  </p>
+                </dd>
+                <dt>
+                  <code>requireInteraction</code>
+                </dt>
+                <dd>
+                  <p>
+                    A boolean.
+                  </p>
+                  <p class="note">
+                    This is not named <code>require_interaction</code> for consistency with the
+                    {{NotificationOptions}} dictionary.
+                  </p>
+                </dd>
+                <dt>
+                  <code>data</code>
+                </dt>
+                <dd>
+                  <p>
+                    Any JSON value.
+                  </p>
+                </dd>
+                <dt>
+                  <code>actions</code>
+                </dt>
+                <dd>
+                  <p>
+                    An array of JSON objects consisting of the following members, all derived from
+                    the {{NotificationAction}} dictionary and to be maintained in tandem.
+                  </p>
+                  <dl>
+                    <dt>
+                      <code>action</code> (required)
+                    </dt>
+                    <dd>
+                      <p>
+                        A string.
+                      </p>
+                    </dd>
+                    <dt>
+                      <code>title</code> (required)
+                    </dt>
+                    <dd>
+                      <p>
+                        A string.
+                      </p>
+                    </dd>
+                    <dt>
+                      <code>navigate</code> (required)
+                    </dt>
+                    <dd>
+                      <p>
+                        A string that holds a URL.
+                      </p>
+                    </dd>
+                    <dt>
+                      <code>icon</code>
+                    </dt>
+                    <dd>
+                      <p>
+                        A string that holds a URL.
+                      </p>
+                    </dd>
+                  </dl>
+                </dd>
+              </dl>
+            </dd>
+            <dt>
+              <code>app_badge</code>
+            </dt>
+            <dd>
+              <p>
+                A [=/64-bit unsigned integer=].
+              </p>
+              <p class="note">
+                Platform conventions are likely to impose a lower limit with regards to what is
+                displayed to the end user. [[BADGING]]
+              </p>
+            </dd>
+            <dt>
+              <code>mutable</code>
+            </dt>
+            <dd>
+              <p>
+                A boolean. When true causes a <code>push</code> event to be dispatched to a service
+                worker (if any) containing the {{Notification}} object and app badge number (if
+                any) described by the <a>declarative push message</a>.
+              </p>
+            </dd>
+          </dl>
+        </section>
+        <section>
+          <h3>
+            Parser
+          </h3>
+          <p>
+            A <dfn>declarative push message parser result</dfn> is a [=/tuple=] consisting of a
+            <dfn data-dfn-for="declarative push message parser result">notification</dfn> (a
+            [=/notification=]), an <dfn data-dfn-for="declarative push message parser result">app
+            badge</dfn> (null or an integer), and a <dfn data-dfn-for=
+            "declarative push message parser result">mutable</dfn> (a boolean).
+          </p>
+          <p>
+            The <dfn>declarative push message parser</dfn> given a [=/byte sequence=]
+            <var>bytes</var>, [=/origin=] <var>origin</var>, [=/URL=] <var>baseURL</var>, and
+            {{EpochTimeStamp}} <var>fallbackTimestamp</var> runs these steps. They return failure
+            or a [=/declarative push message parser result=].
+          </p>
+          <ol>
+            <li>
+              <p>
+                Let <var>message</var> be the result of [=parse JSON bytes to an Infra
+                value|parsing JSON bytes to an Infra value=] given <var>bytes</var>. If that throws
+                an exception, then return failure.
+              </p>
+            </li>
+            <li>
+              <p data-cite="INFRA">
+                If <var>message</var> is not a [=/map=], then return failure.
+              </p>
+            </li>
+            <li>
+              <p>
+                If <var>message</var>["`web_push`"] does not [=map/exist=] or is not 8030, then
+                return failure.
+              </p>
+            </li>
+            <li>
+              <p>
+                If <var>message</var>["`notification`"] does not [=map/exist=], then return
+                failure.
+              </p>
+            </li>
+            <li>
+              <p>
+                Let <var>notificationInput</var> be <var>message</var>["`notification`"].
+              </p>
+            </li>
+            <li>
+              <p data-cite="INFRA">
+                If <var>notificationInput</var> is not a [=/map=], then return failure.
+              </p>
+            </li>
+            <li>
+              <p>
+                If <var>notificationInput</var>["`title`"] does not [=map/exist=] or is not a
+                string, then return failure.
+              </p>
+            </li>
+            <li>
+              <p>
+                If <var>notificationInput</var>["`navigate`"] does not [=map/exist=] or is not a
+                string, then return failure.
+              </p>
+            </li>
+            <!-- We could also handle this the same way as any other NotificationOptions members as we still need to check that the final notification has a navigation URL regardless, but it seems better to illustrate early failures are possible. -->
+            <li>
+              <p>
+                Let <var>notificationTitle</var> be <var>notificationInput</var>["`title`"].
+              </p>
+            </li>
+            <li>
+              <p>
+                Let <var>notificationOptions</var> be a {{NotificationOptions}} dictionary.
+              </p>
+            </li>
+            <li>
+              <p>
+                If <var>notificationInput</var>["`dir`"] [=map/exists=] and is "`auto`", "`ltr`",
+                or "`rtl`", then set <var>notificationOptions</var>["{{NotificationOptions/dir}}"]
+                to <var>notificationInput</var>["`dir`"].
+              </p>
+            </li>
+            <li>
+              <p>
+                If <var>notificationInput</var>["`lang`"] [=map/exists=] and is a string, then set
+                <var>notificationOptions</var>["{{NotificationOptions/lang}}"] to
+                <var>notificationInput</var>["`lang`"].
+              </p>
+            </li>
+            <li>
+              <p>
+                If <var>notificationInput</var>["`body`"] [=map/exists=] and is a string, then set
+                <var>notificationOptions</var>["{{NotificationOptions/body}}"] to
+                <var>notificationInput</var>["`body`"].
+              </p>
+            </li>
+            <li>
+              <p>
+                Set <var>notificationOptions</var>["{{NotificationOptions/navigate}}"] to
+                <var>notificationInput</var>["`navigate`"], [=string/converted=].
+              </p>
+            </li>
+            <li>
+              <p>
+                If <var>notificationInput</var>["`tag`"] [=map/exists=] and is a string, then set
+                <var>notificationOptions</var>["{{NotificationOptions/tag}}"] to
+                <var>notificationInput</var>["`tag`"].
+              </p>
+            </li>
+            <li>
+              <p>
+                If <var>notificationInput</var>["`image`"] [=map/exists=] and is a string, then set
+                <var>notificationOptions</var>["{{NotificationOptions/image}}"] to
+                <var>notificationInput</var>["`image`"], [=string/converted=].
+              </p>
+            </li>
+            <li>
+              <p>
+                If <var>notificationInput</var>["`icon`"] [=map/exists=] and is a string, then set
+                <var>notificationOptions</var>["{{NotificationOptions/icon}}"] to
+                <var>notificationInput</var>["`icon`"], [=string/converted=].
+              </p>
+            </li>
+            <li>
+              <p>
+                If <var>notificationInput</var>["`badge`"] [=map/exists=] and is a string, then set
+                <var>notificationOptions</var>["{{NotificationOptions/badge}}"] to
+                <var>notificationInput</var>["`badge`"], [=string/converted=].
+              </p>
+            </li>
+            <li>
+              <p>
+                If <var>notificationInput</var>["`vibrate`"] [=map/exists=] and is a [=/list=] of
+                which each [=list/item=] is a [=/32-bit unsigned integer=], then set
+                <var>notificationOptions</var>["{{NotificationOptions/vibrate}}"] to
+                <var>notificationInput</var>["`vibrate`"].
+              </p>
+            </li>
+            <li>
+              <p>
+                If <var>notificationInput</var>["`timestamp`"] [=map/exists=] and is a [=/64-bit
+                unsigned integer=], then set
+                <var>notificationOptions</var>["{{NotificationOptions/timestamp}}"] to
+                <var>notificationInput</var>["`timestamp`"].
+              </p>
+            </li>
+            <li>
+              <p>
+                If <var>notificationInput</var>["`renotify`"] [=map/exists=] and is a boolean, then
+                set <var>notificationOptions</var>["{{NotificationOptions/renotify}}"] to
+                <var>notificationInput</var>["`renotify`"].
+              </p>
+            </li>
+            <li>
+              <p>
+                If <var>notificationInput</var>["`silent`"] [=map/exists=] and is a boolean, then
+                set <var>notificationOptions</var>["{{NotificationOptions/silent}}"] to
+                <var>notificationInput</var>["`silent`"].
+              </p>
+            </li>
+            <li>
+              <p>
+                If <var>notificationInput</var>["`requireInteraction`"] [=map/exists=] and is a
+                boolean, then set
+                <var>notificationOptions</var>["{{NotificationOptions/requireInteraction}}"] to
+                <var>notificationInput</var>["`requireInteraction`"].
+              </p>
+            </li>
+            <li>
+              <p>
+                If <var>notificationInput</var>["`data`"] [=map/exists=], then set
+                <var>notificationOptions</var>["{{NotificationOptions/data}}"] to the result of
+                running <a>convert an Infra value to a JSON-compatible JavaScript value</a> given
+                <var>notificationInput</var>["`data`"].
+              </p>
+            </li>
+            <li>
+              <p>
+                If <var>notificationInput</var>["`actions`"] [=map/exists=] and is a [=/list=]:
+              </p>
+              <ol>
+                <li>
+                  <p>
+                    Let <var>notificationActions</var> be « ».
+                  </p>
+                </li>
+                <li>
+                  <p>
+                    [=list/For each=] <var>actionInput</var> of
+                    <var>notificationInput</var>["`actions`"]:
+                  </p>
+                  <ol>
+                    <li>
+                      <p>
+                        If <var>actionInput</var>["`action`"] does not [=map/exist=] or is not a
+                        string, then [=iteration/continue=].
+                      </p>
+                    </li>
+                    <li>
+                      <p>
+                        If <var>actionInput</var>["`title`"] does not [=map/exist=] or is not a
+                        string, then [=iteration/continue=].
+                      </p>
+                    </li>
+                    <li>
+                      <p>
+                        If <var>actionInput</var>["`navigate`"] does not [=map/exist=] or is not a
+                        string, then [=iteration/continue=].
+                      </p>
+                    </li>
+                    <!-- We still need to check the final action for a navigation URL regardless, but failing early seems good as per above. -->
+                    <li>
+                      <p>
+                        Let <var>actionNavigate</var> be <var>actionInput</var>["`navigate`"],
+                        [=string/converted=].
+                      </p>
+                    </li>
+                    <li>
+                      <p>
+                        Let <var>notificationAction</var> be the {{NotificationAction}} dictionary
+                        «[ "{{NotificationAction/action}}" → <var>actionInput</var>["`action`"],
+                        "{{NotificationAction/title}}" → <var>actionInput</var>["`title`"],
+                        "{{NotificationAction/navigate}}" → <var>actionNavigate</var> ]».
+                      </p>
+                    </li>
+                    <!-- Initialize the dictionary mostly at once here to account for required members. -->
+                    <li>
+                      <p>
+                        If <var>actionInput</var>["`icon`"] [=map/exists=] and is a string, then
+                        set <var>notificationAction</var>["{{NotificationAction/icon}}"] to
+                        <var>actionInput</var>["`icon`"], [=string/converted=].
+                      </p>
+                    </li>
+                    <li>
+                      <p>
+                        [=list/Append=] <var>notificationAction</var> to
+                        <var>notificationActions</var>.
+                      </p>
+                    </li>
+                  </ol>
+                </li>
+                <li>
+                  <p>
+                    Set <var>notificationOptions</var>["{{NotificationOptions/actions}}"] to
+                    <var>notificationActions</var>.
+                  </p>
+                </li>
+              </ol>
+            </li>
+            <li>
+              <p>
+                Let <var>notification</var> be the result of <a data-lt=
+                "create a notification">creating a notification</a> given
+                <var>notificationTitle</var>, <var>notificationOptions</var>, <var>origin</var>,
+                <var>baseURL</var>, and <var>fallbackTimestamp</var>. If this throws an exception,
+                then return failure.
+              </p>
+            </li>
+            <li>
+              <p>
+                If <var>notification</var>'s [=notification/navigation URL=] is null, then return
+                failure.
+              </p>
+            </li>
+            <li>
+              <p>
+                If the [=notification action/navigation URL=] of any [=/notification action=] of
+                <var>notification</var>'s [=notification/actions=] is null, then return failure.
+              </p>
+            </li>
+            <li>
+              <p>
+                Let <var>appBadge</var> be null.
+              </p>
+            </li>
+            <li>
+              <p>
+                If <var>message</var>["`app_badge`"] [=map/exists=] and
+                <var>message</var>["`app_badge`"] is a [=/64-bit unsigned integer=], then set
+                <var>appBadge</var> to <var>message</var>["`app_badge`"].
+              </p><!-- unsigned long long in Web IDL -->
+            </li>
+            <li>
+              <p>
+                Let <var>mutable</var> be false.
+              </p>
+            </li>
+            <li>
+              <p>
+                If <var>message</var>["`mutable`"] [=map/exists=] and
+                <var>message</var>["`mutable`"] is a boolean, then set <var>mutable</var> to
+                <var>message</var>["`mutable`"].
+              </p>
+            </li>
+            <li>
+              <p>
+                Return (<var>notification</var>, <var>appBadge</var>, <var>mutable</var>).
+              </p>
+            </li>
+          </ol>
+        </section>
       </section>
       <section>
         <h2>
@@ -527,7 +1081,7 @@
         The Service Worker specification defines a {{ServiceWorkerRegistration}} interface
         [[SERVICE-WORKERS]], which this specification extends.
       </p>
-      <pre class="idl" data-cite="service-workers">
+      <pre class="idl" data-cite="SERVICE-WORKERS">
         [SecureContext]
         partial interface ServiceWorkerRegistration {
           readonly attribute PushManager pushManager;
@@ -978,8 +1532,8 @@
         };
       </pre>
       <p>
-        {{PushMessageData}} objects have an associated <dfn>bytes</dfn> (a [=byte sequence=]),
-        which is set on creation.
+        {{PushMessageData}} objects have an associated <dfn data-dfn-for=
+        "PushMessageData">bytes</dfn> (a [=byte sequence=]), which is set on creation.
       </p>
       <p>
         The <dfn>arrayBuffer()</dfn> method steps are to return an {{ArrayBuffer}} whose contents
@@ -995,11 +1549,11 @@
         {{ArrayBuffer}} whose contents are [=this=]'s [=bytes=]. Exceptions thrown during the
         creation of the {{ArrayBuffer}} object are re-thrown.
       </p>
-      <p data-cite="encoding">
+      <p data-cite="ENCODING">
         The <dfn>json()</dfn> method steps are to return the result of [=parse JSON bytes to a
         JavaScript value|parsing JSON bytes to a JavaScript value=] given [=this=]'s [=bytes=].
       </p>
-      <p data-cite="encoding">
+      <p data-cite="ENCODING">
         The <dfn>text()</dfn> method steps are to return the result of running <a>UTF-8 decode</a>
         on [=this=]'s [=bytes=].
       </p>
@@ -1010,7 +1564,7 @@
         <li>Let |bytes| be an empty byte sequence.
         </li>
         <li>Switch on |object|'s type:
-          <dl data-cite="WebIDL">
+          <dl data-cite="WEBIDL">
             <dt>
               {{BufferSource}}
             </dt>
@@ -1020,7 +1574,7 @@
             <dt>
               {{USVString}}
             </dt>
-            <dd data-cite="encoding">
+            <dd data-cite="ENCODING">
               Set |bytes| to the result of running <a>utf-8 encode</a> on |object|.
             </dd>
           </dl>
@@ -1063,12 +1617,22 @@
         <h2>
           <dfn>PushEvent</dfn> Interface
         </h2>
-        <pre class="idl" data-cite="service-workers">
+        <pre class="idl" data-cite="SERVICE-WORKERS NOTIFICATIONS">
             [Exposed=ServiceWorker, SecureContext]
             interface PushEvent : ExtendableEvent {
               constructor(DOMString type, optional PushEventInit eventInitDict = {});
               readonly attribute PushMessageData? data;
+              readonly attribute Notification? notification;
+              readonly attribute unsigned long long? appBadge;
             };
+
+            dictionary PushEventInit : ExtendableEventInit {
+              PushMessageDataInit? data = null;
+              Notification? notification = null;
+              unsigned long long? appBadge = null;
+            };
+
+            typedef (BufferSource or USVString) PushMessageDataInit;
           </pre>
         <p>
           When a <dfn>constructor</dfn> of the <a>PushEvent</a> interface, or of an interface that
@@ -1082,29 +1646,18 @@
           <li>Set |b| to the result of <a data-lt="extract a byte sequence">extracting a byte
           sequence</a> from the "`data`" member of |eventInitDict|.
           </li>
-          <li>Set the `data` attribute of the event to a new <a>PushMessageData</a> instance with
-          `bytes` set to |b|.
+          <li>Set the `data` attribute of the event to a new {{PushMessageData}} instance whose
+          [=PushMessageData/bytes=] is |b|.
           </li>
         </ol>
         <p>
-          The <dfn>data</dfn>, when getting, returns the value it was initialized with.
+          The <dfn>data</dfn> attribute must return the value it was initialized with.
         </p>
-      </section>
-      <section data-dfn-for="PushEventInit">
-        <h2>
-          <dfn>PushEventInit</dfn> dictionary
-        </h2>
-        <pre class="idl" data-cite="service-workers">
-            typedef (BufferSource or USVString) PushMessageDataInit;
-
-            dictionary PushEventInit : ExtendableEventInit {
-              PushMessageDataInit data;
-            };
-          </pre>
         <p>
-          The <dfn>data</dfn> member contains the data included in the <a>push message</a> when
-          included and the <a>user agent</a> verified its authenticity. The value will be set to
-          `null` in all other cases.
+          The <dfn>notification</dfn> attribute must return the value it was initialized with.
+        </p>
+        <p>
+          The <dfn>appBadge</dfn> attribute must return the value it was initialized with.
         </p>
       </section>
       <section>
@@ -1127,27 +1680,168 @@
           </li>
           <li>If the <a>push message</a> contains a payload:
             <ol>
-              <li>Decrypt the <a>push message</a> payload using the private key from the key pair
+              <li>Decrypt the <a>push message</a>'s payload using the private key from the key pair
               associated with |subscription| and the process described in [[RFC8291]]. Set |bytes|
               to the resulting [=/byte sequence=].
               </li>
-              <li>If the <a>push message</a> payload could not be decrypted for any reason:
-                <ol>
-                  <li>Acknowledge the receipt of the <a>push message</a> according to [[RFC8030]].
-                  Though the message was not successfully received and processed, this prevents the
-                  push service from attempting to retransmit the message; a badly encrypted message
-                  is not recoverable.
-                  </li>
-                  <li>Abort these steps.
-                  </li>
-                </ol>
+              <li>
+                <p>
+                  If the <a>push message</a> payload could not be decrypted for any reason, then
+                  [=acknowledge a push message|acknowledge=] the <a>push message</a> and abort
+                  these steps.
+                </p>
                 <p class="note">
-                  A `push` event will not be fired for a <a>push message</a> that was not
-                  successfully decrypted using the key pair associated with the <a>push
-                  subscription</a>.
+                  A `push` event is not fired for a <a>push message</a> that was not successfully
+                  decrypted using the key pair associated with the <a>push subscription</a>.
                 </p>
               </li>
             </ol>
+          </li>
+          <li>
+            <p>
+              If |bytes| is non-null:
+            </p>
+            <ol>
+              <li>
+                <p>
+                  Let |baseURL| be |registration|'s [=service worker registration/scope URL=].
+                </p>
+              </li>
+              <li>
+                <p>
+                  Let |origin| be |baseURL|'s [=url/origin=].
+                </p>
+              </li>
+              <li>
+                <p>
+                  Let |fallbackTimestamp| be [=current coarsened wall time=].
+                </p>
+              </li>
+              <li>
+                <p>
+                  Let |declarativeResult| be the result of running the [=/declarative push message
+                  parser=] given |bytes|, |origin|, |baseURL|, and |fallbackTimestamp|.
+                </p>
+              </li>
+              <li>
+                <p>
+                  If |declarativeResult| is not failure:
+                </p>
+                <ol>
+                  <li>
+                    <p>
+                      Let |notification| be |declarativeResult|'s [=declarative push message parser
+                      result/notification=].
+                    </p>
+                  </li>
+                  <li>
+                    <p>
+                      Set |notification|'s [=notification/service worker registration=] to
+                      |registration|.
+                    </p>
+                  </li>
+                  <li>
+                    <p>
+                      Let |notificationShown| be false.
+                    </p>
+                  </li>
+                  <li>
+                    <p>
+                      Let |appBadgeSet| be false.
+                    </p>
+                  </li>
+                  <li>
+                    <p>
+                      If |declarativeResult|'s [=declarative push message parser result/mutable=]
+                      is true:
+                    </p>
+                    <ol>
+                      <li>
+                        <p>
+                          Let |result| be the result of [=fire a push event|firing a push event=]
+                          given |registration|, null, a new {{Notification}} object representing
+                          |notification|, and |declarativeResult|'s [=declarative push message
+                          parser result/app badge=].
+                        </p>
+                      </li>
+                      <li>
+                        <p>
+                          If |result| is not failure, then set |notificationShown| to |result|'s
+                          [=push event result/notification shown=] and |appBadgeSet| to |result|'s
+                          [=push event result/app badge set=].
+                        </p>
+                      </li>
+                    </ol>
+                  </li>
+                  <li>
+                    <p>
+                      If |notificationShown| is false, then run the [=notification show steps=]
+                      given |notification|.
+                    </p>
+                  </li>
+                  <li>
+                    <p>
+                      If |appBadgeSet| is false, then <a href=
+                      "https://github.com/w3c/badging/issues/111">w3c/badging #111</a>...
+                    </p>
+                  </li>
+                  <li>
+                    <p>
+                      [=acknowledge a push message|Acknowledge=] the <a>push message</a> and abort
+                      these steps.
+                    </p>
+                  </li>
+                </ol>
+              </li>
+            </ol>
+          </li>
+          <li>
+            <p>
+              Let |data| be a new {{PushMessageData}} object whose [=PushMessageData/bytes=] is
+              |bytes| if |bytes| is non-null; otherwise null.
+            </p>
+          </li>
+          <li>
+            <p>
+              Let |result| be the result of [=fire a push event|firing a push event=] given
+              |registration|, |data|, null, and null.
+            </p>
+          </li>
+          <li>
+            <p>
+              If <var>result</var> is failure and the same <a>push message</a> has been delivered
+              to a <a>service worker registration</a> multiple times unsuccessfully, then
+              [=acknowledge a push message|acknowledge=] the <a>push message</a>.
+            </p>
+          </li>
+          <li>
+            <p>
+              If <var>result</var> is not failure, then [=acknowledge a push message|acknowledge=]
+              the <a>push message</a>.
+            </p>
+          </li>
+        </ol>
+        <p>
+          A <dfn>push event result</dfn> is a [=/tuple=] consisting of a <dfn for=
+          "push event result">notification shown</dfn> (a [=/boolean=]) and an <dfn for=
+          "push event result">app badge set</dfn> (a [=/boolean=]).
+        </p>
+        <p>
+          To <dfn>fire a push event</dfn> given a [=/service worker registration=] |registration|,
+          {{PushMessageData}} object or null |data|, a [=/notification=] or null |notification|,
+          and an integer or null |appBadge|, run these steps. They return failure or a [=/push
+          event result=].
+        </p>
+        <ol>
+          <li>
+            <p>
+              Let |notificationResult| be null.
+            </p>
+          </li>
+          <li>
+            <p>
+              Let |appBadgeResult| be null.
+            </p>
           </li>
           <li>
             <p>
@@ -1156,44 +1850,92 @@
             </p>
             <dl>
               <dt>
-                `data`
+                {{PushEvent/data}}
               </dt>
               <dd>
-                A new {{PushMessageData}} object whose [=bytes=] is |bytes|.
+                |data|
+              </dd>
+              <dt>
+                {{PushEvent/notification}}
+              </dt>
+              <dd>
+                |notification|
+              </dd>
+              <dt>
+                {{PushEvent/appBadge}}
+              </dt>
+              <dd>
+                |appBadge|
               </dd>
             </dl>
             <p>
               Then run the following steps in parallel, with |dispatchedEvent|:
             </p>
             <ol>
-              <li>Wait for all of the promises in the [=ExtendableEvent/extend lifetime promises=]
-              of |dispatchedEvent| to resolve.
-              </li>
-              <li>If all the promises resolve successfully, acknowledge the receipt of the <a>push
-              message</a> according to [[RFC8030]] and abort these steps.
+              <li>
+                <p>
+                  Wait for all of the promises in the [=ExtendableEvent/extend lifetime promises=]
+                  of |dispatchedEvent| to resolve.
+                </p>
               </li>
               <li>
                 <p>
-                  If the same <a>push message</a> has been delivered to a <a>service worker
-                  registration</a> multiple times unsuccessfully, acknowledge the receipt of the
-                  <a>push message</a> according to [[RFC8030]].
+                  If they do not resolve successfully, then set |notificationResult| and
+                  |appBadgeResult| to failure and abort these steps.
                 </p>
+              </li>
+              <li>
                 <p>
-                  Acknowledging the <a>push message</a> causes the <a>push service</a> to stop
-                  delivering the message and to report success to the <a>application server</a>.
-                  This prevents the same <a>push message</a> from being retried by the <a>push
-                  service</a> indefinitely.
+                  Set |notificationResult| to true if
+                  {{ServiceWorkerRegistration/showNotification()}} has been invoked; otherwise
+                  false.
                 </p>
+              </li>
+              <li>
                 <p>
-                  Acknowledging also means that an <a>application server</a> could incorrectly
-                  receive a delivery receipt indicating successful delivery of the <a>push
-                  message</a>. Therefore, multiple rejections SHOULD be permitted before
-                  acknowledging; allowing at least three attempts is recommended.
+                  Set |appBadgeResult| to true if {{NavigatorBadge/setAppBadge()}} has been
+                  invoked; otherwise false.
                 </p>
               </li>
             </ol>
           </li>
+          <li>
+            <p>
+              Wait for |notificationResult| and |appBadgeResult| to be non-null.
+            </p>
+          </li>
+          <li>
+            <p>
+              If |notificationResult| is failure, then return failure.
+            </p>
+          </li>
+          <li>
+            <p>
+              [=/Assert=]: |notificationResult| and |appBadgeResult| are [=/booleans=].
+            </p>
+          </li>
+          <li>
+            <p>
+              Return (|notificationResult|, |appBadgeResult|).
+            </p>
+          </li>
         </ol>
+        <p>
+          To <dfn>acknowledge a push message</dfn> given a <a>push message</a>
+          <var>pushMessage</var> means to acknowledge the receipt of <var>pushMessage</var>
+          according to [[RFC8030]].
+        </p>
+        <p>
+          Acknowledging the <a>push message</a> causes the <a>push service</a> to stop delivering
+          the message and to report success to the <a>application server</a>. This prevents the
+          same <a>push message</a> from being retried by the <a>push service</a> indefinitely.
+        </p>
+        <p>
+          Acknowledging also means that an <a>application server</a> could incorrectly receive a
+          delivery receipt indicating successful delivery of the <a>push message</a>. Therefore,
+          multiple rejections SHOULD be permitted before acknowledging; allowing at least three
+          attempts is recommended.
+        </p>
       </section>
       <section>
         <h2>
@@ -1234,7 +1976,7 @@
           <h2>
             <dfn>PushSubscriptionChangeEvent</dfn> Interface
           </h2>
-          <pre class="idl" data-cite="service-workers">
+          <pre class="idl" data-cite="SERVICE-WORKERS">
             [Exposed=ServiceWorker, SecureContext]
             interface PushSubscriptionChangeEvent : ExtendableEvent {
               constructor(DOMString type, optional PushSubscriptionChangeEventInit eventInitDict = {});
@@ -1255,7 +1997,7 @@
           <h2>
             <dfn>PushSubscriptionChangeEventInit</dfn> Interface
           </h2>
-          <pre class="idl" data-cite="service-workers">
+          <pre class="idl" data-cite="SERVICE-WORKERS">
               dictionary PushSubscriptionChangeEventInit : ExtendableEventInit {
                 PushSubscription newSubscription = null;
                 PushSubscription oldSubscription = null;
