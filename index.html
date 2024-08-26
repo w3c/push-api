@@ -626,22 +626,18 @@
         global task=] on the [=networking task source=] using |global| to [=reject=] |promise| with
         an {{"InvalidStateError"}} {{DOMException}} and terminate these steps.
         </li>
-        <li>Let |sw| be |registration|'s [=service worker registration/active worker=].
-        </li>
         <li>Let |permission| be [=request permission to use=] "push".
         </li>
         <li>If |permission| is {{PermissionState/"denied"}}, [=queue a global task=] on the [=user
         interaction task source=] using |global| to [=reject=] |promise| with a
         {{"NotAllowedError"}} {{DOMException}} and terminate these steps.
         </li>
-        <li>If |sw| is already subscribed, run the following sub-steps:
+        <li>If |registration| has a <a>push subscription</a>:
           <ol>
-            <li>Try to retrieve the <a>push subscription</a> associated with the |sw|. If there is
-            an error, [=queue a global task=] on the [=networking task source=] using |global| to
-            [=reject=] |promise| with an {{"AbortError"}} {{DOMException}} and terminate these
-            steps.
-            </li>
-            <li>Let |subscription| be the <a>push subscription</a> associated with |sw|.
+            <li>Let |subscription| be the result of obtaining |registration|'s <a>push
+            subscription</a>. If there is an error, [=queue a global task=] on the [=networking
+            task source=] using |global| to [=reject=] |promise| with an {{"AbortError"}}
+            {{DOMException}} and terminate these steps.
             </li>
             <li>Compare the |options| argument with the `options` attribute of |subscription|. The
             contents of {{BufferSource}} values are compared for equality rather than
