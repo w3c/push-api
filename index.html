@@ -982,7 +982,7 @@
         };
       </pre>
       <p>
-        <a>PushMessageData</a> objects have an associated <dfn>bytes</dfn> (a [=byte sequence=]),
+        {{PushMessageData}} objects have an associated <dfn>bytes</dfn> (a [=byte sequence=]),
         which is set on creation.
       </p>
       <p>
@@ -1127,32 +1127,29 @@
           </li>
           <li>Let |subscription| be the active <a>push subscription</a> for |registration|.
           </li>
-          <li>Initialize |data| to a value of `null`.
+          <li>Let |bytes| be null.
           </li>
-          <li>If the <a>push message</a> contains a payload, perform the following steps:
+          <li>If the <a>push message</a> contains a payload:
             <ol>
-              <li>Decrypt the <a>push message</a> using the private key from the key pair
-              associated with |subscription| and the process described in [[RFC8291]]. This
-              produces the plain text of the message.
+              <li>Decrypt the <a>push message</a> payload using the private key from the key pair
+              associated with |subscription| and the process described in [[RFC8291]]. Set |bytes|
+              to the resulting [=/byte sequence=].
               </li>
-              <li>If the <a>push message</a> could not be decrypted for any reason, perform the
-              following steps:
+              <li>If the <a>push message</a> payload could not be decrypted for any reason:
                 <ol>
                   <li>Acknowledge the receipt of the <a>push message</a> according to [[RFC8030]].
                   Though the message was not successfully received and processed, this prevents the
                   push service from attempting to retransmit the message; a badly encrypted message
                   is not recoverable.
                   </li>
-                  <li>Discard the <a>push message</a>.
+                  <li>Abort these steps.
                   </li>
-                  <li>Terminate this process.
-                  </li>
-                </ol>A `push` event MUST NOT be fired for a <a>push message</a> that was not
-                successfully decrypted using the key pair associated with the <a>push
-                subscription</a>.
-              </li>
-              <li>Let |data| be a new <a>PushMessageData</a> instance with the decrypted plain text
-              of the <a>push message</a>.
+                </ol>
+                <p class="note">
+                  A `push` event will not be fired for a <a>push message</a> that was not
+                  successfully decrypted using the key pair associated with the <a>push
+                  subscription</a>.
+                </p>
               </li>
             </ol>
           </li>
@@ -1166,7 +1163,7 @@
                 `data`
               </dt>
               <dd>
-                |data|
+                A new {{PushMessageData}} object whose [=bytes=] is |bytes|.
               </dd>
             </dl>
             <p>
