@@ -292,8 +292,9 @@
                 </dt>
                 <dd>
                   <p>
-                    A boolean. When true causes a <code>pushnotification</code> to be dispatched to
-                    a service worker (if any).
+                    A boolean. When true causes a <code>push</code> event to be dispatched to a
+                    service worker (if any) containing the {{Notification}} object described by the
+                    <a>declarative push message</a>.
                   </p>
                 </dd>
               </dl>
@@ -1347,7 +1348,17 @@
             interface PushEvent : ExtendableEvent {
               constructor(DOMString type, optional PushEventInit eventInitDict = {});
               readonly attribute PushMessageData? data;
+              readonly attribute Notification? notification;
+              readonly attribute unsigned long long? appBadge;
             };
+
+            dictionary PushEventInit : ExtendableEventInit {
+              PushMessageDataInit? data = null;
+              Notification? notification = null;
+              unsigned long long? appBadge = null;
+            };
+
+            typedef (BufferSource or USVString) PushMessageDataInit;
           </pre>
         <p>
           When a <dfn>constructor</dfn> of the <a>PushEvent</a> interface, or of an interface that
@@ -1368,41 +1379,6 @@
         <p>
           The <dfn>data</dfn>, when getting, returns the value it was initialized with.
         </p>
-      </section>
-      <section data-dfn-for="PushEventInit">
-        <h2>
-          <dfn>PushEventInit</dfn> dictionary
-        </h2>
-        <pre class="idl" data-cite="service-workers">
-            typedef (BufferSource or USVString) PushMessageDataInit;
-
-            dictionary PushEventInit : ExtendableEventInit {
-              PushMessageDataInit data;
-            };
-          </pre>
-        <p>
-          The <dfn>data</dfn> member contains the data included in the <a>push message</a> when
-          included and the <a>user agent</a> verified its authenticity. The value will be set to
-          `null` in all other cases.
-        </p>
-      </section>
-      <section data-dfn-for="PushNotificationEvent">
-        <h2>
-          <dfn>PushNotificationEvent</dfn> Interface
-        </h2>
-        <pre class="idl" data-cite="service-workers">
-            [Exposed=ServiceWorker, SecureContext]
-            interface PushNotificationEvent : ExtendableEvent {
-              constructor(DOMString type, optional PushNotificationEventInit eventInitDict = {});
-              readonly attribute Notification notification;
-              readonly attribute unsigned long long? appBadge;
-            };
-
-            dictionary PushNotificationEventInit : ExtendableEventInit {
-              required Notification notification;
-              unsigned long long? appBadge = null;
-            };
-          </pre>
         <p>
           The <dfn>notification</dfn> attribute must return the value it was initialized with.
         </p>
@@ -1506,19 +1482,23 @@
                     <ol>
                       <li>
                         <p>
-                          [=/Fire a functional event=] named "`pushnotification`" using
-                          {{PushNotificationEvent}} on |registration| with the following
+                          [=/Fire a functional event=] named "`push`" using
+                          {{PushEvent}} on |registration| with the following
                           properties:
                         </p>
                         <dl>
                           <dt>
-                            `notification`
+                            {{PushEvent/data}}
+                          <dd>
+                            null
+                          <dt>
+                            {{PushEvent/notification}}
                           </dt>
                           <dd>
                             |notification|
                           </dd>
                           <dt>
-                            `appBadge`
+                            {{PushEvent/appBadge}}
                           </dt>
                           <dd>
                             |declarativeResult|'s [=declarative push message parser result/app
@@ -1566,11 +1546,16 @@
             </p>
             <dl>
               <dt>
-                `data`
+                {{PushEvent//data}}
               </dt>
               <dd>
                 A new <a>PushMessageData</a> instance whose [=PushMessageData/bytes=] is |bytes|.
               </dd>
+              <dt>
+                {{PushEvent/notification}}
+              <dd>null
+              <dt>{{PushEvent/appBadge}}
+              <dd>null
             </dl>
             <p>
               Then run the following steps in parallel, with |dispatchedEvent|:
