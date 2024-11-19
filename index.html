@@ -699,9 +699,19 @@
         </h2>
         <p>
           A <dfn>push subscription</dfn> is a message delivery context established between the
-          <a>user agent</a> and the <a>push service</a> on behalf of a web application. Each
-          <a>push subscription</a> is associated with a <a>service worker registration</a> and a
-          <a>service worker registration</a> has at most one <a>push subscription</a>.
+          <a>user agent</a> and the <a>push service</a> on behalf of a web application.
+        </p>
+        <p>
+          A [=push subscription=] has an associated <dfn data-dfn-for=
+          "push subscription">scope</dfn>, which is a [=/URL=].
+        </p>
+        <p>
+          A [=push subscription=] is considered to have a <dfn data-dfn-for=
+          "push subscription">window-accessible scope</dfn> when its [=push subscription/scope=] is
+          a [=/list=] of [=list/size=] 1 and [=push subscription/scope=][0] is the empty string.
+        </p>
+        <p class="note">
+          I.e., the [=url/path=] component of the [=/URL=] serializes as "`/`".
         </p>
         <p>
           A <a>push subscription</a> has an associated <dfn>push endpoint</dfn>. It MUST be the
@@ -721,12 +731,9 @@
           creating the <a>push subscription</a>.
         </p>
         <p>
-          If the <a>user agent</a> has to change the keys for any reason, it MUST <a>fire the
-          "`pushsubscriptionchange`" event</a> with the <a>service worker registration</a>
-          associated with the <a>push subscription</a> as |registration|, a {{PushSubscription}}
-          instance representing the <a>push subscription</a> having the old keys as
-          |oldSubscription| and a {{PushSubscription}} instance representing the <a>push
-          subscription</a> having the new keys as |newSubscription|.
+          If the <a>user agent</a> has to change the keys of a [=push subscription=] for any reason
+          and the [=push subscription=]'s [=associated service worker registration=] is non-null,
+          it MUST [=refresh=] the [=push subscription=].
         </p>
         <p>
           To <dfn>create a push subscription</dfn>, given an {{PushSubscriptionOptionsInit}}
@@ -771,17 +778,41 @@
         </ol>
         <section>
           <h2>
-            Subscription Refreshes
+            Relationship to service worker registrations
+          </h2>
+          <p>
+            A [=push subscription=]'s <dfn>associated service worker registration</dfn> is the
+            [=service worker registration=] whose [=service worker registration/scope URL=]
+            [=URL/equals=] the [=push subscription=]'s [=push subscription/scope=], if any;
+            otherwise null.
+          </p>
+          <p class="note">
+            A [=push subscription=]'s [=associated service worker registration=] can only be null
+            when it has a [=push subscription/window-accessible scope=].
+          </p>
+          <p>
+            And vice versa, a [=service worker registration=]'s <dfn>associated push
+            subscription</dfn> is the [=push subscription=] whose [=push subscription/scope=]
+            [=URL/equals=] the [=service worker registration=]'s [=service worker
+            registration/scope URL=], if any; otherwise null.
+          </p>
+        </section>
+        <section>
+          <h2>
+            Subscription refreshes
           </h2>
           <p>
             A <a>user agent</a> or <a>push service</a> MAY choose to <dfn>refresh</dfn> a <a>push
-            subscription</a> at any time, for example because it has reached a certain age.
+            subscription</a> whose [=associated service worker registration=] is non-null at any
+            time, for example because it has reached a certain age.
           </p>
           <p>
             When this happens, the <a>user agent</a> MUST run the steps to <a>create a push
             subscription</a> given the <a>PushSubscriptionOptions</a> that were provided for
-            creating the current <a>push subscription</a>. The new <a>push subscription</a> MUST
-            have a key pair that's different from the original subscription.
+            creating the current <a>push subscription</a>, and set the new [=push subscription=]'s
+            [=push subscription/scope=] to the original subscription's [=push subscription/scope=].
+            The new <a>push subscription</a> MUST have a key pair that's different from the
+            original subscription.
           </p>
           <p>
             When successful, <a>user agent</a> then MUST <a>fire the "`pushsubscriptionchange`"
@@ -808,7 +839,7 @@
         </section>
         <section>
           <h2>
-            Subscription Deactivation
+            Subscription deactivation
           </h2>
           <p>
             When a <a>push subscription</a> is <dfn data-lt="deactivate">deactivated</dfn>, both
@@ -817,13 +848,13 @@
             delivered.
           </p>
           <p>
-            A <a>push subscription</a> is <a>deactivated</a> when its associated <a>service worker
-            registration</a> is unregistered, though a <a>push subscription</a> MAY be
-            <a>deactivated</a> earlier.
+            A <a>push subscription</a> without a [=push subscription/window-accessible scope=] is
+            <a>deactivated</a> when its associated <a>service worker registration</a> is
+            unregistered, though a <a>push subscription</a> MAY be <a>deactivated</a> earlier.
           </p>
           <p class="note">
-            A <a>push subscription</a> is removed when <a>service worker registration</a> is
-            cleared.
+            A <a>push subscription</a> without a [=push subscription/window-accessible scope=] is
+            removed when <a>service worker registration</a> is cleared.
           </p>
         </section>
       </section>
@@ -1049,23 +1080,23 @@
       </section>
     </section>
     <section data-dfn-for="ServiceWorkerRegistration">
-      <h2>
-        Extensions to the `ServiceWorkerRegistration` Interface
+      <h2 id="extensions-to-the-serviceworkerregistration-interface">
+        `PushManagerAttribute` mixin
       </h2>
       <p>
-        The Service Worker specification defines a {{ServiceWorkerRegistration}} interface
-        [[SERVICE-WORKERS]], which this specification extends.
+        This specifications extends the {{Window}} and {{ServiceWorkerRegistration}} objects
+        through the {{PushManagerAttribute}} mixin. [[HTML]] [[SERVICE-WORKERS]]
       </p>
-      <pre class="idl" data-cite="SERVICE-WORKERS">
+      <pre class="idl" data-cite="HTML SERVICE-WORKERS">
         [SecureContext]
-        partial interface ServiceWorkerRegistration {
+        interface mixin PushManagerAttribute {
           readonly attribute PushManager pushManager;
         };
+        Window includes PushManagerAttribute;
+        ServiceWorkerRegistration includes PushManagerAttribute;
       </pre>
       <p>
-        The <dfn>pushManager</dfn> attribute exposes a {{PushManager}}, which has an associated
-        <a>service worker registration</a> represented by the {{ServiceWorkerRegistration}} on
-        which the attribute is exposed.
+        The <dfn>pushManager</dfn> attribute exposes a {{PushManager}}.
       </p>
     </section>
     <section data-dfn-for="PushManager">
@@ -1107,7 +1138,23 @@
         </li>
         <li>Let |global| be [=this=]' [=relevant global object=].
         </li>
-        <li>Return |promise| and continue [=in parallel=].
+        <li>Let |scope| be null.
+        </li>
+        <li>Let |registration| be null.
+        </li>
+        <li>If [=this=] is a {{Window}} object, then set |scope| to the result of running the
+        [=basic URL parser=] given "`/`" and |global|'s <a>associated <code>Document</code></a>'s
+        [=Document/URL=].
+        </li>
+        <li>Otherwise:
+          <ol>
+            <li>[=/Assert=]: [=this=] is a {{ServiceWorkerRegistration}} object.
+            </li>
+            <li>Set |registration| to [=this=]'s associated [=service worker registration=].
+            </li>
+          </ol>
+        </li>
+        <li>Run these steps [=in parallel=]:
           <aside class="note" title="Validation order can vary across user agents">
             <p>
               Because of implementation-specific reasons, user agents are known to do some of the
@@ -1117,80 +1164,106 @@
               don't believe this affects interoperability of implementations or web applications.
             </p>
           </aside>
-        </li>
-        <li>If the |options| argument has a {{PushSubscriptionOptionsInit/userVisibleOnly}} value
-        set to `false` and the user agent requires it to be `true`, [=queue a global task=] on the
-        [=networking task source=] using |global| to [=reject=] |promise| {{"NotAllowedError"}}
-        {{DOMException}}
-        </li>
-        <li>If the |options| argument does not include a non-null value for the
-        {{PushSubscriptionOptionsInit/applicationServerKey}} member, and the <a>push service</a>
-        requires one to be given, [=queue a global task=] on the [=networking task source=] using
-        |global| to [=reject=] |promise| with a {{"NotSupportedError"}} {{DOMException}}.
-        </li>
-        <li>If the |options| argument includes a non-null value for the
-        {{PushSubscriptionOptions/applicationServerKey}} attribute, run the following sub-steps:
           <ol>
-            <li>If |options|'s {{PushSubscriptionOptionsInit/applicationServerKey}} is a
-            {{DOMString}}, set its value to an {{ArrayBuffer}} containing the sequence of octets
-            that result from decoding |options|'s
-            {{PushSubscriptionOptionsInit/applicationServerKey}} using the base64url encoding
-            [[RFC7515]].
+            <li>If the |options| argument has a {{PushSubscriptionOptionsInit/userVisibleOnly}}
+            value set to `false` and the user agent requires it to be `true`, [=queue a global
+            task=] on the [=networking task source=] using |global| to [=reject=] |promise|
+            {{"NotAllowedError"}} {{DOMException}}
             </li>
-            <li>If decoding fails, [=queue a global task=] on the [=networking task source=] using
-            |global| to [=reject=] |promise| with an {{"InvalidCharacterError"}} {{DOMException}}
-            and terminate these steps.
+            <li>If the |options| argument does not include a non-null value for the
+            {{PushSubscriptionOptionsInit/applicationServerKey}} member, and the <a>push
+            service</a> requires one to be given, [=queue a global task=] on the [=networking task
+            source=] using |global| to [=reject=] |promise| with a {{"NotSupportedError"}}
+            {{DOMException}}.
             </li>
-            <li>Ensure that |options|'s {{PushSubscriptionOptionsInit/applicationServerKey}}
-            describes a valid point on the P-256 curve. If its value is invalid, [=queue a global
-            task=] on the [=networking task source=] using |global| to [=reject=] |promise| with an
-            {{"InvalidAccessError"}} {{DOMException}} and terminate these steps.
+            <li>If the |options| argument includes a non-null value for the
+            {{PushSubscriptionOptions/applicationServerKey}} attribute:
+              <ol>
+                <li>If |options|'s {{PushSubscriptionOptionsInit/applicationServerKey}} is a
+                {{DOMString}}, set its value to an {{ArrayBuffer}} containing the sequence of
+                octets that result from decoding |options|'s
+                {{PushSubscriptionOptionsInit/applicationServerKey}} using the base64url encoding
+                [[RFC7515]].
+                </li>
+                <li>If decoding fails, [=queue a global task=] on the [=networking task source=]
+                using |global| to [=reject=] |promise| with an {{"InvalidCharacterError"}}
+                {{DOMException}} and terminate these steps.
+                </li>
+                <li>Ensure that |options|'s {{PushSubscriptionOptionsInit/applicationServerKey}}
+                describes a valid point on the P-256 curve. If its value is invalid, [=queue a
+                global task=] on the [=networking task source=] using |global| to [=reject=]
+                |promise| with an {{"InvalidAccessError"}} {{DOMException}} and terminate these
+                steps.
+                </li>
+              </ol>
+            </li>
+            <li>Let |subscription| be null.
+            </li>
+            <li>If |scope| is non-null:
+              <ol>
+                <li>If there is a [=push subscription=] with a [=push
+                subscription/window-accessible scope=] whose [=push subscription/scope=]
+                [=URL/equals=] |scope|, then set |subscription| to that [=push subscription=].
+                </li>
+              </ol>
+            </li>
+            <li>Otherwise:
+              <ol>
+                <li>[=/Assert=]: |registration| is non-null.
+                </li>
+                <li>If |registration|'s [=service worker registration/active worker=] is null,
+                [=queue a global task=] on the [=networking task source=] using |global| to
+                [=reject=] |promise| with an {{"InvalidStateError"}} {{DOMException}} and terminate
+                these steps.
+                </li>
+                <li>If |registration|'s [=associated push subscription=] is non-null, then set
+                |subscription| to |registration|'s [=associated push subscription=].
+                </li>
+                <li>Set |scope| to |registration|'s [=service worker registration/scope URL=].
+                </li>
+              </ol>
+            </li>
+            <li>Let |permission| be [=request permission to use=] "push".
+            </li>
+            <li>If |permission| is {{PermissionState/"denied"}}, [=queue a global task=] on the
+            [=user interaction task source=] using |global| to [=reject=] |promise| with a
+            {{"NotAllowedError"}} {{DOMException}} and terminate these steps.
+            </li>
+            <li>If |subscription| is non-null:
+              <ol>
+                <li>If there is an error with |subscription|, then [=queue a global task=] on the
+                [=networking task source=] using |global| to [=reject=] |promise| with an
+                {{"AbortError"}} {{DOMException}} and terminate these steps.
+                </li>
+                <li>Compare the |options| argument with the `options` attribute of |subscription|.
+                The contents of {{BufferSource}} values are compared for equality rather than
+                [=ECMAScript/reference record|reference=].
+                </li>
+                <li>If any attribute on |options| contains a different value to that stored for
+                |subscription|, then [=queue a global task=] on the [=networking task source=]
+                using |global| to [=reject=] |promise| with an {{"InvalidStateError"}}
+                {{DOMException}} and terminate these steps.
+                </li>
+                <li>[=Queue a global task=] on the [=networking task source=] using |global| to
+                [=resolve=] |promise| with |subscription| and terminate these steps.
+                </li>
+              </ol>
+            </li>
+            <li>[=/Assert=]: |subscription| is null and |scope| is a [=/URL=].
+            </li>
+            <li>Set |subscription| to the result of trying to [=create a push subscription=] with
+            |options|. If creating the subscription [=exception/throws=] an [=exception=], [=queue
+            a global task=] on the [=networking task source=] using |global| to [=reject=]
+            |promise| with a that [=exception=] and terminate these steps.
+            </li>
+            <li>Set |subscription|'s [=push subscription/scope=] to |scope|.
+            </li>
+            <li>[=Queue a global task=] on the [=networking task source=] using |global| to
+            [=resolve=] |promise| with a {{PushSubscription}} corresponding to |subscription|.
             </li>
           </ol>
         </li>
-        <li>Let |registration:ServiceWorkerRegistration| be [=this=]'s associated <a>service worker
-        registration</a>.
-        </li>
-        <li>If |registration|'s [=service worker registration/active worker=] is null, [=queue a
-        global task=] on the [=networking task source=] using |global| to [=reject=] |promise| with
-        an {{"InvalidStateError"}} {{DOMException}} and terminate these steps.
-        </li>
-        <li>Let |permission| be [=request permission to use=] "push".
-        </li>
-        <li>If |permission| is {{PermissionState/"denied"}}, [=queue a global task=] on the [=user
-        interaction task source=] using |global| to [=reject=] |promise| with a
-        {{"NotAllowedError"}} {{DOMException}} and terminate these steps.
-        </li>
-        <li>If |registration| has a <a>push subscription</a>:
-          <ol>
-            <li>Let |subscription| be the result of obtaining |registration|'s <a>push
-            subscription</a>. If there is an error, [=queue a global task=] on the [=networking
-            task source=] using |global| to [=reject=] |promise| with an {{"AbortError"}}
-            {{DOMException}} and terminate these steps.
-            </li>
-            <li>Compare the |options| argument with the `options` attribute of |subscription|. The
-            contents of {{BufferSource}} values are compared for equality rather than
-            [=ECMAScript/reference record|reference=].
-            </li>
-            <li>If any attribute on |options| contains a different value to that stored for
-            |subscription|, then [=queue a global task=] on the [=networking task source=] using
-            |global| to [=reject=] |promise| with an {{"InvalidStateError"}} {{DOMException}} and
-            terminate these steps.
-            </li>
-            <li>When the request has been completed, [=queue a global task=] on the [=networking
-            task source=] using |global| to [=resolve=] |promise| with |subscription| and terminate
-            these steps.
-            </li>
-          </ol>
-        </li>
-        <li>Let |subscription| be the result of trying to [=create a push subscription=] with
-        |options|. If creating the subscription [=exception/throws=] an [=exception=], [=queue a
-        global task=] on the [=networking task source=] using |global| to [=reject=] |promise| with
-        a that [=exception=] and terminate these these steps.
-        </li>
-        <li>Otherwise, [=queue a global task=] on the [=networking task source=] using |global| to
-        [=resolve=] |promise| with a {{PushSubscription}} providing the details of the new
-        |subscription|.
+        <li>Return |promise|.
         </li>
       </ol>
       <p>
@@ -1200,17 +1273,54 @@
       <ol>
         <li>Let |promise| be <a>a new promise</a>.
         </li>
-        <li>Return |promise| and continue the following steps asynchronously.
+        <li>Let |global| be [=this=]'s [=relevant global object=].
         </li>
-        <li>If the <a>Service Worker</a> is not subscribed, resolve |promise| with null.
+        <li>Let |windowScope| be null.
         </li>
-        <li>Retrieve the <a>push subscription</a> associated with the <a>Service Worker</a>.
+        <li>Let |registration| be null.
         </li>
-        <li>If there is an error, reject |promise| with a {{DOMException}} whose name is
-        {{"AbortError"}} and terminate these steps.
+        <li>If [=this=] is a {{Window}} object, then set |windowScope| to the result of running the
+        [=basic URL parser=] given "`/`" and [=this=]'s <a>associated <code>Document</code></a>'s
+        [=Document/URL=].
         </li>
-        <li>When the request has been completed, resolve |promise| with a {{PushSubscription}}
-        providing the details of the retrieved <a>push subscription</a>.
+        <li>Otherwise:
+          <ol>
+            <li>[=/Assert=]: [=this=] is a {{ServiceWorkerRegistration}} object.
+            </li>
+            <li>Set |registration| to [=this=]'s associated [=service worker registration=].
+            </li>
+          </ol>
+        </li>
+        <li>Run these steps [=/in parallel=]:
+          <ol>
+            <li>Let |subscription| be null.
+            </li>
+            <li>If |windowScope| is non-null:
+              <ol>
+                <li>If there is a [=push subscription=] whose [=push subscription/scope=] is
+                |windowScope|, then set |subscription| to that [=push subscription=].
+                </li>
+              </ol>
+            </li>
+            <li>Otherwise:
+              <ol>
+                <li>[=/Assert=]: |registration| is non-null.
+                </li>
+                <li>If |registration|'s [=associated push subscription=] is non-null, then set
+                |subscription| to |registration|'s [=associated push subscription=].
+                </li>
+              </ol>
+            </li>
+            <li>If |subscription| is null, then resolve |promise| with null.
+            </li>
+            <li>If there is an error with |subscription|, reject |promise| with a {{DOMException}}
+            whose name is {{"AbortError"}} and terminate these steps.
+            </li>
+            <li>Resolve |promise| with a {{PushSubscription}} corresponding to |subscription|.
+            </li>
+          </ol>
+        </li>
+        <li>Return |promise|.
         </li>
       </ol>
       <p>
