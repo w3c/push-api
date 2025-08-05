@@ -1724,8 +1724,8 @@
                       <li>
                         <p>
                           Let |result| be the result of [=fire a push event|firing a push event=]
-                          given |registration|, null, and a new {{Notification}} object representing
-                          |notification|.
+                          given |registration|, null, and a new {{Notification}} object
+                          representing |notification|.
                         </p>
                       </li>
                       <li>
@@ -1784,8 +1784,8 @@
         </p>
         <p>
           To <dfn>fire a push event</dfn> given a [=/service worker registration=] |registration|,
-          {{PushMessageData}} object or null |data|, and a [=/notification=] or null |notification|,
-          run these steps. They return failure or a [=/push event result=].
+          {{PushMessageData}} object or null |data|, and a [=/notification=] or null
+          |notification|, run these steps. They return failure or a [=/push event result=].
         </p>
         <ol>
           <li>
@@ -1830,9 +1830,9 @@
               </li>
               <li>
                 <p>
-                  Set |notificationResult| to true if
-                  {{ServiceWorkerRegistration/showNotification()}} has been invoked; otherwise
-                  false.
+                  Set |notificationResult| to |registration|'s <a data-dfn-for=
+                  "service worker registration">has <code>showNotification()</code> been
+                  successfully invoked</a>.
                 </p>
               </li>
             </ol>
