@@ -707,8 +707,9 @@
         </p>
         <p>
           A [=push subscription=] is considered to have a <dfn data-dfn-for=
-          "push subscription">window-accessible scope</dfn> when its [=push subscription/scope=] is
-          a [=/list=] of [=list/size=] 1 and [=push subscription/scope=][0] is the empty string.
+          "push subscription">window-accessible scope</dfn> when its [=push subscription/scope=]'s
+          [=url/path=] is a [=/list=] of [=list/size=] 1 and [=push subscription/scope=]'s
+          [=url/path=][0] is the empty string.
         </p>
         <p class="note">
           I.e., the [=url/path=] component of the [=/URL=] serializes as "`/`".
@@ -1098,6 +1099,15 @@
       <p>
         The <dfn>pushManager</dfn> attribute exposes a {{PushManager}}.
       </p>
+      <p>
+        On a {{Window}} object the {{PushManager}}'s [=PushManager/service worker registration=] is
+        null.
+      </p>
+      <p>
+        On a {{ServiceWorkerRegistration}} object the {{PushManager}}'s [=PushManager/service
+        worker registration=] is the <a>service worker registration</a> represented by the
+        {{ServiceWorkerRegistration}} object.
+      </p>
     </section>
     <section data-dfn-for="PushManager">
       <h2>
@@ -1117,6 +1127,10 @@
         };
       </pre>
       <p>
+        A {{PushManager}} has an associated <dfn data-dfn-for="PushManager">service worker
+        registration</dfn> which is null or a <a>service worker registration</a>.
+      </p>
+      <p>
         The <dfn>supportedContentEncodings</dfn> attribute exposes the sequence of supported
         content codings that can be used to encrypt the payload of a <a>push message</a>. A content
         coding is indicated using the <a>Content-Encoding</a> header field when requesting the
@@ -1131,26 +1145,31 @@
         `subscribe()` method
       </h3>
       <p>
-        The <dfn>subscribe()</dfn> method when invoked MUST run the following steps:
+        The <dfn>subscribe()</dfn> method steps are:
       </p>
       <ol class="algorithm">
         <li>Let |promise| be [=a new promise=].
         </li>
-        <li>Let |global| be [=this=]' [=relevant global object=].
+        <li>Let |global| be [=this=]'s [=relevant global object=].
         </li>
         <li>Let |scope| be null.
         </li>
         <li>Let |registration| be null.
         </li>
-        <li>If [=this=] is a {{Window}} object, then set |scope| to the result of running the
-        [=basic URL parser=] given "`/`" and |global|'s <a>associated <code>Document</code></a>'s
-        [=Document/URL=].
+        <li>If [=this=]'s [=PushManager/service worker registration=] is null:
+          <ol>
+            <li>Set |scope| to the result of running the [=basic URL parser=] given "`/`" and
+            |global|'s <a>associated <code>Document</code></a>'s [=Document/URL=].
+            </li>
+            <!-- Should the scope be validated here or do we trust the permission story to take care of that? Hmm. -->
+          </ol>
         </li>
         <li>Otherwise:
           <ol>
-            <li>[=/Assert=]: [=this=] is a {{ServiceWorkerRegistration}} object.
+            <li>[=/Assert=]: [=this=]'s [=PushManager/service worker registration=] is a [=service
+            worker registration=].
             </li>
-            <li>Set |registration| to [=this=]'s associated [=service worker registration=].
+            <li>Set |registration| to [=this=]'s [=PushManager/service worker registration=].
             </li>
           </ol>
         </li>
@@ -1162,7 +1181,7 @@
               {{PushSubscriptionOptionsInit/userVisibleOnly}} is allowed after validating the
               {{PushSubscriptionOptionsInit/applicationServerKey}}, and vice versa). However, we
               don't believe this affects interoperability of implementations or web applications.
-            </p>
+            </p><!-- This doesn't really seem acceptable this day and age. -->
           </aside>
           <ol>
             <li>If the |options| argument has a {{PushSubscriptionOptionsInit/userVisibleOnly}}
@@ -1267,8 +1286,7 @@
         </li>
       </ol>
       <p>
-        The <dfn data-dfn-for="PushManager">getSubscription</dfn> method when invoked MUST run the
-        following steps:
+        The <dfn data-dfn-for="PushManager">getSubscription()</dfn> method steps are:
       </p>
       <ol>
         <li>Let |promise| be <a>a new promise</a>.
@@ -1279,15 +1297,16 @@
         </li>
         <li>Let |registration| be null.
         </li>
-        <li>If [=this=] is a {{Window}} object, then set |windowScope| to the result of running the
-        [=basic URL parser=] given "`/`" and [=this=]'s <a>associated <code>Document</code></a>'s
-        [=Document/URL=].
+        <li>If [=this=]'s [=PushManager/service worker registration=] is null, then set
+        |windowScope| to the result of running the [=basic URL parser=] given "`/`" and [=this=]'s
+        <a>associated <code>Document</code></a>'s [=Document/URL=].
         </li>
         <li>Otherwise:
           <ol>
-            <li>[=/Assert=]: [=this=] is a {{ServiceWorkerRegistration}} object.
+            <li>[=/Assert=]: [=this=]'s [=PushManager/service worker registration=] is a [=service
+            worker registration=].
             </li>
-            <li>Set |registration| to [=this=]'s associated [=service worker registration=].
+            <li>Set |registration| to [=this=]'s [=PushManager/service worker registration=].
             </li>
           </ol>
         </li>
@@ -1749,20 +1768,34 @@
           it MUST run the following steps.
         </p>
         <ol>
-          <li>Let |registration| be the <a>service worker registration</a> corresponding to the <a>
-            push message</a>.
+          <li>
+            <p>
+              Let |subscription| be the active <a>push subscription</a> corresponding to the
+              <a>push message</a>.
+            </p>
           </li>
-          <li>If |registration| is not found, abort these steps.
+          <li>
+            <p>
+              Let |registration| be |subscription|'s [=push subscription/associated service worker
+              registration=].
+            </p>
           </li>
-          <li>Let |subscription| be the active <a>push subscription</a> for |registration|.
+          <li>
+            <p>
+              Let |bytes| be null.
+            </p>
           </li>
-          <li>Let |bytes| be null.
-          </li>
-          <li>If the <a>push message</a> contains a payload:
+          <li>
+            <p>
+              If the <a>push message</a> contains a payload:
+            </p>
             <ol>
-              <li>Decrypt the <a>push message</a>'s payload using the private key from the key pair
-              associated with |subscription| and the process described in [[RFC8291]]. Set |bytes|
-              to the resulting [=/byte sequence=].
+              <li>
+                <p>
+                  Decrypt the <a>push message</a>'s payload using the private key from the key pair
+                  associated with |subscription| and the process described in [[RFC8291]]. Set
+                  |bytes| to the resulting [=/byte sequence=].
+                </p>
               </li>
               <li>
                 <p>
@@ -1784,7 +1817,7 @@
             <ol>
               <li>
                 <p>
-                  Let |baseURL| be |registration|'s [=service worker registration/scope URL=].
+                  Let |baseURL| be |subscription|'s [=push subscription/scope=].
                 </p>
               </li>
               <li>
@@ -1828,7 +1861,7 @@
                   <li>
                     <p>
                       If |declarativeResult|'s [=declarative push message parser result/mutable=]
-                      is true:
+                      is true and |registration| is non-null:
                     </p>
                     <ol>
                       <li>
@@ -1861,6 +1894,11 @@
                 </ol>
               </li>
             </ol>
+          </li>
+          <li>
+            <p>
+              If |registration| is null, then abort these steps.
+            </p>
           </li>
           <li>
             <p>
