@@ -1097,7 +1097,12 @@
         ServiceWorkerRegistration includes PushManagerAttribute;
       </pre>
       <p>
-        The <dfn>pushManager</dfn> attribute exposes a {{PushManager}}.
+        {{Window}} and {{ServiceWorkerRegistration}} objects have an associated {{PushManager}}
+        object.
+      </p>
+      <p>
+        The <dfn>pushManager</dfn> getter steps are to return [=this=]'s associated {{PushManager}}
+        object.
       </p>
       <p>
         On a {{Window}} object the {{PushManager}}'s [=PushManager/service worker registration=] is
@@ -1184,10 +1189,14 @@
             </p><!-- This doesn't really seem acceptable this day and age. -->
           </aside>
           <ol>
+            <li>If |scope| is failure or is a [=/URL=] whose [=url/scheme=] is not "`https`", then
+            [=queue a global task=] on the [=networking task source=] using |global| to [=reject=]
+            |promise| with a {{"NotAllowedError"}} {{DOMException}}.
+            </li>
             <li>If the |options| argument has a {{PushSubscriptionOptionsInit/userVisibleOnly}}
             value set to `false` and the user agent requires it to be `true`, [=queue a global
-            task=] on the [=networking task source=] using |global| to [=reject=] |promise|
-            {{"NotAllowedError"}} {{DOMException}}
+            task=] on the [=networking task source=] using |global| to [=reject=] |promise| with a
+            {{"NotAllowedError"}} {{DOMException}}.
             </li>
             <li>If the |options| argument does not include a non-null value for the
             {{PushSubscriptionOptionsInit/applicationServerKey}} member, and the <a>push
