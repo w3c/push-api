@@ -721,12 +721,8 @@
           creating the <a>push subscription</a>.
         </p>
         <p>
-          If the <a>user agent</a> has to change the keys for any reason, it MUST <a>fire the
-          "`pushsubscriptionchange`" event</a> with the <a>service worker registration</a>
-          associated with the <a>push subscription</a> as |registration|, a {{PushSubscription}}
-          instance representing the <a>push subscription</a> having the old keys as
-          |oldSubscription| and a {{PushSubscription}} instance representing the <a>push
-          subscription</a> having the new keys as |newSubscription|.
+          If the [=user agent=] has to change the keys for any reason, it MUST [=refresh=] the
+          [=push subscription=].
         </p>
         <p>
           To <dfn>create a push subscription</dfn>, given an {{PushSubscriptionOptionsInit}}
