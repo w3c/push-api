@@ -1096,7 +1096,7 @@
         `subscribe()` method
       </h3>
       <p>
-        The <dfn>subscribe()</dfn> method when invoked MUST run the following steps:
+        The <dfn>subscribe()</dfn> method steps are:
       </p>
       <ol class="algorithm">
         <li>Let |promise| be [=a new promise=].
@@ -1125,7 +1125,7 @@
         |global| to [=reject=] |promise| with a {{"NotSupportedError"}} {{DOMException}}.
         </li>
         <li>If the |options| argument includes a non-null value for the
-        {{PushSubscriptionOptions/applicationServerKey}} attribute, run the following sub-steps:
+        {{PushSubscriptionOptions/applicationServerKey}} attribute:
           <ol>
             <li>If |options|'s {{PushSubscriptionOptionsInit/applicationServerKey}} is a
             {{DOMString}}, set its value to an {{ArrayBuffer}} containing the sequence of octets
@@ -1190,8 +1190,7 @@
         </li>
       </ol>
       <p>
-        The <dfn data-dfn-for="PushManager">getSubscription</dfn> method when invoked MUST run the
-        following steps:
+        The <dfn data-dfn-for="PushManager">getSubscription()</dfn> method steps are:
       </p>
       <ol>
         <li>Let |promise| be <a>a new promise</a>.
