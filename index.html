@@ -1120,16 +1120,17 @@
             {{"NotAllowedError"}} {{DOMException}}
             </li>
             <li>If the |options| argument does not include a non-null value for the
-            {{PushSubscriptionOptionsInit/applicationServerKey}} member, and the <a>push service</a>
-            requires one to be given, [=queue a global task=] on the [=networking task source=]
-            using |global| to [=reject=] |promise| with a {{"NotSupportedError"}} {{DOMException}}.
+            {{PushSubscriptionOptionsInit/applicationServerKey}} member, and the <a>push
+            service</a> requires one to be given, [=queue a global task=] on the [=networking task
+            source=] using |global| to [=reject=] |promise| with a {{"NotSupportedError"}}
+            {{DOMException}}.
             </li>
             <li>If the |options| argument includes a non-null value for the
             {{PushSubscriptionOptions/applicationServerKey}} attribute:
               <ol>
                 <li>If |options|'s {{PushSubscriptionOptionsInit/applicationServerKey}} is a
-                {{DOMString}}, set its value to an {{ArrayBuffer}} containing the sequence of octets
-                that result from decoding |options|'s
+                {{DOMString}}, set its value to an {{ArrayBuffer}} containing the sequence of
+                octets that result from decoding |options|'s
                 {{PushSubscriptionOptionsInit/applicationServerKey}} using the base64url encoding
                 [[RFC7515]].
                 </li>
@@ -1148,9 +1149,9 @@
             <li>Let |registration:ServiceWorkerRegistration| be [=this=]'s associated <a>service
             worker registration</a>.
             </li>
-            <li>If |registration|'s [=service worker registration/active worker=] is null, [=queue a
-            global task=] on the [=networking task source=] using |global| to [=reject=] |promise|
-            with an {{"InvalidStateError"}} {{DOMException}} and terminate these steps.
+            <li>If |registration|'s [=service worker registration/active worker=] is null, [=queue
+            a global task=] on the [=networking task source=] using |global| to [=reject=]
+            |promise| with an {{"InvalidStateError"}} {{DOMException}} and terminate these steps.
             </li>
             <li>Let |permission| be [=request permission to use=] "push".
             </li>
@@ -1170,20 +1171,20 @@
                 [=ECMAScript/reference record|reference=].
                 </li>
                 <li>If any attribute on |options| contains a different value to that stored for
-                |subscription|, then [=queue a global task=] on the [=networking task source=] using
-                |global| to [=reject=] |promise| with an {{"InvalidStateError"}} {{DOMException}}
-                and terminate these steps.
+                |subscription|, then [=queue a global task=] on the [=networking task source=]
+                using |global| to [=reject=] |promise| with an {{"InvalidStateError"}}
+                {{DOMException}} and terminate these steps.
                 </li>
-                <li>When the request has been completed, [=queue a global task=] on the [=networking
-                task source=] using |global| to [=resolve=] |promise| with |subscription| and
-                terminate these steps.
+                <li>When the request has been completed, [=queue a global task=] on the
+                [=networking task source=] using |global| to [=resolve=] |promise| with
+                |subscription| and terminate these steps.
                 </li>
               </ol>
             </li>
             <li>Let |subscription| be the result of trying to [=create a push subscription=] with
-            |options|. If creating the subscription [=exception/throws=] an [=exception=], [=queue a
-            global task=] on the [=networking task source=] using |global| to [=reject=] |promise|
-            with a that [=exception=] and terminate these these steps.
+            |options|. If creating the subscription [=exception/throws=] an [=exception=], [=queue
+            a global task=] on the [=networking task source=] using |global| to [=reject=]
+            |promise| with a that [=exception=] and terminate these these steps.
             </li>
             <li>Otherwise, [=queue a global task=] on the [=networking task source=] using |global|
             to [=resolve=] |promise| with a {{PushSubscription}} providing the details of the new
