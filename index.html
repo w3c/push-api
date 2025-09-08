@@ -1166,7 +1166,6 @@
             <li>Set |scope| to the result of running the [=basic URL parser=] given "`/`" and
             |global|'s <a>associated <code>Document</code></a>'s [=Document/URL=].
             </li>
-            <!-- Should the scope be validated here or do we trust the permission story to take care of that? Hmm. -->
           </ol>
         </li>
         <li>Otherwise:
@@ -1307,7 +1306,7 @@
         <li>Let |registration| be null.
         </li>
         <li>If [=this=]'s [=PushManager/service worker registration=] is null, then set
-        |windowScope| to the result of running the [=basic URL parser=] given "`/`" and [=this=]'s
+        |windowScope| to the result of running the [=basic URL parser=] given "`/`" and |global|'s
         <a>associated <code>Document</code></a>'s [=Document/URL=].
         </li>
         <li>Otherwise:
