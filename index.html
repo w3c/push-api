@@ -929,13 +929,6 @@
         <a>application server</a>'s communication with the user.
       </p>
       <p>
-        <a>User agents</a> MUST NOT provide Push API access to web applications without the
-        <a>express permission</a> of the user. <a>User agents</a> MUST acquire consent for
-        permission through a user interface for each call to the `subscribe()` method, unless a
-        previous permission grant has been persisted, or a prearranged trust relationship applies.
-        Permissions that are preserved beyond the current browsing session MUST be revocable.
-      </p>
-      <p>
         The Push API may have to wake up the Service Worker associated with the <a>service worker
         registration</a> in order to run the developer-provided event handlers. This can cause
         resource usage, such as network traffic, that the <a>user agent</a> SHOULD attribute to the
@@ -967,12 +960,6 @@
         reused for a new <a>push subscription</a>. This prevents the creation of a persistent
         identifier that the user cannot remove. This also prevents reuse of the details of one
         <a>push subscription</a> to send <a>push messages</a> to another <a>push subscription</a>.
-      </p>
-      <p>
-        <a>User agents</a> MUST implement the Push API to only be available in a [=secure
-        context=]. This provides better protection for the user against man-in-the-middle attacks
-        intended to obtain push subscription data. Browsers may ignore this rule for development
-        purposes only.
       </p>
     </section>
     <section class="informative" id="pushframework">
