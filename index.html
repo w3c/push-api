@@ -849,8 +849,8 @@
             delivered.
           </p>
           <p>
-            A <a>push subscription</a> without a [=push subscription/window-accessible scope=] is
-            <a>deactivated</a> when its associated <a>service worker registration</a> is
+            A <a>push subscription</a> without a [=push subscription/window-accessible scope=] MUST
+            be <a>deactivated</a> when its associated <a>service worker registration</a> is
             unregistered, though a <a>push subscription</a> MAY be <a>deactivated</a> earlier.
           </p>
           <p class="note">
@@ -913,7 +913,7 @@
         The contents of a <a>push message</a> are encrypted [[RFC8291]]. However, the <a>push
         service</a> is still exposed to the metadata of messages sent by an <a>application
         server</a> to a <a>user agent</a> over a <a>push subscription</a>. This includes the
-        timing, frequency and size of messages. Other than changing <a>push services</a>, which
+        timing, frequency, and size of messages. Other than changing <a>push services</a>, which
         user agents may disallow, the only known mitigation is to increase the apparent message
         size by padding.
       </p>
@@ -952,10 +952,6 @@
         |registration|, a {{PushSubscription}} instance representing the <a>push subscription</a>
         as |oldSubscription|, and `null` as |newSubscription|. The <a>user agent</a> MUST
         <a>deactivate</a> the affected subscriptions in parallel.
-      </p>
-      <p>
-        When a <a>service worker registration</a> is unregistered, any associated <a>push
-        subscription</a> MUST be <a>deactivated</a>.
       </p>
       <p>
         The <a>push endpoint</a> MUST NOT expose information about the user to be derived by actors
