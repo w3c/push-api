@@ -1177,8 +1177,8 @@
         source=] using |global| to [=reject=] |promise| with a {{"NotAllowedError"}}
         {{DOMException}} and terminate these steps.
         </li>
-        <li>If |options|["{{PushSubscriptionOptionsInit/applicationServerKey}}"] is not non-null
-        and the <a>push service</a> requires it to be non-null, then [=queue a global task=] on the
+        <li>If |options|["{{PushSubscriptionOptionsInit/applicationServerKey}}"] is null and the
+        <a>push service</a> requires it to be non-null, then [=queue a global task=] on the
         [=networking task source=] using |global| to [=reject=] |promise| with a
         {{"NotSupportedError"}} {{DOMException}} and terminate these steps.
         </li>
