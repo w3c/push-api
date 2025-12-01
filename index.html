@@ -1329,20 +1329,41 @@
         </li>
       </ol>
       <p>
-        The <dfn data-dfn-for="PushManager">permissionState()</dfn> method when invoked MUST run
-        the following steps:
+        The <dfn data-dfn-for="PushManager">permissionState()</dfn> method steps are:
       </p>
       <ol>
-        <li>Let |promise| be <a>a new promise</a>.
+        <li>
+          <p>
+            Let |promise| be [=a new promise=].
+          </p>
         </li>
-        <li>Return |promise| and continue the following steps asynchronously.
+        <li>
+          <p>
+            Let |global| be [=this=]'s [=relevant global object=].
+          </p>
         </li>
-        <li>Let |descriptor| be a new {{PermissionDescriptor}} with the
-        {{PermissionDescriptor/name}} initialized to "push".
+        <li>
+          <p>
+            [=In parallel=]:
+          </p>
+          <ol>
+            <li>
+              <p>
+                Let |state| be "`push`"'s [=permission state=].
+              </p>
+            </li>
+            <li>
+              <p>
+                [=Queue a global task=] on the [=permissions task source=] with |global| to resolve
+                |promise| with |state|.
+              </p>
+            </li>
+          </ol>
         </li>
-        <li>let |state| be the [=permission state=] of |descriptor| and the result.
-        </li>
-        <li>Resolve |promise| with |state|.
+        <li>
+          <p>
+            Return |promise|.
+          </p>
         </li>
       </ol>
       <p>
