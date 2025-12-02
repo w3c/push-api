@@ -401,13 +401,25 @@
               </dl>
             </dd>
             <dt>
+              <code>app_badge</code>
+            </dt>
+            <dd>
+              <p>
+                A boolean or a [=/64-bit unsigned integer=].
+              </p>
+              <p class="note">
+                Platform conventions are likely to impose a lower limit with regards to what is
+                displayed to the end user. [[BADGING]]
+              </p>
+            </dd>
+            <dt>
               <code>mutable</code>
             </dt>
             <dd>
               <p>
                 A boolean. When true causes a <code>push</code> event to be dispatched to a service
-                worker (if any) containing the {{Notification}} object described by the
-                <a>declarative push message</a>.
+                worker (if any) containing the {{Notification}} object and app badge number (if
+                any) described by the <a>declarative push message</a>.
               </p>
             </dd>
           </dl>
@@ -419,7 +431,8 @@
           <p>
             A <dfn>declarative push message parser result</dfn> is a [=/tuple=] consisting of a
             <dfn data-dfn-for="declarative push message parser result">notification</dfn> (a
-            [=/notification=]) and a <dfn data-dfn-for=
+            [=/notification=]), an <dfn data-dfn-for="declarative push message parser result">app
+            badge</dfn> (null or an integer), and a <dfn data-dfn-for=
             "declarative push message parser result">mutable</dfn> (a boolean).
           </p>
           <p>
@@ -683,6 +696,18 @@
             </li>
             <li>
               <p>
+                Let <var>appBadge</var> be null.
+              </p>
+            </li>
+            <li>
+              <p>
+                If <var>message</var>["`app_badge`"] [=map/exists=] and
+                <var>message</var>["`app_badge`"] is a [=/64-bit unsigned integer=], then set
+                <var>appBadge</var> to <var>message</var>["`app_badge`"].
+              </p><!-- unsigned long long in Web IDL -->
+            </li>
+            <li>
+              <p>
                 Let <var>mutable</var> be false.
               </p>
             </li>
@@ -695,7 +720,7 @@
             </li>
             <li>
               <p>
-                Return (<var>notification</var>, <var>mutable</var>).
+                Return (<var>notification</var>, <var>appBadge</var>, <var>mutable</var>).
               </p>
             </li>
           </ol>
@@ -1734,11 +1759,13 @@
               constructor(DOMString type, optional PushEventInit eventInitDict = {});
               readonly attribute PushMessageData? data;
               readonly attribute Notification? notification;
+              readonly attribute unsigned long long? appBadge;
             };
 
             dictionary PushEventInit : ExtendableEventInit {
               PushMessageDataInit? data = null;
               Notification? notification = null;
+              unsigned long long? appBadge = null;
             };
 
             typedef (BufferSource or USVString) PushMessageDataInit;
@@ -1764,6 +1791,9 @@
         </p>
         <p>
           The <dfn>notification</dfn> attribute must return the value it was initialized with.
+        </p>
+        <p>
+          The <dfn>appBadge</dfn> attribute must return the value it was initialized with.
         </p>
       </section>
       <section>
@@ -1867,6 +1897,11 @@
                   </li>
                   <li>
                     <p>
+                      Let |appBadgeSet| be false.
+                    </p>
+                  </li>
+                  <li>
+                    <p>
                       If |declarativeResult|'s [=declarative push message parser result/mutable=]
                       is true and |registration| is non-null:
                     </p>
@@ -1874,14 +1909,16 @@
                       <li>
                         <p>
                           Let |result| be the result of [=fire a push event|firing a push event=]
-                          given |registration|, null, and a new {{Notification}} object
-                          representing |notification|.
+                          given |registration|, null, a new {{Notification}} object representing
+                          |notification|, and |declarativeResult|'s [=declarative push message
+                          parser result/app badge=].
                         </p>
                       </li>
                       <li>
                         <p>
                           If |result| is not failure, then set |notificationShown| to |result|'s
-                          [=push event result/notification shown=].
+                          [=push event result/notification shown=] and |appBadgeSet| to |result|'s
+                          [=push event result/app badge set=].
                         </p>
                       </li>
                     </ol>
@@ -1891,6 +1928,27 @@
                       If |notificationShown| is false, then run the [=notification show steps=]
                       given |notification|.
                     </p>
+                  </li>
+                  <li data-cite="appmanifest">
+                    <p>
+                      If |appBadgeSet| is false and the web application associated with the <a>push
+                      subscription</a> is an [=installed web application=]:
+                    </p>
+                    <ol>
+                      <li>
+                        <p>
+                          Let |identity| be the web application's [=installed web
+                          application/identity=] [=/URL=].
+                        </p>
+                      </li>
+                      <li>
+                        <p>
+                          [=Set the application badge for installed web application=] given
+                          |identity| and |declarativeResult|'s [=declarative push message parser
+                          result/app badge=].
+                        </p>
+                      </li>
+                    </ol>
                   </li>
                   <li>
                     <p>
@@ -1916,7 +1974,7 @@
           <li>
             <p>
               Let |result| be the result of [=fire a push event|firing a push event=] given
-              |registration|, |data|, and null.
+              |registration|, |data|, null, and null.
             </p>
           </li>
           <li>
@@ -1934,18 +1992,25 @@
           </li>
         </ol>
         <p>
-          A <dfn>push event result</dfn> is a [=/tuple=] consisting of a <dfn data-dfn-for=
-          "push event result">notification shown</dfn> (a [=/boolean=]).
+          A <dfn>push event result</dfn> is a [=/tuple=] consisting of a <dfn for=
+          "push event result">notification shown</dfn> (a [=/boolean=]) and an <dfn for=
+          "push event result">app badge set</dfn> (a [=/boolean=]).
         </p>
         <p>
           To <dfn>fire a push event</dfn> given a [=/service worker registration=] |registration|,
-          {{PushMessageData}} object or null |data|, and a [=/notification=] or null
-          |notification|, run these steps. They return failure or a [=/push event result=].
+          {{PushMessageData}} object or null |data|, a [=/notification=] or null |notification|,
+          and an integer or null |appBadge|, run these steps. They return failure or a [=/push
+          event result=].
         </p>
         <ol>
           <li>
             <p>
               Let |notificationResult| be null.
+            </p>
+          </li>
+          <li>
+            <p>
+              Let |appBadgeResult| be null.
             </p>
           </li>
           <li>
@@ -1972,6 +2037,12 @@
               <dd>
                 |notification|
               </dd>
+              <dt>
+                {{PushEvent/appBadge}}
+              </dt>
+              <dd>
+                |appBadge|
+              </dd>
             </dl>
             <p>
               Then run the following steps in parallel, with |dispatchedEvent|:
@@ -1985,21 +2056,28 @@
               </li>
               <li>
                 <p>
-                  If they do not resolve successfully, then set |notificationResult| to failure.
+                  If they do not resolve successfully, then set |notificationResult| and
+                  |appBadgeResult| to failure and abort these steps.
                 </p>
               </li>
               <li>
                 <p>
-                  Otherwise, set |notificationResult| to |registration|'s [=service worker
-                  registration/has shownotification() been successfully invoked|has
-                  `showNotification()` been successfully invoked=].
+                  Set |notificationResult| to |registration|'s [=service worker registration/has
+                  shownotification() been successfully invoked|has `showNotification()` been
+                  successfully invoked=].
+                </p>
+              </li>
+              <li>
+                <p>
+                  Set |appBadgeResult| to true if {{NavigatorBadge/setAppBadge()}} has been
+                  invoked; otherwise false.
                 </p>
               </li>
             </ol>
           </li>
           <li>
             <p>
-              Wait for |notificationResult| to be non-null.
+              Wait for |notificationResult| and |appBadgeResult| to be non-null.
             </p>
           </li>
           <li>
@@ -2009,12 +2087,12 @@
           </li>
           <li>
             <p>
-              [=/Assert=]: |notificationResult| is a [=/boolean=].
+              [=/Assert=]: |notificationResult| and |appBadgeResult| are [=/booleans=].
             </p>
           </li>
           <li>
             <p>
-              Return (|notificationResult|).
+              Return (|notificationResult|, |appBadgeResult|).
             </p>
           </li>
         </ol>
