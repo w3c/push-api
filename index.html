@@ -911,6 +911,22 @@
           `{name: "push", userVisibleOnly: false}` is [=PermissionDescriptor/stronger than=]
           `{name: "push", userVisibleOnly: true}`.
         </p>
+        <p>
+          When the permission state changes (for example, it is revoked or re-granted), the <a>user
+          agent</a> MAY <a>fire the "`pushsubscriptionchange`" event</a> for subscriptions created
+          with that permission, with the <a>service worker registration</a> associated with
+          the <a>push subscription</a> as |registration|, a {{PushSubscription}} instance
+          representing the <a>push subscription</a> which should not be used anymore (for example,
+          because it has been or it is being <a>deactivated</a>) or `null` if it is not available
+          anymore as |oldSubscription|, and a {{PushSubscription}} representing a new valid <a>push
+          subscription</a> or `null` if none could be created as |newSubscription|.
+        </p>
+        <p class="note">
+          A permission state change can happen for a number of reasons, some of which are likely
+          vendor specific. Because of that, this specification does not mandate firing the
+          <a>pushsubscriptionchange</a> event in all possible cases, and instead leaves it up to
+          the <a>user agent</a> to decide when it is appropriate to do so.
+        </p>
       </section>
     </section>
     <section>
