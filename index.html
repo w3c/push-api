@@ -1200,6 +1200,22 @@
             </li>
           </ol>
         </li>
+        <li>If |global| is a {{Window}} object:
+          <ol>
+            <li>Let |permissionState| be "`push`"'s [=permission state=].
+            </li>
+            <li>If |permissionState| is "`prompt`":
+              <ol>
+                <li>If |global| does not have [=transient activation=], then [=queue a global
+                task=] on the [=networking task source=] using |global| to [=reject=] |promise|
+                with a {{"NotAllowedError"}} {{DOMException}} and terminate these steps.
+                </li>
+                <li>[=Consume user activation=] of |global|.
+                </li>
+              </ol>
+            </li>
+          </ol>
+        </li>
         <li>Run these steps [=in parallel=]:
           <ol>
             <li>Let |subscription| be null.
