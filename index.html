@@ -735,9 +735,8 @@
           SHOULD attempt to <a>refresh</a> the push subscription before the subscription expires.
         </p>
         <p>
-          A <a>push subscription</a> has internal slots for a P-256 <a>ECDH</a> key pair and an
-          authentication secret in accordance with [[RFC8291]]. These slots MUST be populated when
-          creating the <a>push subscription</a>.
+          A [=push subscription=] has an associated <dfn>P-256 ECDH key pair</dfn> and an
+          <dfn>authentication secret</dfn> in accordance with [[RFC8291]].
         </p>
         <p>
           If the <a>user agent</a> has to change the keys of a [=push subscription=] for any reason
@@ -757,16 +756,12 @@
           </li>
           <li>Set |subscription|'s {{PushSubscription/options}} attribute to |options|.
           </li>
-          <li>Generate a new P-256 <a>ECDH</a> key pair [[ANSI-X9-62]]. Store the private key in an
-          internal slot on |subscription|; this value MUST NOT be made available to applications.
-          The public key is also stored in an internal slot and can be retrieved by calling the
-          {{PushSubscription/getKey()}} method of the {{PushSubscription}} with an argument of
-          {{PushEncryptionKeyName/"p256dh"}}.
+          <li>Set |subscription|'s [=P-256 ECDH key pair=] to the result of generating a new P-256
+          [=ECDH=] key pair [[ANSI-X9-62]].
           </li>
-          <li>Generate a new authentication secret, which is a sequence of octets as defined in
-          [[RFC8291]]. Store the authentication secret in an internal slot on |subscription|. This
-          key can be retrieved by calling the {{PushSubscription/getKey()}} method of the
-          {{PushSubscription}} with an argument of {{PushEncryptionKeyName/"auth"}}.
+          <li>Set |subscription|'s [=authentication secret=] to the result of generating a new
+          authentication secret, which is a sequence of octets as defined in [[RFC8291]] Section
+          3.2.
           </li>
           <li>Request a new <a>push subscription</a>. Include the
           {{PushSubscriptionOptions/applicationServerKey}} attribute of |options| when it has been
@@ -1469,11 +1464,16 @@
 
           PushSubscriptionJSON toJSON();
         };
+        
+        dictionary PushSubscriptionKeys {
+          USVString p256dh;
+          USVString auth;
+        };
 
         dictionary PushSubscriptionJSON {
           USVString endpoint;
           EpochTimeStamp? expirationTime = null;
-          record&lt;DOMString, USVString&gt; keys;
+          PushSubscriptionKeys keys;
         };
       </pre>
       <p>
@@ -1493,37 +1493,31 @@
         subscription</a>.
       </p>
       <p>
-        The <dfn>getKey()</dfn> method retrieves keying material that can be used for encrypting
-        and authenticating messages. When {{PushSubscription/getKey()}} is invoked the following
-        process is followed:
+        The <dfn>getKey</dfn><code>(|name:PushEncryptionKeyName|)</code> method steps are:
       </p>
-      <ol>
-        <li>Find the internal slot corresponding to the key named by the `name` argument.
+      <ol class="algorithm">
+        <li>Let |key| be a new {{ArrayBuffer}} object.
         </li>
-        <li>If a slot was not found, return `null`.
+        <li>If |name| is {{PushEncryptionKeyName/"p256dh"}}:
+          <ol>
+            <li>Set the contents of |key| to the serialized value of the public key from
+            [=this=]'s [=P-256 ECDH key pair=], using the uncompressed format defined in
+            [[ANSI-X9-62]] Annex A (that is, a 65 octet sequence that starts with a 0x04 octet), as
+            [[RFC8291]] specifies.
+            </li>
+          </ol>
         </li>
-        <li>Initialize a variable |key| with a newly instantiated {{ArrayBuffer}} instance.
-        </li>
-        <li>If the internal slot contains an asymmetric key pair, set the contents of |key| to the
-        serialized value of the public key from the key pair. This uses the serialization format
-        described in the specification that defines the name. For example, [[RFC8291]] specifies
-        that the {{PushEncryptionKeyName/"p256dh"}} public key is encoded using the uncompressed
-        format defined in [[ANSI-X9-62]] Annex A (that is, a 65 octet sequence that starts with a
-        0x04 octet).
-        </li>
-        <li>Otherwise, if the internal slot contains a symmetric key, set the contents of |key| to
-        a copy of the value from the internal slot. For example, the `auth` parameter contains an
-        octet sequence used by the <a>user agent</a> to authenticate messages sent by an
-        <a>application server</a>.
+        <li>Otherwise:
+          <ol>
+            <li>[=/Assert=]: |name| is {{PushEncryptionKeyName/"auth"}}</li>
+            <li>Set the contents of |key| to a copy of the value from [=this=]'s
+            [=authentication secret=].
+            </li>
+          </ol>
         </li>
         <li>Return |key|.
         </li>
       </ol>
-      <p data-link-for="">
-        Keys named {{PushEncryptionKeyName/"p256dh"}} and {{PushEncryptionKeyName/"auth"}} MUST be
-        supported, and their values MUST correspond to those necessary for the user agent to
-        decrypt received push messages in accordance with [[RFC8291]].
-      </p>
       <p>
         The <dfn data-lt="unsubscribed">unsubscribe()</dfn> method when invoked MUST run the
         following steps:
@@ -1565,24 +1559,13 @@
         <li>Set |json|["expirationTime"] to the result of [=getting the `expirationTime`
         attribute=] of [=this=].
         </li>
-        <li>Let |keys| be a new empty instance of `record&lt;DOMString, USVString&gt;` .
+        <li>Let |keys:PushSubscriptionKeys| be a new {{PushSubscriptionKeys}} dictionary.
         </li>
-        <li>For each identifier |i| corresponding to keys in internal slots on the
-        {{PushSubscription}}, ordered by the name of the key:
-          <ol>
-            <li>If the internal slot corresponds to an asymmetric key pair, let |b| be the encoded
-            value of the public key corresponding to the key name |i|, using the encoding defined
-            for the key name (see {{PushSubscription/getKey()}}).
-            </li>
-            <li>Otherwise, let |b| be the value as returned by {{PushSubscription/getKey}}.
-            </li>
-            <li>Let |s| be the URL-safe base64 encoding without padding [[RFC4648]] of |b| as a
-            {{USVString}}. The <a>user agent</a> MUST use a serialization method that does not
-            branch based on the value of |b|.
-            </li>
-            <li>Set |keys|[|i|] to |s|.
-            </li>
-          </ol>
+        <li>Set |keys|["p256dh"] to the URL-safe base64 encoding without padding [[RFC4648]] of
+        the value as returned by {{PushSubscription/getKey("p256dh")}}, as a {{USVString}}.
+        </li>
+        <li>Set |keys|["auth"] to the URL-safe base64 encoding without padding [[RFC4648]] of
+        the value as returned by {{PushSubscription/getKey("auth")}}, as a {{USVString}}.
         </li>
         <li>Set |json|["keys"] to |keys|.
         </li>
