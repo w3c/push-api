@@ -1873,7 +1873,12 @@
                   <li>
                     <p>
                       If |notificationShown| is false, then run the [=notification show steps=]
-                      given |notification|.
+                      given |notification| and null.
+                    </p>
+                    <p class="note">
+                      As there is no [=/environment settings object=], null is passed. This also
+                      ensures that the resources of |notification|, such as its icon, are fetched
+                      without involving a [=/service worker=].
                     </p>
                   </li>
                   <li>
