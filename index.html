@@ -1500,18 +1500,19 @@
         </li>
         <li>If |name| is {{PushEncryptionKeyName/"p256dh"}}:
           <ol>
-            <li>Set the contents of |key| to the serialized value of the public key from
-            [=this=]'s [=P-256 ECDH key pair=], using the uncompressed format defined in
-            [[ANSI-X9-62]] Annex A (that is, a 65 octet sequence that starts with a 0x04 octet), as
-            [[RFC8291]] specifies.
+            <li>Set the contents of |key| to the serialized value of the public key from [=this=]'s
+            [=P-256 ECDH key pair=], using the uncompressed format defined in [[ANSI-X9-62]] Annex
+            A (that is, a 65 octet sequence that starts with a 0x04 octet), as [[RFC8291]]
+            specifies.
             </li>
           </ol>
         </li>
         <li>Otherwise:
           <ol>
-            <li>[=/Assert=]: |name| is {{PushEncryptionKeyName/"auth"}}</li>
-            <li>Set the contents of |key| to a copy of the value from [=this=]'s
-            [=authentication secret=].
+            <li>[=/Assert=]: |name| is {{PushEncryptionKeyName/"auth"}}
+            </li>
+            <li>Set the contents of |key| to a copy of the value from [=this=]'s [=authentication
+            secret=].
             </li>
           </ol>
         </li>
@@ -1561,11 +1562,11 @@
         </li>
         <li>Let |keys:PushSubscriptionKeys| be a new {{PushSubscriptionKeys}} dictionary.
         </li>
-        <li>Set |keys|["p256dh"] to the URL-safe base64 encoding without padding [[RFC4648]] of
-        the value as returned by {{PushSubscription/getKey("p256dh")}}, as a {{USVString}}.
+        <li>Set |keys|["p256dh"] to the URL-safe base64 encoding without padding [[RFC4648]] of the
+        value as returned by {{PushSubscription/getKey("p256dh")}}, as a {{USVString}}.
         </li>
-        <li>Set |keys|["auth"] to the URL-safe base64 encoding without padding [[RFC4648]] of
-        the value as returned by {{PushSubscription/getKey("auth")}}, as a {{USVString}}.
+        <li>Set |keys|["auth"] to the URL-safe base64 encoding without padding [[RFC4648]] of the
+        value as returned by {{PushSubscription/getKey("auth")}}, as a {{USVString}}.
         </li>
         <li>Set |json|["keys"] to |keys|.
         </li>
