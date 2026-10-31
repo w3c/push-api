@@ -1311,12 +1311,15 @@
                 </li>
               </ol>
             </li>
-            <li>If |subscription| is null, then resolve |promise| with null.
+            <li>If |subscription| is null, then [=queue a global task=] on the [=networking task
+            source=] using |global| to [=resolve=] |promise| with null and terminate these steps.
             </li>
-            <li>If there is an error with |subscription|, reject |promise| with a {{DOMException}}
-            whose name is {{"AbortError"}} and terminate these steps.
+            <li>If there is an error with |subscription|, then [=queue a global task=] on the
+            [=networking task source=] using |global| to [=reject=] |promise| with an
+            {{"AbortError"}} {{DOMException}} and terminate these steps.
             </li>
-            <li>Resolve |promise| with a {{PushSubscription}} corresponding to |subscription|.
+            <li>[=Queue a global task=] on the [=networking task source=] using |global| to
+            [=resolve=] |promise| with a {{PushSubscription}} corresponding to |subscription|.
             </li>
           </ol>
         </li>
