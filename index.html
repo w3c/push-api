@@ -304,14 +304,6 @@
                   </p>
                 </dd>
                 <dt>
-                  <code>vibrate</code>
-                </dt>
-                <dd>
-                  <p>
-                    An array of [=/32-bit unsigned integers=].
-                  </p>
-                </dd>
-                <dt>
                   <code>timestamp</code>
                 </dt>
                 <dd>
@@ -539,14 +531,6 @@
                 If <var>notificationInput</var>["`badge`"] [=map/exists=] and is a string, then set
                 <var>notificationOptions</var>["{{NotificationOptions/badge}}"] to
                 <var>notificationInput</var>["`badge`"], [=string/converted=].
-              </p>
-            </li>
-            <li>
-              <p>
-                If <var>notificationInput</var>["`vibrate`"] [=map/exists=] and is a [=/list=] of
-                which each [=list/item=] is a [=/32-bit unsigned integer=], then set
-                <var>notificationOptions</var>["{{NotificationOptions/vibrate}}"] to
-                <var>notificationInput</var>["`vibrate`"].
               </p>
             </li>
             <li>
