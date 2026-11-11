@@ -1147,19 +1147,34 @@
             </li>
           </ol>
         </li>
-        <li>If |scope| is failure or is a [=/URL=] whose [=url/scheme=] is not "`https`", then
-        [=queue a global task=] on the [=networking task source=] using |global| to [=reject=]
-        |promise| with a {{"NotAllowedError"}} {{DOMException}} and terminate these steps.
+        <li>If |scope| is failure or is a [=/URL=] whose [=url/scheme=] is not "`https`", then:
+          <ol>
+            <li>[=Queue a global task=] on the [=networking task source=] using |global| to
+            [=reject=] |promise| with a {{"NotAllowedError"}} {{DOMException}}.
+            </li>
+            <li>Return |promise|.
+            </li>
+          </ol>
         </li>
         <li>If |options|["{{PushSubscriptionOptionsInit/userVisibleOnly}}"] is false and the user
-        agent requires it to be true, then [=queue a global task=] on the [=networking task
-        source=] using |global| to [=reject=] |promise| with a {{"NotAllowedError"}}
-        {{DOMException}} and terminate these steps.
+        agent requires it to be true, then:
+          <ol>
+            <li>[=Queue a global task=] on the [=networking task source=] using |global| to
+            [=reject=] |promise| with a {{"NotAllowedError"}} {{DOMException}}.
+            </li>
+            <li>Return |promise|.
+            </li>
+          </ol>
         </li>
         <li>If |options|["{{PushSubscriptionOptionsInit/applicationServerKey}}"] is null and the
-        <a>push service</a> requires it to be non-null, then [=queue a global task=] on the
-        [=networking task source=] using |global| to [=reject=] |promise| with a
-        {{"NotSupportedError"}} {{DOMException}} and terminate these steps.
+        <a>push service</a> requires it to be non-null, then:
+          <ol>
+            <li>[=Queue a global task=] on the [=networking task source=] using |global| to
+            [=reject=] |promise| with a {{"NotSupportedError"}} {{DOMException}}.
+            </li>
+            <li>Return |promise|.
+            </li>
+          </ol>
         </li>
         <li>If |options|["{{PushSubscriptionOptions/applicationServerKey}}"] is non-null:
           <ol>
@@ -1168,14 +1183,24 @@
             decoding |options|["{{PushSubscriptionOptions/applicationServerKey}}"] using the
             base64url encoding [[RFC7515]].
             </li>
-            <li>If decoding fails, then [=queue a global task=] on the [=networking task source=]
-            using |global| to [=reject=] |promise| with an {{"InvalidCharacterError"}}
-            {{DOMException}} and terminate these steps.
+            <li>If decoding fails, then:
+              <ol>
+                <li>[=Queue a global task=] on the [=networking task source=] using |global| to
+                [=reject=] |promise| with an {{"InvalidCharacterError"}} {{DOMException}}.
+                </li>
+                <li>Return |promise|.
+                </li>
+              </ol>
             </li>
             <li>Ensure that |options|["{{PushSubscriptionOptions/applicationServerKey}}"] describes
-            a valid point on the P-256 curve. If its value is invalid, then [=queue a global task=]
-            on the [=networking task source=] using |global| to [=reject=] |promise| with an
-            {{"InvalidAccessError"}} {{DOMException}} and terminate these steps.
+            a valid point on the P-256 curve. If its value is invalid, then:
+              <ol>
+                <li>[=Queue a global task=] on the [=networking task source=] using |global| to
+                [=reject=] |promise| with an {{"InvalidAccessError"}} {{DOMException}}.
+                </li>
+                <li>Return |promise|.
+                </li>
+              </ol>
             </li>
           </ol>
         </li>
