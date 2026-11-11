@@ -1307,9 +1307,10 @@
             </li>
             <li>If |windowScope| is non-null:
               <ol>
-                <li>If |windowScope| is a [=/URL=] and there is a [=push subscription=] with a [=push
-                subscription/window-accessible scope=] whose [=push subscription/scope=]
-                [=URL/equals=] |windowScope|, then set |subscription| to that [=push subscription=].
+                <li>If |windowScope| is a [=/URL=] and there is a [=push subscription=] with a
+                [=push subscription/window-accessible scope=] whose [=push subscription/scope=]
+                [=URL/equals=] |windowScope|, then set |subscription| to that [=push
+                subscription=].
                 </li>
               </ol>
             </li>
@@ -2050,9 +2051,9 @@
         <p>
           To <dfn>fire the "`pushsubscriptionchange`" event</dfn> given a <a>service worker
           registration</a> or null |registration|, |newSubscription|, and |oldSubscription|, return
-          if |registration| is null. Otherwise, <a>fire a functional event</a>
-          named "`pushsubscriptionchange`" using
-          <a>PushSubscriptionChangeEvent</a> on |registration| with the following properties:
+          if |registration| is null. Otherwise, <a>fire a functional event</a> named
+          "`pushsubscriptionchange`" using <a>PushSubscriptionChangeEvent</a> on |registration|
+          with the following properties:
         </p>
         <dl>
           <dt>
