@@ -1229,7 +1229,8 @@
                 {{DOMException}} and terminate these steps.
                 </li>
                 <li>[=Queue a global task=] on the [=networking task source=] using |global| to
-                [=resolve=] |promise| with |subscription| and terminate these steps.
+                [=resolve=] |promise| with a {{PushSubscription}} corresponding to |subscription|,
+                and terminate these steps.
                 </li>
               </ol>
             </li>
