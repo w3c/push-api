@@ -1281,8 +1281,9 @@
             </li>
             <li>If |windowScope| is non-null:
               <ol>
-                <li>If there is a [=push subscription=] whose [=push subscription/scope=] is
-                |windowScope|, then set |subscription| to that [=push subscription=].
+                <li>If |windowScope| is a [=/URL=] and there is a [=push subscription=] with a [=push
+                subscription/window-accessible scope=] whose [=push subscription/scope=]
+                [=URL/equals=] |windowScope|, then set |subscription| to that [=push subscription=].
                 </li>
               </ol>
             </li>
