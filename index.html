@@ -1753,7 +1753,7 @@
           steps</a> are extended to include the following steps:
         </p>
         <ol>
-          <li>If |eventInitDict|'s `data` member is not present, set the `data` attribute of the
+          <li>If |eventInitDict|'s `data` member is `null`, set the `data` attribute of the
           event to `null` and terminate these steps.
           </li>
           <li>Set |b| to the result of <a data-lt="extract a byte sequence">extracting a byte
